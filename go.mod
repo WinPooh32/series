@@ -1,4 +1,4 @@
-module series
+module github.com/WinPooh32/series
 
 go 1.11
 
