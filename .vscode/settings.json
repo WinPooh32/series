@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "**/vendor/**": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/vendor/**": true
+  }
+}
