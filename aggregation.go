@@ -1,6 +1,8 @@
 package series
 
-import "github.com/WinPooh32/math"
+import (
+	"github.com/WinPooh32/math"
+)
 
 func Mean(data Data) float32 {
 	var mean float32
@@ -35,4 +37,42 @@ func Sum(data Data) float32 {
 		return math.NaN()
 	}
 	return sum
+}
+
+func Min(data Data) float32 {
+	var min float32 = math.MaxFloat32
+	var count int
+	var items = data.Data()
+	for _, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		if v < min {
+			min = v
+		}
+		count++
+	}
+	if count == 0 {
+		return math.NaN()
+	}
+	return min
+}
+
+func Max(data Data) float32 {
+	var max float32 = -math.MaxFloat32
+	var count int
+	var items = data.Data()
+	for _, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		if v > max {
+			max = v
+		}
+		count++
+	}
+	if count == 0 {
+		return math.NaN()
+	}
+	return max
 }

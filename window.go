@@ -15,6 +15,14 @@ func (w Window) Mean() Data {
 	return w.apply(Mean)
 }
 
+func (w Window) Min() Data {
+	return w.apply(Min)
+}
+
+func (w Window) Max() Data {
+	return w.apply(Max)
+}
+
 func (w Window) Diff() Data {
 	return w.applyDiff()
 }
