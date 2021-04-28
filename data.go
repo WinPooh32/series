@@ -1,5 +1,7 @@
 package series
 
+import "github.com/WinPooh32/math"
+
 type Data struct {
 	samplesize int64
 	index      []int64
@@ -135,10 +137,29 @@ func (d Data) DivScalar(s float32) Data {
 	return d
 }
 
+func (d Data) Log() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = math.Log(v)
+	}
+	return d
+}
+
+// Rolling provides rolling window calculations.
 func (d Data) Rolling(window int) Window {
 	return Window{
 		len:  window,
 		data: d,
+	}
+}
+
+func (d Data) EWM(atype AlphaType, param float32, adjust bool, ignoreNA bool) ExpWindow {
+	return ExpWindow{
+		data:     d,
+		atype:    atype,
+		param:    param,
+		adjust:   adjust,
+		ignoreNA: ignoreNA,
 	}
 }
 
@@ -160,6 +181,22 @@ func (d Data) Resample(samplesize int64) Data {
 		d = d.resampleMore(d, samplesize)
 	}
 	return d
+}
+
+func (d Data) Fillna(value float32, inplace bool) Data {
+	var data Data
+	if inplace {
+		data = d
+	} else {
+		data = d.Clone()
+	}
+	dd := data.Data()
+	for i, v := range dd {
+		if math.IsNaN(v) {
+			dd[i] = value
+		}
+	}
+	return data
 }
 
 func (d Data) resampleLess(data Data, samplesize int64) Data {

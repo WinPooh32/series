@@ -31,10 +31,6 @@ func (w Window) Shift() Data {
 	return w.applyShift()
 }
 
-func (w Window) Fillna(value float32, inplace bool) Data {
-	return w.applyFillna(value, inplace)
-}
-
 func (w Window) apply(f func(Data) float32) Data {
 	var (
 		clone  = w.data.Clone()
@@ -88,20 +84,4 @@ func (w Window) applyShift() Data {
 	}
 
 	return clone
-}
-
-func (w Window) applyFillna(value float32, inplace bool) Data {
-	var data Data
-	if inplace {
-		data = w.data
-	} else {
-		data = w.data.Clone()
-	}
-	d := data.Data()
-	for i, v := range d {
-		if math.IsNaN(v) {
-			d[i] = value
-		}
-	}
-	return data
 }

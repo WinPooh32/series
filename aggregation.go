@@ -5,10 +5,12 @@ import (
 )
 
 func Mean(data Data) float32 {
-	var mean float32
-	var count int
-	var items = data.Data()
-	var inv = 1.0 / float32(len(items))
+	var (
+		count int
+		mean  float32
+		items = data.Data()
+		inv   = 1.0 / float32(len(items))
+	)
 	for _, v := range items {
 		if math.IsNaN(v) {
 			continue
@@ -23,9 +25,11 @@ func Mean(data Data) float32 {
 }
 
 func Sum(data Data) float32 {
-	var sum float32
-	var count int
-	var items = data.Data()
+	var (
+		sum   float32
+		count int
+		items = data.Data()
+	)
 	for _, v := range items {
 		if math.IsNaN(v) {
 			continue
@@ -40,9 +44,11 @@ func Sum(data Data) float32 {
 }
 
 func Min(data Data) float32 {
-	var min float32 = math.MaxFloat32
-	var count int
-	var items = data.Data()
+	var (
+		min   float32 = math.MaxFloat32
+		count int
+		items = data.Data()
+	)
 	for _, v := range items {
 		if math.IsNaN(v) {
 			continue
@@ -59,9 +65,11 @@ func Min(data Data) float32 {
 }
 
 func Max(data Data) float32 {
-	var max float32 = -math.MaxFloat32
-	var count int
-	var items = data.Data()
+	var (
+		max   float32 = -math.MaxFloat32
+		count int
+		items = data.Data()
+	)
 	for _, v := range items {
 		if math.IsNaN(v) {
 			continue

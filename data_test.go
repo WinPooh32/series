@@ -385,3 +385,47 @@ func TestData_DivScalar(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Fillna(t *testing.T) {
+	type fields struct {
+		samplesize int64
+		index      []int64
+		data       []float32
+	}
+	type args struct {
+		value   float32
+		inplace bool
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Data
+	}{
+		{
+			name: "simple fillna",
+			fields: fields{
+				samplesize: 1,
+				index:      []int64{1, 2, 3, 4, 5},
+				data:       []float32{NaN, NaN, 5, 2, NaN},
+			},
+			args: args{
+				value:   0,
+				inplace: false,
+			},
+			want: MakeData(1, []int64{1, 2, 3, 4, 5}, []float32{0, 0, 5, 2, 0}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				samplesize: tt.fields.samplesize,
+				index:      tt.fields.index,
+				data:       tt.fields.data,
+			}
+			if got := d.Fillna(tt.args.value, tt.args.inplace); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Data.Fillna() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
