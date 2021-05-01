@@ -55,14 +55,18 @@ func (w Window) applyDiff() Data {
 		clone  = w.data.Clone()
 		data   = clone.Data()
 		period = w.len
+
+		orig = w.data.Data()
 	)
 
-	for i := 0; i < period; i++ {
-		data[i] = math.NaN()
+	var n = period - 1
+
+	for i := n; i < len(data); i++ {
+		data[i] -= orig[i-n]
 	}
 
-	for i := period; i < len(data); i++ {
-		data[i] -= w.data.Data()[i-period]
+	for i := 0; i < n; i++ {
+		data[i] = math.NaN()
 	}
 
 	return clone
