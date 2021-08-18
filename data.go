@@ -145,6 +145,15 @@ func (d Data) Log() Data {
 	return d
 }
 
+// Apply applies user's function to every value of data.
+func (d Data) Apply(fn func(float32) float32) Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = fn(v)
+	}
+	return d
+}
+
 // Rolling provides rolling window calculations.
 func (d Data) Rolling(window int) Window {
 	return Window{
