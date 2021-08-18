@@ -24,6 +24,7 @@ func (d Data) SampleSize() int64 {
 	return d.samplesize
 }
 
+// Slices makes slice of data.
 func (d Data) Slice(l, r int) Data {
 	return Data{
 		d.samplesize,
@@ -32,6 +33,7 @@ func (d Data) Slice(l, r int) Data {
 	}
 }
 
+// Clone makes full copy of data.
 func (d Data) Clone() Data {
 	var clone = Data{
 		samplesize: d.samplesize,
@@ -137,6 +139,7 @@ func (d Data) DivScalar(s float32) Data {
 	return d
 }
 
+// Log applies natural logarithm function to values of data.
 func (d Data) Log() Data {
 	sl := d.data
 	for i, v := range sl {
@@ -162,6 +165,7 @@ func (d Data) Rolling(window int) Window {
 	}
 }
 
+// EWM provides exponential weighted calculations.
 func (d Data) EWM(atype AlphaType, param float32, adjust bool, ignoreNA bool) ExpWindow {
 	return ExpWindow{
 		data:     d,
@@ -172,6 +176,8 @@ func (d Data) EWM(atype AlphaType, param float32, adjust bool, ignoreNA bool) Ex
 	}
 }
 
+// RollData applies custom function to rolling window of data.
+// Function accepts window bounds.
 func (d Data) RollData(window int, cb func(l int, r int)) {
 	if len(d.data) <= window {
 		cb(0, len(d.data))
