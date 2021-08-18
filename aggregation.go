@@ -89,6 +89,46 @@ func Max(data Data) float32 {
 	return max
 }
 
+// Argmin returns index of the smallest value of series data.
+// If the minimum is achieved in multiple locations, the first row position is returned.
+func Argmin(data Data) int {
+	var (
+		min   float32 = math.MaxFloat32
+		pos   int
+		items = data.Data()
+	)
+	for i, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		if v < min {
+			min = v
+			pos = i
+		}
+	}
+	return pos
+}
+
+// Argmax returns index of the biggest value of series data.
+// If the maximum is achieved in multiple locations, the first row position is returned.
+func Argmax(data Data) int {
+	var (
+		max   float32 = -math.MaxFloat32
+		pos   int     = -1
+		items         = data.Data()
+	)
+	for i, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		if v > max {
+			max = v
+			pos = i
+		}
+	}
+	return pos
+}
+
 // Std returns standard deviation.
 // Normalized by n-1.
 func Std(data Data) float32 {
