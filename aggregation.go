@@ -88,3 +88,27 @@ func Max(data Data) float32 {
 	}
 	return max
 }
+
+// Std returns standard deviation.
+// Normalized by n-1.
+func Std(data Data) float32 {
+	var (
+		count  int
+		items  = data.Data()
+		mean   = Mean(data)
+		inv    = 1.0 / float32(len(items)-1)
+		stdDev float32
+	)
+	for _, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		d := v - mean
+		stdDev += (d * d) * inv
+		count++
+	}
+	if count == 0 {
+		return math.NaN()
+	}
+	return stdDev
+}
