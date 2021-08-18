@@ -8,19 +8,19 @@ type Window struct {
 }
 
 func (w Window) Sum() Data {
-	return w.apply(Sum)
+	return w.Apply(Sum)
 }
 
 func (w Window) Mean() Data {
-	return w.apply(Mean)
+	return w.Apply(Mean)
 }
 
 func (w Window) Min() Data {
-	return w.apply(Min)
+	return w.Apply(Min)
 }
 
 func (w Window) Max() Data {
-	return w.apply(Max)
+	return w.Apply(Max)
 }
 
 func (w Window) Diff() Data {
@@ -31,7 +31,7 @@ func (w Window) Shift() Data {
 	return w.applyShift()
 }
 
-func (w Window) apply(f func(Data) float32) Data {
+func (w Window) Apply(f func(Data) float32) Data {
 	var (
 		clone  = w.data.Clone()
 		data   = clone.Data()
