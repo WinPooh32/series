@@ -4,6 +4,7 @@ import (
 	"github.com/WinPooh32/math"
 )
 
+// Mean returns mean of data's values.
 func Mean(data Data) float32 {
 	var (
 		count int
@@ -24,6 +25,7 @@ func Mean(data Data) float32 {
 	return mean
 }
 
+// Sum returns sum of data's values.
 func Sum(data Data) float32 {
 	var (
 		sum   float32
@@ -43,6 +45,7 @@ func Sum(data Data) float32 {
 	return sum
 }
 
+// Min returns minimum value.
 func Min(data Data) float32 {
 	var (
 		min   float32 = math.MaxFloat32
@@ -64,6 +67,7 @@ func Min(data Data) float32 {
 	return min
 }
 
+// Max returns maximum value.
 func Max(data Data) float32 {
 	var (
 		max   float32 = -math.MaxFloat32
