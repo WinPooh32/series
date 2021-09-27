@@ -219,3 +219,38 @@ func TestWindow_Max(t *testing.T) {
 		})
 	}
 }
+
+func TestWindow_Std(t *testing.T) {
+	type fields struct {
+		len  int
+		data Data
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"period = 3",
+			fields{
+				len:  3,
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []float32{5, 5, 6, 7, 5, 5, 5}),
+			},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []float32{NaN, NaN, 0.57735026, 1, 1, 1.1547005, 0}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := Window{
+				len:  tt.fields.len,
+				data: tt.fields.data,
+			}
+			if got := w.Std(); !reflect.DeepEqual(
+				got.Slice(got.Len()-w.len, got.Len()),
+				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
+			) {
+				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

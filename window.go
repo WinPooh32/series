@@ -23,6 +23,10 @@ func (w Window) Max() Data {
 	return w.Apply(Max)
 }
 
+func (w Window) Std() Data {
+	return w.applyStd()
+}
+
 func (w Window) Diff() Data {
 	return w.applyDiff()
 }
@@ -84,6 +88,27 @@ func (w Window) applyShift() Data {
 	copy(dst, src)
 
 	for i := 0; i < period; i++ {
+		data[i] = math.NaN()
+	}
+
+	return clone
+}
+
+func (w Window) applyStd() Data {
+	var (
+		clone  = w.data.Clone()
+		data   = clone.Data()
+		period = w.len
+	)
+
+	var n = period - 1
+
+	for i := n; i < len(data); i++ {
+		p := i + 1
+		data[i] = Std(w.data.Slice(p-period, p))
+	}
+
+	for i := 0; i < n; i++ {
 		data[i] = math.NaN()
 	}
 
