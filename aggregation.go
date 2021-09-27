@@ -150,5 +150,5 @@ func Std(data Data) float32 {
 	if count == 0 {
 		return math.NaN()
 	}
-	return stdDev
+	return math.Sqrt(stdDev)
 }
