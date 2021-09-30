@@ -148,6 +148,15 @@ func (d Data) Log() Data {
 	return d
 }
 
+// Abs replace each elemnt by their absolute value.
+func (d Data) Abs() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = math.Abs(v)
+	}
+	return d
+}
+
 // Apply applies user's function to every value of data.
 func (d Data) Apply(fn func(float32) float32) Data {
 	sl := d.data
