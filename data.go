@@ -8,18 +8,57 @@ type Data struct {
 	data       []float32
 }
 
+// Index returns underlying index slice.
 func (d Data) Index() (data []int64) {
 	return d.index
+}
+
+// IndexAsFloat32 returns copy of underlying index slice converted to float32 array.
+func (d Data) IndexAsFloat32() (index []float32) {
+	index = make([]float32, len(d.index))
+	for i, v := range d.index {
+		index[i] = float32(v)
+	}
+	return index
+}
+
+// IndexAsFloat64 returns copy of underlying index slice converted to float64 array.
+func (d Data) IndexAsFloat64() (index []float64) {
+	index = make([]float64, len(d.index))
+	for i, v := range d.index {
+		index[i] = float64(v)
+	}
+	return index
 }
 
 func (d Data) Data() (data []float32) {
 	return d.data
 }
 
+// DataAsInt64 returns copy of underlying data slice converted to int64 array.
+func (d Data) DataAsInt64() (data []int64) {
+	data = make([]int64, len(d.index))
+	for i, v := range d.index {
+		data[i] = int64(v)
+	}
+	return data
+}
+
+// DataAsFloat64 returns copy of underlying data slice converted to float64 array.
+func (d Data) DataAsFloat64() (data []float64) {
+	data = make([]float64, len(d.index))
+	for i, v := range d.index {
+		data[i] = float64(v)
+	}
+	return data
+}
+
+// Len returns size of series data.
 func (d Data) Len() int {
 	return len(d.index)
 }
 
+// SampleSize returns length of one sample.
 func (d Data) SampleSize() int64 {
 	return d.samplesize
 }
@@ -35,7 +74,7 @@ func (d Data) Slice(l, r int) Data {
 
 // Clone makes full copy of data.
 func (d Data) Clone() Data {
-	var clone = Data{
+	clone := Data{
 		samplesize: d.samplesize,
 		index:      append([]int64(nil), d.index...),
 		data:       append([]float32(nil), d.data...),
@@ -229,9 +268,9 @@ func (d Data) resampleLess(data Data, samplesize int64) Data {
 }
 
 func (d Data) resampleMore(data Data, samplesize int64) Data {
-	var index = data.index
-	var resIndex = data.Index()[:0]
-	var resData = data.Data()[:0]
+	index := data.index
+	resIndex := data.Index()[:0]
+	resData := data.Data()[:0]
 
 	for i := 0; i < len(index); {
 		beg, end := i, d.nextSample(index, i, samplesize)
