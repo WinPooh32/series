@@ -131,11 +131,10 @@ func Argmax(data Data) int {
 
 // Std returns standard deviation.
 // Normalized by n-1.
-func Std(data Data) float32 {
+func Std(data Data, mean float32) float32 {
 	var (
 		count  int
 		items  = data.Data()
-		mean   = Mean(data)
 		inv    = 1.0 / float32(len(items)-1)
 		stdDev float32
 	)

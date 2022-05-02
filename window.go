@@ -23,8 +23,8 @@ func (w Window) Max() Data {
 	return w.Apply(Max)
 }
 
-func (w Window) Std() Data {
-	return w.applyStd()
+func (w Window) Std(ma Data) Data {
+	return w.applyStd(ma)
 }
 
 func (w Window) Diff() Data {
@@ -32,7 +32,14 @@ func (w Window) Diff() Data {
 }
 
 func (w Window) Shift() Data {
-	return w.applyShift()
+	switch {
+	case w.len == 0:
+		return w.data
+	case w.len > 0:
+		return w.applyShiftPisitive()
+	default:
+		return w.applyShiftNegative()
+	}
 }
 
 func (w Window) Apply(f func(Data) float32) Data {
@@ -47,7 +54,7 @@ func (w Window) Apply(f func(Data) float32) Data {
 	}
 
 	w.data.RollData(period, func(l int, r int) {
-		var slice = w.data.Slice(l, r)
+		slice := w.data.Slice(l, r)
 		data[r-1] = f(slice)
 	})
 
@@ -63,20 +70,20 @@ func (w Window) applyDiff() Data {
 		orig = w.data.Data()
 	)
 
-	var n = period - 1
+	total := period - 1
 
-	for i := n; i < len(data); i++ {
-		data[i] -= orig[i-n]
+	for i := total; i < len(data); i++ {
+		data[i] -= orig[i-total]
 	}
 
-	for i := 0; i < n; i++ {
+	for i := 0; i < total; i++ {
 		data[i] = math.NaN()
 	}
 
 	return clone
 }
 
-func (w Window) applyShift() Data {
+func (w Window) applyShiftPisitive() Data {
 	var (
 		clone  = w.data.Clone()
 		data   = clone.Data()
@@ -94,21 +101,40 @@ func (w Window) applyShift() Data {
 	return clone
 }
 
-func (w Window) applyStd() Data {
+func (w Window) applyShiftNegative() Data {
+	var (
+		clone  = w.data.Clone()
+		data   = clone.Data()
+		period = -(w.len)
+	)
+
+	dst := data[:len(data)-period]
+	src := data[period:]
+	copy(dst, src)
+
+	for i := len(data) - period; i < len(data); i++ {
+		data[i] = math.NaN()
+	}
+
+	return clone
+}
+
+func (w Window) applyStd(ma Data) Data {
 	var (
 		clone  = w.data.Clone()
 		data   = clone.Data()
 		period = w.len
 	)
 
-	var n = period - 1
+	total := period - 1
 
-	for i := n; i < len(data); i++ {
+	for i := total; i < len(data); i++ {
 		p := i + 1
-		data[i] = Std(w.data.Slice(p-period, p))
+		v := w.data.Slice(p-period, p)
+		data[i] = Std(v, ma.data[p-1])
 	}
 
-	for i := 0; i < n; i++ {
+	for i := 0; i < total; i++ {
 		data[i] = math.NaN()
 	}
 

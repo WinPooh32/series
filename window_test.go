@@ -10,7 +10,6 @@ import (
 var NaN = math.NaN()
 
 func TestWindow_Sum(t *testing.T) {
-
 	type fields struct {
 		len  int
 		data Data
@@ -245,7 +244,10 @@ func TestWindow_Std(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Std(); !reflect.DeepEqual(
+
+			ma := tt.fields.data.Rolling(3).Mean()
+
+			if got := w.Std(ma); !reflect.DeepEqual(
 				got.Slice(got.Len()-w.len, got.Len()),
 				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
 			) {
