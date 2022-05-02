@@ -294,6 +294,7 @@ func (d Data) Resample(samplesize int64) Data {
 	return d
 }
 
+// Fill NaN values.
 func (d Data) Fillna(value float32, inplace bool) Data {
 	var data Data
 	if inplace {
@@ -344,6 +345,7 @@ func (d Data) nextSample(index []int64, i int, samplesize int64) (end int) {
 	return end
 }
 
+// MakeData makes series data instance.
 func MakeData(samplesize int64, index []int64, data []float32) Data {
 	if len(index) != len(data) {
 		panic("size of index and data must be equal")
