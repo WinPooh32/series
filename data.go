@@ -13,7 +13,7 @@ type Data struct {
 }
 
 // Index returns underlying index slice.
-func (d Data) Index() (data []int64) {
+func (d Data) Index() (index []int64) {
 	return d.index
 }
 
@@ -41,8 +41,8 @@ func (d Data) Data() (data []float32) {
 
 // DataAsInt64 returns copy of underlying data slice converted to int64 array.
 func (d Data) DataAsInt64() (data []int64) {
-	data = make([]int64, len(d.index))
-	for i, v := range d.index {
+	data = make([]int64, len(d.data))
+	for i, v := range d.data {
 		data[i] = int64(v)
 	}
 	return data
@@ -50,8 +50,8 @@ func (d Data) DataAsInt64() (data []int64) {
 
 // DataAsFloat64 returns copy of underlying data slice converted to float64 array.
 func (d Data) DataAsFloat64() (data []float64) {
-	data = make([]float64, len(d.index))
-	for i, v := range d.index {
+	data = make([]float64, len(d.data))
+	for i, v := range d.data {
 		data[i] = float64(v)
 	}
 	return data
