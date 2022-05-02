@@ -1,6 +1,10 @@
 package series
 
-import "github.com/WinPooh32/math"
+import (
+	stdmath "math"
+
+	"github.com/WinPooh32/math"
+)
 
 type Data struct {
 	samplesize int64
@@ -192,6 +196,50 @@ func (d Data) Abs() Data {
 	sl := d.data
 	for i, v := range sl {
 		sl[i] = math.Abs(v)
+	}
+	return d
+}
+
+// Floor returns the greatest integer value less than or equal to x.
+func (d Data) Floor() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = math.Floor(v)
+	}
+	return d
+}
+
+// Trunc returns the integer value of x.
+func (d Data) Trunc() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = math.Trunc(v)
+	}
+	return d
+}
+
+// Round returns the nearest integer, rounding half away from zero.
+func (d Data) Round() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = float32(stdmath.Round(float64(v)))
+	}
+	return d
+}
+
+// RoundToEven returns the nearest integer, rounding ties to even.
+func (d Data) RoundToEven() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = float32(stdmath.RoundToEven(float64(v)))
+	}
+	return d
+}
+
+func (d Data) Ceil() Data {
+	sl := d.data
+	for i, v := range sl {
+		sl[i] = math.Ceil(v)
 	}
 	return d
 }
