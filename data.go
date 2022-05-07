@@ -6,10 +6,24 @@ import (
 	"github.com/WinPooh32/math"
 )
 
+// Data is the series data container.
 type Data struct {
-	samplesize int64
-	index      []int64
-	data       []float32
+	freq  int64
+	index []int64
+	data  []float32
+}
+
+// MakeData makes series data instance.
+// freq is the size of data sample.
+func MakeData(freq int64, index []int64, data []float32) Data {
+	if len(index) != len(data) {
+		panic("length of index and data must be equal")
+	}
+	return Data{
+		freq:  freq,
+		index: index,
+		data:  data,
+	}
 }
 
 // Index returns underlying index slice.
