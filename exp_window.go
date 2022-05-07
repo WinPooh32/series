@@ -1,6 +1,6 @@
 package series
 
-import "github.com/WinPooh32/math"
+import "github.com/WinPooh32/series/math"
 
 type AlphaType int
 
@@ -18,13 +18,13 @@ const (
 type ExpWindow struct {
 	data     Data
 	atype    AlphaType
-	param    float32
+	param    dtype
 	adjust   bool
 	ignoreNA bool
 }
 
 func (w ExpWindow) Mean() Data {
-	var alpha float32
+	var alpha dtype
 
 	switch w.atype {
 	case Alpha:
@@ -55,7 +55,7 @@ func (w ExpWindow) Mean() Data {
 	return w.applyMean(w.data.Clone(), alpha)
 }
 
-func (w ExpWindow) applyMean(data Data, alpha float32) Data {
+func (w ExpWindow) applyMean(data Data, alpha dtype) Data {
 	if w.adjust {
 		w.adjustedMean(data, alpha, w.ignoreNA)
 	} else {
@@ -64,11 +64,11 @@ func (w ExpWindow) applyMean(data Data, alpha float32) Data {
 	return data
 }
 
-func (ExpWindow) adjustedMean(data Data, alpha float32, ignoreNA bool) {
+func (ExpWindow) adjustedMean(data Data, alpha dtype, ignoreNA bool) {
 	var (
-		items  []float32 = data.Data()
-		weight float32   = 1
-		last   float32   = 0
+		items  []dtype = data.Data()
+		weight dtype   = 1
+		last   dtype   = 0
 	)
 
 	alpha = 1 - alpha
@@ -92,12 +92,12 @@ func (ExpWindow) adjustedMean(data Data, alpha float32, ignoreNA bool) {
 	}
 }
 
-func (ExpWindow) notadjustedMean(data Data, alpha float32, ignoreNA bool) {
+func (ExpWindow) notadjustedMean(data Data, alpha dtype, ignoreNA bool) {
 	var (
 		count int
-		items []float32 = data.Data()
-		beta  float32   = 1 - alpha
-		last  float32   = items[0]
+		items []dtype = data.Data()
+		beta  dtype   = 1 - alpha
+		last  dtype   = items[0]
 	)
 	if math.IsNaN(last) {
 		last = 0

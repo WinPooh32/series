@@ -3,14 +3,14 @@ package series
 import (
 	"testing"
 
-	"github.com/WinPooh32/math"
+	"github.com/WinPooh32/series/math"
 )
 
 func TestExpWindow_Mean(t *testing.T) {
 	type fields struct {
 		data     Data
 		atype    AlphaType
-		param    float32
+		param    dtype
 		adjust   bool
 		ignoreNA bool
 	}
@@ -25,7 +25,7 @@ func TestExpWindow_Mean(t *testing.T) {
 				data: MakeData(
 					1,
 					[]int64{1, 2, 3, 4, 5},
-					[]float32{0, 1, 2, NaN, 4},
+					[]dtype{0, 1, 2, NaN, 4},
 				),
 				atype:    AlphaCom,
 				param:    0.5,
@@ -35,7 +35,7 @@ func TestExpWindow_Mean(t *testing.T) {
 			MakeData(
 				1,
 				[]int64{1, 2, 3, 4, 5},
-				[]float32{0, 0.6923077, 1.575, 1.575, 3.198347},
+				[]dtype{0, 0.6923077, 1.575, 1.575, 3.198347},
 			),
 		},
 	}

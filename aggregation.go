@@ -1,19 +1,19 @@
 package series
 
 import (
-	"github.com/WinPooh32/math"
+	"github.com/WinPooh32/series/math"
 )
 
 // AggregateFunc is applied aggregation function.
-type AggregateFunc func(data Data) float32
+type AggregateFunc func(data Data) dtype
 
 // Mean returns mean of data's values.
-func Mean(data Data) float32 {
+func Mean(data Data) dtype {
 	var (
 		count int
-		mean  float32
+		mean  dtype
 		items = data.Data()
-		inv   = 1.0 / float32(len(items))
+		inv   = 1.0 / dtype(len(items))
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -29,9 +29,9 @@ func Mean(data Data) float32 {
 }
 
 // Sum returns sum of data's values.
-func Sum(data Data) float32 {
+func Sum(data Data) dtype {
 	var (
-		sum   float32
+		sum   dtype
 		count int
 		items = data.Data()
 	)
@@ -49,9 +49,9 @@ func Sum(data Data) float32 {
 }
 
 // Min returns minimum value.
-func Min(data Data) float32 {
+func Min(data Data) dtype {
 	var (
-		min   float32 = math.MaxFloat32
+		min   dtype = maxReal
 		count int
 		items = data.Data()
 	)
@@ -71,9 +71,9 @@ func Min(data Data) float32 {
 }
 
 // Max returns maximum value.
-func Max(data Data) float32 {
+func Max(data Data) dtype {
 	var (
-		max   float32 = -math.MaxFloat32
+		max   dtype = -maxReal
 		count int
 		items = data.Data()
 	)
@@ -96,7 +96,7 @@ func Max(data Data) float32 {
 // If the minimum is achieved in multiple locations, the first row position is returned.
 func Argmin(data Data) int {
 	var (
-		min   float32 = math.MaxFloat32
+		min   dtype = maxReal
 		pos   int
 		items = data.Data()
 	)
@@ -116,9 +116,9 @@ func Argmin(data Data) int {
 // If the maximum is achieved in multiple locations, the first row position is returned.
 func Argmax(data Data) int {
 	var (
-		max   float32 = -math.MaxFloat32
-		pos   int     = -1
-		items         = data.Data()
+		max   dtype = -maxReal
+		pos   int   = -1
+		items       = data.Data()
 	)
 	for i, v := range items {
 		if math.IsNaN(v) {
@@ -134,12 +134,12 @@ func Argmax(data Data) int {
 
 // Std returns standard deviation.
 // Normalized by n-1.
-func Std(data Data, mean float32) float32 {
+func Std(data Data, mean dtype) dtype {
 	var (
 		count  int
 		items  = data.Data()
-		inv    = 1.0 / float32(len(items)-1)
-		stdDev float32
+		inv    = 1.0 / dtype(len(items)-1)
+		stdDev dtype
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -155,7 +155,7 @@ func Std(data Data, mean float32) float32 {
 	return math.Sqrt(stdDev)
 }
 
-func First(data Data) float32 {
+func First(data Data) dtype {
 	items := data.Data()
 	if len(items) == 0 {
 		return math.NaN()
@@ -163,7 +163,7 @@ func First(data Data) float32 {
 	return items[0]
 }
 
-func Last(data Data) float32 {
+func Last(data Data) dtype {
 	items := data.Data()
 	if len(items) == 0 {
 		return math.NaN()

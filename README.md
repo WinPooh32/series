@@ -5,4 +5,12 @@
 
 Liteweight library of series data processing functions written in pure ideomatic Go. Inspired by python library [Pandas](https://github.com/pandas-dev/pandas).
 
+For enabling **float32** use build tag `series_f32`, otherwise **float64** will be used as data type.
+
+Build command example:
+
+``` shell
+go build -tags series_f32
+```
+
 [Code Examples](https://github.com/WinPooh32/fta/blob/master/fta.go)

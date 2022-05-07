@@ -3,7 +3,7 @@ package series
 import (
 	"time"
 
-	"github.com/WinPooh32/math"
+	"github.com/WinPooh32/series/math"
 )
 
 // ResampleOrigin is the timestamp (milliseconds) on which to adjust the grouping.
@@ -75,21 +75,21 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		data = res.data
 
 		// bucket is samples count of resampling group.
-		bucket       = int(math.Ceil(float32(res.freq) / float32(res.data.freq)))
-		bucketsTotal = int(math.Ceil(float32(res.data.Len()) / float32(bucket)))
+		bucket       = int(math.Ceil(dtype(res.freq) / dtype(res.data.freq)))
+		bucketsTotal = int(math.Ceil(dtype(res.data.Len()) / dtype(bucket)))
 
 		srcIndex = data.Index()
 
-		aggValue = make([]float32, 0, bucketsTotal)
+		aggValue = make([]dtype, 0, bucketsTotal)
 		aggIndex = make([]int64, 0, bucketsTotal)
 
 		startPointTS = srcIndex[0]
 		endPointTS   = res.adjust(startPointTS)
-		endPoint     = int(math.Ceil(float32(endPointTS) / float32(res.data.freq)))
+		endPoint     = int(math.Ceil(dtype(endPointTS) / dtype(res.data.freq)))
 	)
 
 	var (
-		value float32
+		value dtype
 		beg   = 0
 		end   = endPoint
 		idx   = srcIndex[end-1]

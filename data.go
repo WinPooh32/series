@@ -1,22 +1,21 @@
 package series
 
 import (
-	stdmath "math"
 	"sort"
 
-	"github.com/WinPooh32/math"
+	"github.com/WinPooh32/series/math"
 )
 
 // Data is the series data container.
 type Data struct {
 	freq  int64
 	index []int64
-	data  []float32
+	data  []dtype
 }
 
 // MakeData makes series data instance.
 // freq is the size of data sample.
-func MakeData(freq int64, index []int64, data []float32) Data {
+func MakeData(freq int64, index []int64, data []dtype) Data {
 	if len(index) != len(data) {
 		panic("length of index and data must be equal")
 	}
@@ -57,7 +56,7 @@ func (d Data) ArgAt(i int) int64 {
 }
 
 // At returns data value at i offset.
-func (d Data) At(i int) float32 {
+func (d Data) At(i int) dtype {
 	return d.data[i]
 }
 
@@ -86,7 +85,7 @@ func (d Data) Index() (index []int64) {
 	return d.index
 }
 
-// IndexAsFloat32 returns copy of underlying index slice converted to float32 array.
+// IndexAsreal returns copy of underlying index slice converted to real array.
 func (d Data) IndexAsFloat32() (index []float32) {
 	index = make([]float32, len(d.index))
 	for i, v := range d.index {
@@ -104,7 +103,7 @@ func (d Data) IndexAsFloat64() (index []float64) {
 	return index
 }
 
-func (d Data) Data() (data []float32) {
+func (d Data) Data() (data []dtype) {
 	return d.data
 }
 
@@ -150,7 +149,7 @@ func (d Data) Clone() Data {
 	clone := Data{
 		freq:  d.freq,
 		index: append([]int64(nil), d.index...),
-		data:  append([]float32(nil), d.data...),
+		data:  append([]dtype(nil), d.data...),
 	}
 	return clone
 }
@@ -219,7 +218,7 @@ func (d Data) Div(r Data) Data {
 	return d
 }
 
-func (d Data) AddScalar(s float32) Data {
+func (d Data) AddScalar(s dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] += s
@@ -227,7 +226,7 @@ func (d Data) AddScalar(s float32) Data {
 	return d
 }
 
-func (d Data) SubScalar(s float32) Data {
+func (d Data) SubScalar(s dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] -= s
@@ -235,7 +234,7 @@ func (d Data) SubScalar(s float32) Data {
 	return d
 }
 
-func (d Data) MulScalar(s float32) Data {
+func (d Data) MulScalar(s dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] *= s
@@ -243,7 +242,7 @@ func (d Data) MulScalar(s float32) Data {
 	return d
 }
 
-func (d Data) DivScalar(s float32) Data {
+func (d Data) DivScalar(s dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] /= s
@@ -291,7 +290,7 @@ func (d Data) Trunc() Data {
 func (d Data) Round() Data {
 	sl := d.data
 	for i, v := range sl {
-		sl[i] = float32(stdmath.Round(float64(v)))
+		sl[i] = dtype(math.Round(v))
 	}
 	return d
 }
@@ -300,7 +299,7 @@ func (d Data) Round() Data {
 func (d Data) RoundToEven() Data {
 	sl := d.data
 	for i, v := range sl {
-		sl[i] = float32(stdmath.RoundToEven(float64(v)))
+		sl[i] = dtype(math.RoundToEven(v))
 	}
 	return d
 }
@@ -314,7 +313,7 @@ func (d Data) Ceil() Data {
 }
 
 // Apply applies user's function to every value of data.
-func (d Data) Apply(fn func(float32) float32) Data {
+func (d Data) Apply(fn func(dtype) dtype) Data {
 	sl := d.data
 	for i, v := range sl {
 		sl[i] = fn(v)
@@ -331,7 +330,7 @@ func (d Data) Rolling(window int) Window {
 }
 
 // EWM provides exponential weighted calculations.
-func (d Data) EWM(atype AlphaType, param float32, adjust bool, ignoreNA bool) ExpWindow {
+func (d Data) EWM(atype AlphaType, param dtype, adjust bool, ignoreNA bool) ExpWindow {
 	return ExpWindow{
 		data:     d,
 		atype:    atype,
@@ -369,7 +368,7 @@ func (d Data) Resample(freq int64, origin ResampleOrigin) Resampler {
 }
 
 // Fill NaN values.
-func (d Data) Fillna(value float32, inplace bool) Data {
+func (d Data) Fillna(value dtype, inplace bool) Data {
 	var data Data
 	if inplace {
 		data = d

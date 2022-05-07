@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/WinPooh32/math"
+	"github.com/WinPooh32/series/math"
 )
 
 func TestData_Resample(t *testing.T) {
@@ -19,7 +19,7 @@ func TestData_Resample(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
 		freq   int64
@@ -33,21 +33,21 @@ func TestData_Resample(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
 				freq:   2,
 				origin: OriginStart,
 			},
-			MakeData(2, []int64{2, 4, 6}, []float32{3, 7, 11}),
+			MakeData(2, []int64{2, 4, 6}, []dtype{3, 7, 11}),
 		},
 		{
 			"odd length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []float32{1, 2, 3, 4, 5, 6, 7}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []dtype{1, 2, 3, 4, 5, 6, 7}},
 			args{
 				freq:   2,
 				origin: OriginStart,
 			},
-			MakeData(2, []int64{2, 4, 6, 8}, []float32{3, 7, 11, 7}),
+			MakeData(2, []int64{2, 4, 6, 8}, []dtype{3, 7, 11, 7}),
 		},
 		{
 			"even length minutes freq",
@@ -61,7 +61,7 @@ func TestData_Resample(t *testing.T) {
 					5 * minute,
 					6 * minute,
 				},
-				[]float32{1, 2, 3, 4, 5, 6},
+				[]dtype{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   2 * minute,
@@ -74,7 +74,7 @@ func TestData_Resample(t *testing.T) {
 					4 * minute,
 					6 * minute,
 				},
-				[]float32{3, 7, 11},
+				[]dtype{3, 7, 11},
 			),
 		},
 		{
@@ -90,7 +90,7 @@ func TestData_Resample(t *testing.T) {
 					6 * minute,
 					7 * minute,
 				},
-				[]float32{1, 2, 3, 4, 5, 6, 7},
+				[]dtype{1, 2, 3, 4, 5, 6, 7},
 			},
 			args{
 				freq:   2 * minute,
@@ -104,7 +104,7 @@ func TestData_Resample(t *testing.T) {
 					6 * minute,
 					8 * minute,
 				},
-				[]float32{3, 7, 11, 7},
+				[]dtype{3, 7, 11, 7},
 			),
 		},
 		{
@@ -119,7 +119,7 @@ func TestData_Resample(t *testing.T) {
 					5 * minute,
 					6 * minute,
 				},
-				[]float32{1, 2, 3, 4, 5, 6},
+				[]dtype{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   1*minute + 30*second,
@@ -132,7 +132,7 @@ func TestData_Resample(t *testing.T) {
 					210 * second,
 					300 * second,
 				},
-				[]float32{3, 7, 11},
+				[]dtype{3, 7, 11},
 			),
 		},
 		{
@@ -148,7 +148,7 @@ func TestData_Resample(t *testing.T) {
 					6 * minute,
 					7 * minute,
 				},
-				[]float32{1, 2, 3, 4, 5, 6, 7},
+				[]dtype{1, 2, 3, 4, 5, 6, 7},
 			},
 			args{
 				freq:   1*minute + 30*second,
@@ -162,7 +162,7 @@ func TestData_Resample(t *testing.T) {
 					300 * second,
 					390 * second,
 				},
-				[]float32{3, 7, 11, 7},
+				[]dtype{3, 7, 11, 7},
 			),
 		},
 		{
@@ -177,7 +177,7 @@ func TestData_Resample(t *testing.T) {
 					dayStart + 5*minute,
 					dayStart + 6*minute,
 				},
-				[]float32{1, 2, 3, 4, 5, 6},
+				[]dtype{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   2 * minute,
@@ -190,7 +190,7 @@ func TestData_Resample(t *testing.T) {
 					dayStart + 4*minute,
 					dayStart + 6*minute,
 				},
-				[]float32{3, 7, 11},
+				[]dtype{3, 7, 11},
 			),
 		},
 	}
@@ -212,7 +212,7 @@ func TestData_Rolling(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
 		window int
@@ -243,7 +243,7 @@ func TestData_Add(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
 		r Data
@@ -256,11 +256,11 @@ func TestData_Add(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{2, 4, 6, 8, 10, 12}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{2, 4, 6, 8, 10, 12}),
 		},
 	}
 	for _, tt := range tests {
@@ -281,7 +281,7 @@ func TestData_Sub(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
 		r Data
@@ -294,11 +294,11 @@ func TestData_Sub(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{0, 0, 0, 0, 0, 0}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{0, 0, 0, 0, 0, 0}),
 		},
 	}
 	for _, tt := range tests {
@@ -319,7 +319,7 @@ func TestData_Mul(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
 		r Data
@@ -332,11 +332,11 @@ func TestData_Mul(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 4, 9, 16, 25, 36}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 4, 9, 16, 25, 36}),
 		},
 	}
 	for _, tt := range tests {
@@ -357,7 +357,7 @@ func TestData_Div(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
 		r Data
@@ -370,11 +370,11 @@ func TestData_Div(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 1, 1, 1, 1, 1}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 1, 1, 1, 1, 1}),
 		},
 	}
 	for _, tt := range tests {
@@ -395,10 +395,10 @@ func TestData_AddScalar(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
-		s float32
+		s dtype
 	}
 	tests := []struct {
 		name   string
@@ -408,11 +408,11 @@ func TestData_AddScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
 				4,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{5, 6, 7, 8, 9, 10}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{5, 6, 7, 8, 9, 10}),
 		},
 	}
 	for _, tt := range tests {
@@ -433,10 +433,10 @@ func TestData_SubScalar(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
-		s float32
+		s dtype
 	}
 	tests := []struct {
 		name   string
@@ -446,11 +446,11 @@ func TestData_SubScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
 				4,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{-3, -2, -1, 0, 1, 2}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{-3, -2, -1, 0, 1, 2}),
 		},
 	}
 	for _, tt := range tests {
@@ -471,10 +471,10 @@ func TestData_MulScalar(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
-		s float32
+		s dtype
 	}
 	tests := []struct {
 		name   string
@@ -484,11 +484,11 @@ func TestData_MulScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 3, 4, 5, 6}},
 			args{
 				4,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{4, 8, 12, 16, 20, 24}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{4, 8, 12, 16, 20, 24}),
 		},
 	}
 	for _, tt := range tests {
@@ -509,10 +509,10 @@ func TestData_DivScalar(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
-		s float32
+		s dtype
 	}
 	tests := []struct {
 		name   string
@@ -522,11 +522,11 @@ func TestData_DivScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{2, 4, 8, 12, 14, 16}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []dtype{2, 4, 8, 12, 14, 16}},
 			args{
 				2,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 4, 6, 7, 8}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 2, 4, 6, 7, 8}),
 		},
 	}
 	for _, tt := range tests {
@@ -547,10 +547,10 @@ func TestData_Fillna(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	type args struct {
-		value   float32
+		value   dtype
 		inplace bool
 	}
 	tests := []struct {
@@ -564,13 +564,13 @@ func TestData_Fillna(t *testing.T) {
 			fields: fields{
 				freq:  1,
 				index: []int64{1, 2, 3, 4, 5},
-				data:  []float32{NaN, NaN, 5, 2, NaN},
+				data:  []dtype{NaN, NaN, 5, 2, NaN},
 			},
 			args: args{
 				value:   0,
 				inplace: false,
 			},
-			want: MakeData(1, []int64{1, 2, 3, 4, 5}, []float32{0, 0, 5, 2, 0}),
+			want: MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{0, 0, 5, 2, 0}),
 		},
 	}
 	for _, tt := range tests {
@@ -591,7 +591,7 @@ func TestData_Sort(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	tests := []struct {
 		name   string
@@ -603,9 +603,9 @@ func TestData_Sort(t *testing.T) {
 			fields: fields{
 				freq:  1,
 				index: []int64{1, 2, 3, 4, 5},
-				data:  []float32{NaN, NaN, 5, 2, NaN},
+				data:  []dtype{NaN, NaN, 5, 2, NaN},
 			},
-			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []float32{NaN, NaN, NaN, 2, 5}),
+			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []dtype{NaN, NaN, NaN, 2, 5}),
 		},
 	}
 	for _, tt := range tests {
@@ -635,7 +635,7 @@ func TestData_SortStable(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	tests := []struct {
 		name   string
@@ -647,9 +647,9 @@ func TestData_SortStable(t *testing.T) {
 			fields: fields{
 				freq:  1,
 				index: []int64{1, 2, 3, 4, 5},
-				data:  []float32{NaN, NaN, 5, 2, NaN},
+				data:  []dtype{NaN, NaN, 5, 2, NaN},
 			},
-			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []float32{NaN, NaN, NaN, 2, 5}),
+			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []dtype{NaN, NaN, NaN, 2, 5}),
 		},
 	}
 	for _, tt := range tests {
@@ -679,7 +679,7 @@ func TestData_ArgSort(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	tests := []struct {
 		name   string
@@ -691,12 +691,12 @@ func TestData_ArgSort(t *testing.T) {
 			fields: fields{
 				freq:  1,
 				index: []int64{4, 1, 3, 2, 5},
-				data:  []float32{2, NaN, 5, NaN, NaN},
+				data:  []dtype{2, NaN, 5, NaN, NaN},
 			},
 			want: MakeData(
 				1,
 				[]int64{1, 2, 3, 4, 5},
-				[]float32{NaN, NaN, 5, 2, NaN}),
+				[]dtype{NaN, NaN, 5, 2, NaN}),
 		},
 	}
 	for _, tt := range tests {
@@ -736,7 +736,7 @@ func TestData_ArgSortStable(t *testing.T) {
 	type fields struct {
 		freq  int64
 		index []int64
-		data  []float32
+		data  []dtype
 	}
 	tests := []struct {
 		name   string
@@ -748,12 +748,12 @@ func TestData_ArgSortStable(t *testing.T) {
 			fields: fields{
 				freq:  1,
 				index: []int64{4, 1, 3, 2, 5},
-				data:  []float32{2, NaN, 5, NaN, NaN},
+				data:  []dtype{2, NaN, 5, NaN, NaN},
 			},
 			want: MakeData(
 				1,
 				[]int64{1, 2, 3, 4, 5},
-				[]float32{NaN, NaN, 5, 2, NaN}),
+				[]dtype{NaN, NaN, 5, 2, NaN}),
 		},
 	}
 	for _, tt := range tests {

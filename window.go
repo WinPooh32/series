@@ -1,6 +1,6 @@
 package series
 
-import "github.com/WinPooh32/math"
+import "github.com/WinPooh32/series/math"
 
 type Window struct {
 	len  int
