@@ -29,40 +29,40 @@ type Resampler struct {
 
 // Sum applies sum function to sample group.
 func (res Resampler) Sum() Data {
-	return res.resample(Sum)
+	return res.downsample(Sum)
 }
 
 // Mean applies mean function to sample group.
 func (res Resampler) Mean() Data {
-	return res.resample(Mean)
+	return res.downsample(Mean)
 }
 
 // Min applies min function to sample group.
 func (res Resampler) Min() Data {
-	return res.resample(Min)
+	return res.downsample(Min)
 }
 
 // Max applies max function to sample group.
 func (res Resampler) Max() Data {
-	return res.resample(Max)
+	return res.downsample(Max)
 }
 
 // First applies first function to sample group.
 func (res Resampler) First() Data {
-	return res.resample(First)
+	return res.downsample(First)
 }
 
 // Last applies last function to sample group.
 func (res Resampler) Last() Data {
-	return res.resample(Last)
+	return res.downsample(Last)
 }
 
 // Apply applies custom function to sample group.
 func (res Resampler) Apply(agg AggregateFunc) Data {
-	return res.resample(agg)
+	return res.downsample(agg)
 }
 
-func (res Resampler) resample(agg AggregateFunc) Data {
+func (res Resampler) downsample(agg AggregateFunc) Data {
 	if agg == nil {
 		panic("aggregation func must not be null!")
 	}
