@@ -78,13 +78,13 @@ func (d Data) Len() int {
 
 // SampleSize returns length of one sample.
 func (d Data) SampleSize() int64 {
-	return d.samplesize
+	return d.freq
 }
 
 // Slices makes slice of data.
 func (d Data) Slice(l, r int) Data {
 	return Data{
-		d.samplesize,
+		d.freq,
 		d.index[l:r],
 		d.data[l:r],
 	}
@@ -93,9 +93,9 @@ func (d Data) Slice(l, r int) Data {
 // Clone makes full copy of data.
 func (d Data) Clone() Data {
 	clone := Data{
-		samplesize: d.samplesize,
-		index:      append([]int64(nil), d.index...),
-		data:       append([]float32(nil), d.data...),
+		freq:  d.freq,
+		index: append([]int64(nil), d.index...),
+		data:  append([]float32(nil), d.data...),
 	}
 	return clone
 }
@@ -297,15 +297,20 @@ func (d Data) RollData(window int, cb func(l int, r int)) {
 	}
 }
 
-func (d Data) Resample(samplesize int64) Data {
-	switch {
-	case samplesize == d.samplesize:
-	case samplesize < d.samplesize:
-		d = d.resampleLess(d, samplesize)
-	default:
-		d = d.resampleMore(d, samplesize)
+func (d Data) Resample(freq int64, origin ResampleOrigin) Resampler {
+	if freq <= 0 {
+		panic("resampling frequency must be greater than zero")
 	}
-	return d
+	switch origin {
+	case OriginEpoch, OriginStart, OriginStartDay:
+	default:
+		panic("unknown resampling origin type")
+	}
+	return Resampler{
+		data:   d,
+		freq:   freq,
+		origin: origin,
+	}
 }
 
 // Fill NaN values.
@@ -323,46 +328,4 @@ func (d Data) Fillna(value float32, inplace bool) Data {
 		}
 	}
 	return data
-}
-
-func (d Data) resampleLess(data Data, samplesize int64) Data {
-	// TODO
-	panic("not implemented!")
-}
-
-func (d Data) resampleMore(data Data, samplesize int64) Data {
-	index := data.index
-	resIndex := data.Index()[:0]
-	resData := data.Data()[:0]
-
-	for i := 0; i < len(index); {
-		beg, end := i, d.nextSample(index, i, samplesize)
-
-		resIndex = append(resIndex, index[end-1])
-		resData = append(resData, Mean(data.Slice(beg, end)))
-
-		i = end
-	}
-
-	return MakeData(samplesize, resIndex, resData)
-}
-
-func (d Data) nextSample(index []int64, i int, samplesize int64) (end int) {
-	size := len(index)
-	border := index[i] + samplesize
-
-	for i < size && index[i] < border {
-		i++
-		end = i
-	}
-
-	return end
-}
-
-// MakeData makes series data instance.
-func MakeData(samplesize int64, index []int64, data []float32) Data {
-	if len(index) != len(data) {
-		panic("size of index and data must be equal")
-	}
-	return Data{samplesize, index, data}
 }

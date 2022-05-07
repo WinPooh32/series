@@ -42,7 +42,7 @@ func (w Window) Shift() Data {
 	}
 }
 
-func (w Window) Apply(f func(Data) float32) Data {
+func (w Window) Apply(agg AggregateFunc) Data {
 	var (
 		clone  = w.data.Clone()
 		data   = clone.Data()
@@ -55,7 +55,7 @@ func (w Window) Apply(f func(Data) float32) Data {
 
 	w.data.RollData(period, func(l int, r int) {
 		slice := w.data.Slice(l, r)
-		data[r-1] = f(slice)
+		data[r-1] = agg(slice)
 	})
 
 	return clone

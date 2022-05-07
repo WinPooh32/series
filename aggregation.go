@@ -4,6 +4,9 @@ import (
 	"github.com/WinPooh32/math"
 )
 
+// AggregateFunc is applied aggregation function.
+type AggregateFunc func(data Data) float32
+
 // Mean returns mean of data's values.
 func Mean(data Data) float32 {
 	var (
@@ -150,4 +153,20 @@ func Std(data Data, mean float32) float32 {
 		return math.NaN()
 	}
 	return math.Sqrt(stdDev)
+}
+
+func First(data Data) float32 {
+	items := data.Data()
+	if len(items) == 0 {
+		return math.NaN()
+	}
+	return items[0]
+}
+
+func Last(data Data) float32 {
+	items := data.Data()
+	if len(items) == 0 {
+		return math.NaN()
+	}
+	return items[len(items)-1]
 }
