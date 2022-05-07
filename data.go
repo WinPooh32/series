@@ -10,12 +10,12 @@ import (
 type Data struct {
 	freq  int64
 	index []int64
-	data  []dtype
+	data  []Dtype
 }
 
 // MakeData makes series data instance.
 // freq is the size of data sample.
-func MakeData(freq int64, index []int64, data []dtype) Data {
+func MakeData(freq int64, index []int64, data []Dtype) Data {
 	if len(index) != len(data) {
 		panic("length of index and data must be equal")
 	}
@@ -56,7 +56,7 @@ func (d Data) ArgAt(i int) int64 {
 }
 
 // At returns data value at i offset.
-func (d Data) At(i int) dtype {
+func (d Data) At(i int) Dtype {
 	return d.data[i]
 }
 
@@ -103,7 +103,7 @@ func (d Data) IndexAsFloat64() (index []float64) {
 	return index
 }
 
-func (d Data) Data() (data []dtype) {
+func (d Data) Data() (data []Dtype) {
 	return d.data
 }
 
@@ -149,7 +149,7 @@ func (d Data) Clone() Data {
 	clone := Data{
 		freq:  d.freq,
 		index: append([]int64(nil), d.index...),
-		data:  append([]dtype(nil), d.data...),
+		data:  append([]Dtype(nil), d.data...),
 	}
 	return clone
 }
@@ -218,7 +218,7 @@ func (d Data) Div(r Data) Data {
 	return d
 }
 
-func (d Data) AddScalar(s dtype) Data {
+func (d Data) AddScalar(s Dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] += s
@@ -226,7 +226,7 @@ func (d Data) AddScalar(s dtype) Data {
 	return d
 }
 
-func (d Data) SubScalar(s dtype) Data {
+func (d Data) SubScalar(s Dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] -= s
@@ -234,7 +234,7 @@ func (d Data) SubScalar(s dtype) Data {
 	return d
 }
 
-func (d Data) MulScalar(s dtype) Data {
+func (d Data) MulScalar(s Dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] *= s
@@ -242,7 +242,7 @@ func (d Data) MulScalar(s dtype) Data {
 	return d
 }
 
-func (d Data) DivScalar(s dtype) Data {
+func (d Data) DivScalar(s Dtype) Data {
 	sl := d.data
 	for i := range sl {
 		sl[i] /= s
@@ -290,7 +290,7 @@ func (d Data) Trunc() Data {
 func (d Data) Round() Data {
 	sl := d.data
 	for i, v := range sl {
-		sl[i] = dtype(math.Round(v))
+		sl[i] = Dtype(math.Round(v))
 	}
 	return d
 }
@@ -299,7 +299,7 @@ func (d Data) Round() Data {
 func (d Data) RoundToEven() Data {
 	sl := d.data
 	for i, v := range sl {
-		sl[i] = dtype(math.RoundToEven(v))
+		sl[i] = Dtype(math.RoundToEven(v))
 	}
 	return d
 }
@@ -313,7 +313,7 @@ func (d Data) Ceil() Data {
 }
 
 // Apply applies user's function to every value of data.
-func (d Data) Apply(fn func(dtype) dtype) Data {
+func (d Data) Apply(fn func(Dtype) Dtype) Data {
 	sl := d.data
 	for i, v := range sl {
 		sl[i] = fn(v)
@@ -330,7 +330,7 @@ func (d Data) Rolling(window int) Window {
 }
 
 // EWM provides exponential weighted calculations.
-func (d Data) EWM(atype AlphaType, param dtype, adjust bool, ignoreNA bool) ExpWindow {
+func (d Data) EWM(atype AlphaType, param Dtype, adjust bool, ignoreNA bool) ExpWindow {
 	return ExpWindow{
 		data:     d,
 		atype:    atype,
@@ -368,7 +368,7 @@ func (d Data) Resample(freq int64, origin ResampleOrigin) Resampler {
 }
 
 // Fill NaN values.
-func (d Data) Fillna(value dtype, inplace bool) Data {
+func (d Data) Fillna(value Dtype, inplace bool) Data {
 	var data Data
 	if inplace {
 		data = d

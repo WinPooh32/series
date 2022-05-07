@@ -75,21 +75,21 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		data = res.data
 
 		// bucket is samples count of resampling group.
-		bucket       = int(math.Ceil(dtype(res.freq) / dtype(res.data.freq)))
-		bucketsTotal = int(math.Ceil(dtype(res.data.Len()) / dtype(bucket)))
+		bucket       = int(math.Ceil(Dtype(res.freq) / Dtype(res.data.freq)))
+		bucketsTotal = int(math.Ceil(Dtype(res.data.Len()) / Dtype(bucket)))
 
 		srcIndex = data.Index()
 
-		aggValue = make([]dtype, 0, bucketsTotal)
+		aggValue = make([]Dtype, 0, bucketsTotal)
 		aggIndex = make([]int64, 0, bucketsTotal)
 
 		startPointTS = srcIndex[0]
 		endPointTS   = res.adjust(startPointTS)
-		endPoint     = int(math.Ceil(dtype(endPointTS) / dtype(res.data.freq)))
+		endPoint     = int(math.Ceil(Dtype(endPointTS) / Dtype(res.data.freq)))
 	)
 
 	var (
-		value dtype
+		value Dtype
 		beg   = 0
 		end   = endPoint
 		idx   = srcIndex[end-1]

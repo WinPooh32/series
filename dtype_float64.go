@@ -6,6 +6,6 @@ import (
 	"github.com/WinPooh32/series/math"
 )
 
-type dtype = float64
+type Dtype = float64
 
 const maxReal = math.MaxFloat64

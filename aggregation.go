@@ -5,15 +5,15 @@ import (
 )
 
 // AggregateFunc is applied aggregation function.
-type AggregateFunc func(data Data) dtype
+type AggregateFunc func(data Data) Dtype
 
 // Mean returns mean of data's values.
-func Mean(data Data) dtype {
+func Mean(data Data) Dtype {
 	var (
 		count int
-		mean  dtype
+		mean  Dtype
 		items = data.Data()
-		inv   = 1.0 / dtype(len(items))
+		inv   = 1.0 / Dtype(len(items))
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -29,9 +29,9 @@ func Mean(data Data) dtype {
 }
 
 // Sum returns sum of data's values.
-func Sum(data Data) dtype {
+func Sum(data Data) Dtype {
 	var (
-		sum   dtype
+		sum   Dtype
 		count int
 		items = data.Data()
 	)
@@ -49,9 +49,9 @@ func Sum(data Data) dtype {
 }
 
 // Min returns minimum value.
-func Min(data Data) dtype {
+func Min(data Data) Dtype {
 	var (
-		min   dtype = maxReal
+		min   Dtype = maxReal
 		count int
 		items = data.Data()
 	)
@@ -71,9 +71,9 @@ func Min(data Data) dtype {
 }
 
 // Max returns maximum value.
-func Max(data Data) dtype {
+func Max(data Data) Dtype {
 	var (
-		max   dtype = -maxReal
+		max   Dtype = -maxReal
 		count int
 		items = data.Data()
 	)
@@ -96,7 +96,7 @@ func Max(data Data) dtype {
 // If the minimum is achieved in multiple locations, the first row position is returned.
 func Argmin(data Data) int {
 	var (
-		min   dtype = maxReal
+		min   Dtype = maxReal
 		pos   int
 		items = data.Data()
 	)
@@ -116,7 +116,7 @@ func Argmin(data Data) int {
 // If the maximum is achieved in multiple locations, the first row position is returned.
 func Argmax(data Data) int {
 	var (
-		max   dtype = -maxReal
+		max   Dtype = -maxReal
 		pos   int   = -1
 		items       = data.Data()
 	)
@@ -134,12 +134,12 @@ func Argmax(data Data) int {
 
 // Std returns standard deviation.
 // Normalized by n-1.
-func Std(data Data, mean dtype) dtype {
+func Std(data Data, mean Dtype) Dtype {
 	var (
 		count  int
 		items  = data.Data()
-		inv    = 1.0 / dtype(len(items)-1)
-		stdDev dtype
+		inv    = 1.0 / Dtype(len(items)-1)
+		stdDev Dtype
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -155,7 +155,7 @@ func Std(data Data, mean dtype) dtype {
 	return math.Sqrt(stdDev)
 }
 
-func First(data Data) dtype {
+func First(data Data) Dtype {
 	items := data.Data()
 	if len(items) == 0 {
 		return math.NaN()
@@ -163,7 +163,7 @@ func First(data Data) dtype {
 	return items[0]
 }
 
-func Last(data Data) dtype {
+func Last(data Data) Dtype {
 	items := data.Data()
 	if len(items) == 0 {
 		return math.NaN()

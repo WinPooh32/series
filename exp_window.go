@@ -18,13 +18,13 @@ const (
 type ExpWindow struct {
 	data     Data
 	atype    AlphaType
-	param    dtype
+	param    Dtype
 	adjust   bool
 	ignoreNA bool
 }
 
 func (w ExpWindow) Mean() Data {
-	var alpha dtype
+	var alpha Dtype
 
 	switch w.atype {
 	case Alpha:
@@ -55,7 +55,7 @@ func (w ExpWindow) Mean() Data {
 	return w.applyMean(w.data.Clone(), alpha)
 }
 
-func (w ExpWindow) applyMean(data Data, alpha dtype) Data {
+func (w ExpWindow) applyMean(data Data, alpha Dtype) Data {
 	if w.adjust {
 		w.adjustedMean(data, alpha, w.ignoreNA)
 	} else {
@@ -64,11 +64,11 @@ func (w ExpWindow) applyMean(data Data, alpha dtype) Data {
 	return data
 }
 
-func (ExpWindow) adjustedMean(data Data, alpha dtype, ignoreNA bool) {
+func (ExpWindow) adjustedMean(data Data, alpha Dtype, ignoreNA bool) {
 	var (
-		items  []dtype = data.Data()
-		weight dtype   = 1
-		last   dtype   = 0
+		items  []Dtype = data.Data()
+		weight Dtype   = 1
+		last   Dtype   = 0
 	)
 
 	alpha = 1 - alpha
@@ -92,12 +92,12 @@ func (ExpWindow) adjustedMean(data Data, alpha dtype, ignoreNA bool) {
 	}
 }
 
-func (ExpWindow) notadjustedMean(data Data, alpha dtype, ignoreNA bool) {
+func (ExpWindow) notadjustedMean(data Data, alpha Dtype, ignoreNA bool) {
 	var (
 		count int
-		items []dtype = data.Data()
-		beta  dtype   = 1 - alpha
-		last  dtype   = items[0]
+		items []Dtype = data.Data()
+		beta  Dtype   = 1 - alpha
+		last  Dtype   = items[0]
 	)
 	if math.IsNaN(last) {
 		last = 0

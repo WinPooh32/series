@@ -23,9 +23,9 @@ func TestWindow_Sum(t *testing.T) {
 			"odd length",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{1, 2, 3, 4, 5}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{1, 2, 3, 4, 5}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{NaN, NaN, 6, 9, 12}),
+			MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{NaN, NaN, 6, 9, 12}),
 		},
 	}
 	for _, tt := range tests {
@@ -58,9 +58,9 @@ func TestWindow_Mean(t *testing.T) {
 			"odd length",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{1, 2, 3, 4, 5}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{1, 2, 3, 4, 5}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{NaN, NaN, 2, 3, 4}),
+			MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{NaN, NaN, 2, 3, 4}),
 		},
 	}
 	for _, tt := range tests {
@@ -93,9 +93,9 @@ func TestWindow_applyDiff(t *testing.T) {
 			"odd length",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 1, 2, 3, 5, 8}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{NaN, NaN, NaN, 2, 4, 6}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, NaN, NaN, 2, 4, 6}),
 		},
 	}
 	for _, tt := range tests {
@@ -128,9 +128,9 @@ func TestWindow_applyShift(t *testing.T) {
 			"odd length",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{1, 1, 2, 3, 5, 8}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []dtype{NaN, NaN, NaN, 1, 1, 2}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, NaN, NaN, 1, 1, 2}),
 		},
 	}
 	for _, tt := range tests {
@@ -163,9 +163,9 @@ func TestWindow_Min(t *testing.T) {
 			"odd length",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{4, 3, 5, 2, 6}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{4, 3, 5, 2, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{NaN, NaN, 3, 2, 2}),
+			MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{NaN, NaN, 3, 2, 2}),
 		},
 	}
 	for _, tt := range tests {
@@ -198,9 +198,9 @@ func TestWindow_Max(t *testing.T) {
 			"odd length",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{4, 3, 5, 2, 6}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{4, 3, 5, 2, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5}, []dtype{NaN, NaN, 5, 5, 6}),
+			MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{NaN, NaN, 5, 5, 6}),
 		},
 	}
 	for _, tt := range tests {
@@ -233,9 +233,9 @@ func TestWindow_Std(t *testing.T) {
 			"period = 3",
 			fields{
 				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []dtype{5, 5, 6, 7, 5, 5, 5}),
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{5, 5, 6, 7, 5, 5, 5}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []dtype{NaN, NaN, 0.57735026, 1, 1, 1.1547005, 0}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{NaN, NaN, 0.57735026, 1, 1, 1.1547005, 0}),
 		},
 	}
 	for _, tt := range tests {
