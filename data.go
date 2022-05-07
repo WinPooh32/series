@@ -76,12 +76,12 @@ func (d Data) Len() int {
 	return len(d.index)
 }
 
-// SampleSize returns length of one sample.
-func (d Data) SampleSize() int64 {
+// Freq returns period length of one sample.
+func (d Data) Freq() int64 {
 	return d.freq
 }
 
-// Slices makes slice of data.
+// Slice makes slice of data.
 func (d Data) Slice(l, r int) Data {
 	return Data{
 		d.freq,

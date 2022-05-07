@@ -15,13 +15,13 @@ func TestData_Resample(t *testing.T) {
 	dayStart := time.Date(2022, 5, 7, 0, 0, 0, 0, time.UTC).UnixMilli()
 
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
-		samplesize int64
-		origin     ResampleOrigin
+		freq   int64
+		origin ResampleOrigin
 	}
 	tests := []struct {
 		name   string
@@ -33,8 +33,8 @@ func TestData_Resample(t *testing.T) {
 			"even length",
 			fields{1, []int64{1, 2, 3, 4, 5, 6}, []float32{1, 2, 3, 4, 5, 6}},
 			args{
-				samplesize: 2,
-				origin:     OriginStart,
+				freq:   2,
+				origin: OriginStart,
 			},
 			MakeData(2, []int64{2, 4, 6}, []float32{3, 7, 11}),
 		},
@@ -42,8 +42,8 @@ func TestData_Resample(t *testing.T) {
 			"odd length",
 			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []float32{1, 2, 3, 4, 5, 6, 7}},
 			args{
-				samplesize: 2,
-				origin:     OriginStart,
+				freq:   2,
+				origin: OriginStart,
 			},
 			MakeData(2, []int64{2, 4, 6, 8}, []float32{3, 7, 11, 7}),
 		},
@@ -62,8 +62,8 @@ func TestData_Resample(t *testing.T) {
 				[]float32{1, 2, 3, 4, 5, 6},
 			},
 			args{
-				samplesize: 2 * minute,
-				origin:     OriginStart,
+				freq:   2 * minute,
+				origin: OriginStart,
 			},
 			MakeData(
 				2*minute,
@@ -91,8 +91,8 @@ func TestData_Resample(t *testing.T) {
 				[]float32{1, 2, 3, 4, 5, 6, 7},
 			},
 			args{
-				samplesize: 2 * minute,
-				origin:     OriginStart,
+				freq:   2 * minute,
+				origin: OriginStart,
 			},
 			MakeData(
 				2*minute,
@@ -120,8 +120,8 @@ func TestData_Resample(t *testing.T) {
 				[]float32{1, 2, 3, 4, 5, 6},
 			},
 			args{
-				samplesize: 1*minute + 30*second,
-				origin:     OriginStart,
+				freq:   1*minute + 30*second,
+				origin: OriginStart,
 			},
 			MakeData(
 				1*minute+30*second,
@@ -149,8 +149,8 @@ func TestData_Resample(t *testing.T) {
 				[]float32{1, 2, 3, 4, 5, 6, 7},
 			},
 			args{
-				samplesize: 1*minute + 30*second,
-				origin:     OriginStart,
+				freq:   1*minute + 30*second,
+				origin: OriginStart,
 			},
 			MakeData(
 				1*minute+30*second,
@@ -178,8 +178,8 @@ func TestData_Resample(t *testing.T) {
 				[]float32{1, 2, 3, 4, 5, 6},
 			},
 			args{
-				samplesize: 2 * minute,
-				origin:     OriginEpoch,
+				freq:   2 * minute,
+				origin: OriginEpoch,
 			},
 			MakeData(
 				2*minute,
@@ -195,11 +195,11 @@ func TestData_Resample(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Resample(tt.args.samplesize, OriginStart).Sum(); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
 			}
 		})
@@ -208,9 +208,9 @@ func TestData_Resample(t *testing.T) {
 
 func TestData_Rolling(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		window int
@@ -226,7 +226,7 @@ func TestData_Rolling(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -239,9 +239,9 @@ func TestData_Rolling(t *testing.T) {
 
 func TestData_Add(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		r Data
@@ -264,7 +264,7 @@ func TestData_Add(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -277,9 +277,9 @@ func TestData_Add(t *testing.T) {
 
 func TestData_Sub(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		r Data
@@ -302,7 +302,7 @@ func TestData_Sub(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -315,9 +315,9 @@ func TestData_Sub(t *testing.T) {
 
 func TestData_Mul(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		r Data
@@ -340,7 +340,7 @@ func TestData_Mul(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -353,9 +353,9 @@ func TestData_Mul(t *testing.T) {
 
 func TestData_Div(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		r Data
@@ -378,7 +378,7 @@ func TestData_Div(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -391,9 +391,9 @@ func TestData_Div(t *testing.T) {
 
 func TestData_AddScalar(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		s float32
@@ -416,7 +416,7 @@ func TestData_AddScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -429,9 +429,9 @@ func TestData_AddScalar(t *testing.T) {
 
 func TestData_SubScalar(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		s float32
@@ -454,7 +454,7 @@ func TestData_SubScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -467,9 +467,9 @@ func TestData_SubScalar(t *testing.T) {
 
 func TestData_MulScalar(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		s float32
@@ -492,7 +492,7 @@ func TestData_MulScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -505,9 +505,9 @@ func TestData_MulScalar(t *testing.T) {
 
 func TestData_DivScalar(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		s float32
@@ -530,7 +530,7 @@ func TestData_DivScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
@@ -543,9 +543,9 @@ func TestData_DivScalar(t *testing.T) {
 
 func TestData_Fillna(t *testing.T) {
 	type fields struct {
-		samplesize int64
-		index      []int64
-		data       []float32
+		freq  int64
+		index []int64
+		data  []float32
 	}
 	type args struct {
 		value   float32
@@ -560,9 +560,9 @@ func TestData_Fillna(t *testing.T) {
 		{
 			name: "simple fillna",
 			fields: fields{
-				samplesize: 1,
-				index:      []int64{1, 2, 3, 4, 5},
-				data:       []float32{NaN, NaN, 5, 2, NaN},
+				freq:  1,
+				index: []int64{1, 2, 3, 4, 5},
+				data:  []float32{NaN, NaN, 5, 2, NaN},
 			},
 			args: args{
 				value:   0,
@@ -574,7 +574,7 @@ func TestData_Fillna(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.samplesize,
+				freq:  tt.fields.freq,
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
