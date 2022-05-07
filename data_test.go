@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/WinPooh32/math"
 )
 
 func TestData_Resample(t *testing.T) {
@@ -580,6 +582,208 @@ func TestData_Fillna(t *testing.T) {
 			}
 			if got := d.Fillna(tt.args.value, tt.args.inplace); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Data.Fillna() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestData_Sort(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []float32
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			name: "simple Sort",
+			fields: fields{
+				freq:  1,
+				index: []int64{1, 2, 3, 4, 5},
+				data:  []float32{NaN, NaN, 5, 2, NaN},
+			},
+			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []float32{NaN, NaN, NaN, 2, 5}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+
+			d.Sort()
+
+			if len(d.data) != len(tt.want.data) {
+				t.Fatalf("Data.Sort() = %v, want %v", d.data, tt.want.data)
+			}
+
+			for i, v := range tt.want.data {
+				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
+					t.Fatalf("Data.Sort() = %v, want %v", d.data, tt.want.data)
+				}
+			}
+		})
+	}
+}
+
+func TestData_SortStable(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []float32
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			name: "simple SortStable",
+			fields: fields{
+				freq:  1,
+				index: []int64{1, 2, 3, 4, 5},
+				data:  []float32{NaN, NaN, 5, 2, NaN},
+			},
+			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []float32{NaN, NaN, NaN, 2, 5}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+
+			d.SortStable()
+
+			if len(d.data) != len(tt.want.data) {
+				t.Fatalf("Data.SortStable() = %v, want %v", d.data, tt.want.data)
+			}
+
+			for i, v := range tt.want.data {
+				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
+					t.Fatalf("Data.SortStable() = %v, want %v", d.data, tt.want.data)
+				}
+			}
+		})
+	}
+}
+
+func TestData_ArgSort(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []float32
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			name: "simple ArgSort",
+			fields: fields{
+				freq:  1,
+				index: []int64{4, 1, 3, 2, 5},
+				data:  []float32{2, NaN, 5, NaN, NaN},
+			},
+			want: MakeData(
+				1,
+				[]int64{1, 2, 3, 4, 5},
+				[]float32{NaN, NaN, 5, 2, NaN}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+
+			d.ArgSort()
+
+			if len(d.data) != len(tt.want.index) {
+				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.index)
+			}
+
+			for i, v := range tt.want.index {
+				if v != d.index[i] {
+					t.Fatalf("Data.ArgSort() = %v, want %v", d.index, tt.want.index)
+				}
+			}
+
+			if len(d.data) != len(tt.want.data) {
+				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+			}
+
+			for i, v := range tt.want.data {
+				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
+					t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+				}
+			}
+		})
+	}
+}
+
+func TestData_ArgSortStable(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []float32
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			name: "simple ArgSortStable",
+			fields: fields{
+				freq:  1,
+				index: []int64{4, 1, 3, 2, 5},
+				data:  []float32{2, NaN, 5, NaN, NaN},
+			},
+			want: MakeData(
+				1,
+				[]int64{1, 2, 3, 4, 5},
+				[]float32{NaN, NaN, 5, 2, NaN}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+
+			d.ArgSortStable()
+
+			if len(d.data) != len(tt.want.index) {
+				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.index)
+			}
+
+			for i, v := range tt.want.index {
+				if v != d.index[i] {
+					t.Fatalf("Data.ArgSort() = %v, want %v", d.index, tt.want.index)
+				}
+			}
+
+			if len(d.data) != len(tt.want.data) {
+				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+			}
+
+			for i, v := range tt.want.data {
+				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
+					t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+				}
 			}
 		})
 	}
