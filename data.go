@@ -107,11 +107,29 @@ func (d Data) Data() (data []Dtype) {
 	return d.data
 }
 
-// DataAsInt64 returns copy of underlying data slice converted to int64 array.
+// DataAsInt32 returns copy of underlying data slice converted to int32 array.
+func (d Data) DataAsInt32() (data []int32) {
+	data = make([]int32, len(d.data))
+	for i, v := range d.data {
+		data[i] = int32(v)
+	}
+	return data
+}
+
+// DataAsInt64 returns copy of underlying data slice converted to float32 array.
 func (d Data) DataAsInt64() (data []int64) {
 	data = make([]int64, len(d.data))
 	for i, v := range d.data {
 		data[i] = int64(v)
+	}
+	return data
+}
+
+// DataAsFloat32 returns copy of underlying data slice converted to float32 array.
+func (d Data) DataAsFloat32() (data []float32) {
+	data = make([]float32, len(d.data))
+	for i, v := range d.data {
+		data[i] = float32(v)
 	}
 	return data
 }
