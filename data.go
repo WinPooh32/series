@@ -239,6 +239,84 @@ func (d Data) Apply(fn func(Dtype) Dtype) Data {
 	return d
 }
 
+// Reverse reverses index and data values.
+func (d Data) Reverse() Data {
+	return d.ArgReverse().DataReverse()
+}
+
+// Reverse reverses only index values.
+func (d Data) ArgReverse() Data {
+	sl := d.index
+
+	if l := len(sl); l <= 1 {
+		return d
+	} else if l == 2 {
+		sl[0], sl[1] = sl[1], sl[0]
+		return d
+	}
+
+	half := len(sl) / 2
+
+	left := sl[:half]
+	right := sl[half:]
+
+	l := 0
+	r := len(right) - 1
+
+	for l < len(left) && r >= 0 {
+		left[l], right[r] = right[r], left[l]
+		l++
+		r--
+	}
+
+	return d
+}
+
+// Reverse reverses only data values.
+func (d Data) DataReverse() Data {
+	sl := d.data
+
+	if l := len(sl); l <= 1 {
+		return d
+	} else if l == 2 {
+		sl[0], sl[1] = sl[1], sl[0]
+		return d
+	}
+
+	half := len(sl) / 2
+
+	left := sl[:half]
+	right := sl[half:]
+
+	l := 0
+	r := len(right) - 1
+
+	for l < len(left) && r >= 0 {
+		left[l], right[r] = right[r], left[l]
+		l++
+		r--
+	}
+
+	return d
+}
+
+// Fill NaN values.
+func (d Data) Fillna(value Dtype, inplace bool) Data {
+	var data Data
+	if inplace {
+		data = d
+	} else {
+		data = d.Clone()
+	}
+	dd := data.Data()
+	for i, v := range dd {
+		if math.IsNaN(v) {
+			dd[i] = value
+		}
+	}
+	return data
+}
+
 // Rolling provides rolling window calculations.
 func (d Data) Rolling(window int) Window {
 	return Window{
@@ -283,21 +361,4 @@ func (d Data) Resample(freq int64, origin ResampleOrigin) Resampler {
 		freq:   freq,
 		origin: origin,
 	}
-}
-
-// Fill NaN values.
-func (d Data) Fillna(value Dtype, inplace bool) Data {
-	var data Data
-	if inplace {
-		data = d
-	} else {
-		data = d.Clone()
-	}
-	dd := data.Data()
-	for i, v := range dd {
-		if math.IsNaN(v) {
-			dd[i] = value
-		}
-	}
-	return data
 }

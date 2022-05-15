@@ -788,3 +788,156 @@ func TestData_ArgSortStable(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Reverse(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"len == 1",
+			fields{1, []int64{1}, []Dtype{1}},
+			MakeData(1, []int64{1}, []Dtype{1}),
+		},
+		{
+			"len == 2",
+			fields{1, []int64{1, 2}, []Dtype{1, 2}},
+			MakeData(1, []int64{2, 1}, []Dtype{2, 1}),
+		},
+		{
+			"len == 3",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			MakeData(1, []int64{3, 2, 1}, []Dtype{3, 2, 1}),
+		},
+		{
+			"even",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			MakeData(1, []int64{6, 5, 4, 3, 2, 1}, []Dtype{6, 5, 4, 3, 2, 1}),
+		},
+		{
+			"odd",
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
+			MakeData(1, []int64{7, 6, 5, 4, 3, 2, 1}, []Dtype{7, 6, 5, 4, 3, 2, 1}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Reverse(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestData_ArgReverse(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"len == 1",
+			fields{1, []int64{1}, []Dtype{1}},
+			MakeData(1, []int64{1}, []Dtype{1}),
+		},
+		{
+			"len == 2",
+			fields{1, []int64{1, 2}, []Dtype{1, 2}},
+			MakeData(1, []int64{2, 1}, []Dtype{1, 2}),
+		},
+		{
+			"len == 3",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			MakeData(1, []int64{3, 2, 1}, []Dtype{1, 2, 3}),
+		},
+		{
+			"even",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			MakeData(1, []int64{6, 5, 4, 3, 2, 1}, []Dtype{1, 2, 3, 4, 5, 6}),
+		},
+		{
+			"odd",
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
+			MakeData(1, []int64{7, 6, 5, 4, 3, 2, 1}, []Dtype{1, 2, 3, 4, 5, 6, 7}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.ArgReverse(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestData_DataReverse(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"len == 1",
+			fields{1, []int64{1}, []Dtype{1}},
+			MakeData(1, []int64{1}, []Dtype{1}),
+		},
+		{
+			"len == 2",
+			fields{1, []int64{1, 2}, []Dtype{1, 2}},
+			MakeData(1, []int64{1, 2}, []Dtype{2, 1}),
+		},
+		{
+			"len == 3",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{3, 2, 1}),
+		},
+		{
+			"even",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{6, 5, 4, 3, 2, 1}),
+		},
+		{
+			"odd",
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{7, 6, 5, 4, 3, 2, 1}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.DataReverse(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
