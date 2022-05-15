@@ -567,8 +567,7 @@ func TestData_Fillna(t *testing.T) {
 				data:  []Dtype{NaN, NaN, 5, 2, NaN},
 			},
 			args: args{
-				value:   0,
-				inplace: false,
+				value: 0,
 			},
 			want: MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{0, 0, 5, 2, 0}),
 		},
@@ -580,8 +579,52 @@ func TestData_Fillna(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Fillna(tt.args.value, tt.args.inplace); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Fillna(tt.args.value); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Data.Fillna() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestData_Pad(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			name: "simple pad",
+			fields: fields{
+				freq:  1,
+				index: []int64{-1, 0, 1, 2, 3, 4, 5},
+				data:  []Dtype{NaN, 0, NaN, NaN, 5, 2, NaN},
+			},
+			want: MakeData(1, []int64{-1, 0, 1, 2, 3, 4, 5}, []Dtype{NaN, 0, 0, 0, 5, 2, 2}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+
+			d.Pad()
+
+			if len(d.data) != len(tt.want.data) {
+				t.Fatalf("Data.Pad() = %v, want %v", d.data, tt.want.data)
+			}
+
+			for i, v := range tt.want.data {
+				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
+					t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+				}
 			}
 		})
 	}

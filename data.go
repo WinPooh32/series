@@ -300,21 +300,31 @@ func (d Data) DataReverse() Data {
 	return d
 }
 
-// Fill NaN values.
-func (d Data) Fillna(value Dtype, inplace bool) Data {
-	var data Data
-	if inplace {
-		data = d
-	} else {
-		data = d.Clone()
-	}
-	dd := data.Data()
-	for i, v := range dd {
+// Fillna fills NaN values.
+func (d Data) Fillna(value Dtype) Data {
+	sl := d.Data()
+	for i, v := range sl {
 		if math.IsNaN(v) {
-			dd[i] = value
+			sl[i] = value
 		}
 	}
-	return data
+	return d
+}
+
+// Pad fills NaNs by known previous values.
+func (d Data) Pad() Data {
+	sl := d.Data()
+	gg := math.NaN()
+	for i, v := range sl {
+		if math.IsNaN(v) {
+			if !math.IsNaN(gg) {
+				sl[i] = gg
+			}
+		} else {
+			gg = v
+		}
+	}
+	return d
 }
 
 // Rolling provides rolling window calculations.
