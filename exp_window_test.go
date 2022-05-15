@@ -2,8 +2,6 @@ package series
 
 import (
 	"testing"
-
-	"github.com/WinPooh32/series/math"
 )
 
 func TestExpWindow_Mean(t *testing.T) {
@@ -49,17 +47,7 @@ func TestExpWindow_Mean(t *testing.T) {
 				ignoreNA: tt.fields.ignoreNA,
 			}
 
-			equal := true
-			got := w.Mean()
-
-			for i, v := range got.data {
-				if math.Abs(v-tt.want.data[i]) > 0.001 {
-					equal = false
-					break
-				}
-			}
-
-			if !equal {
+			if got := w.Mean(); !got.Equal(tt.want, 10e-4) {
 				t.Errorf("ExpWindow.Mean() = %v, want %v", got, tt.want)
 			}
 		})

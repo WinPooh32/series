@@ -1,7 +1,6 @@
 package series
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/WinPooh32/series/math"
@@ -34,10 +33,7 @@ func TestWindow_Sum(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Sum(); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Sum(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Sum() = %v, want %v", got, tt.want)
 			}
 		})
@@ -69,17 +65,14 @@ func TestWindow_Mean(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Mean(); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Mean(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Mean() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestWindow_applyDiff(t *testing.T) {
+func TestWindow_Diff(t *testing.T) {
 	type fields struct {
 		len  int
 		data Data
@@ -104,17 +97,14 @@ func TestWindow_applyDiff(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Diff(); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Diff(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Diff() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestWindow_applyShift(t *testing.T) {
+func TestWindow_Shift(t *testing.T) {
 	type fields struct {
 		len  int
 		data Data
@@ -139,10 +129,7 @@ func TestWindow_applyShift(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Shift(); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Shift(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Shift() = %v, want %v", got, tt.want)
 			}
 		})
@@ -174,10 +161,7 @@ func TestWindow_Min(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Min(); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Min(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Min() = %v, want %v", got, tt.want)
 			}
 		})
@@ -209,10 +193,7 @@ func TestWindow_Max(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Max(); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Max(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Max() = %v, want %v", got, tt.want)
 			}
 		})
@@ -247,10 +228,7 @@ func TestWindow_Std(t *testing.T) {
 
 			ma := tt.fields.data.Rolling(3).Mean()
 
-			if got := w.Std(ma); !reflect.DeepEqual(
-				got.Slice(got.Len()-w.len, got.Len()),
-				tt.want.Slice(tt.want.Len()-w.len, tt.want.Len()),
-			) {
+			if got := w.Std(ma); !got.Equal(tt.want, Eps) {
 				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
 			}
 		})

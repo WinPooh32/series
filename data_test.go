@@ -1,7 +1,6 @@
 package series
 
 import (
-	"reflect"
 	"testing"
 	"time"
 
@@ -201,39 +200,8 @@ func TestData_Resample(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestData_Rolling(t *testing.T) {
-	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
-	}
-	type args struct {
-		window int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   Window
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
-			}
-			if got := d.Rolling(tt.args.window); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Data.Rolling() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -270,7 +238,7 @@ func TestData_Add(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Add(tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Add(tt.args.r); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Add() = %v, want %v", got, tt.want)
 			}
 		})
@@ -308,7 +276,7 @@ func TestData_Sub(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Sub(tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Sub(tt.args.r); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Sub() = %v, want %v", got, tt.want)
 			}
 		})
@@ -346,7 +314,7 @@ func TestData_Mul(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Mul(tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Mul(tt.args.r); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Mul() = %v, want %v", got, tt.want)
 			}
 		})
@@ -384,7 +352,7 @@ func TestData_Div(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Div(tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Div(tt.args.r); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Div() = %v, want %v", got, tt.want)
 			}
 		})
@@ -422,7 +390,7 @@ func TestData_AddScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.AddScalar(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+			if got := d.AddScalar(tt.args.s); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.AddScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -460,7 +428,7 @@ func TestData_SubScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.SubScalar(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+			if got := d.SubScalar(tt.args.s); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.SubScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -498,7 +466,7 @@ func TestData_MulScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.MulScalar(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+			if got := d.MulScalar(tt.args.s); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.MulScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -536,7 +504,7 @@ func TestData_DivScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.DivScalar(tt.args.s); !reflect.DeepEqual(got, tt.want) {
+			if got := d.DivScalar(tt.args.s); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.DivScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -579,7 +547,7 @@ func TestData_Fillna(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Fillna(tt.args.value); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Fillna(tt.args.value); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Fillna() = %v, want %v", got, tt.want)
 			}
 		})
@@ -752,24 +720,8 @@ func TestData_ArgSort(t *testing.T) {
 
 			d.ArgSort()
 
-			if len(d.data) != len(tt.want.index) {
-				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.index)
-			}
-
-			for i, v := range tt.want.index {
-				if v != d.index[i] {
-					t.Fatalf("Data.ArgSort() = %v, want %v", d.index, tt.want.index)
-				}
-			}
-
-			if len(d.data) != len(tt.want.data) {
+			if !d.Equal(tt.want, Eps) {
 				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
-			}
-
-			for i, v := range tt.want.data {
-				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
-					t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
-				}
 			}
 		})
 	}
@@ -809,24 +761,8 @@ func TestData_ArgSortStable(t *testing.T) {
 
 			d.ArgSortStable()
 
-			if len(d.data) != len(tt.want.index) {
-				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.index)
-			}
-
-			for i, v := range tt.want.index {
-				if v != d.index[i] {
-					t.Fatalf("Data.ArgSort() = %v, want %v", d.index, tt.want.index)
-				}
-			}
-
-			if len(d.data) != len(tt.want.data) {
-				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
-			}
-
-			for i, v := range tt.want.data {
-				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
-					t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
-				}
+			if !d.Equal(tt.want, Eps) {
+				t.Fatalf("Data.ArgSortStable() = %v, want %v", d.data, tt.want.data)
 			}
 		})
 	}
@@ -876,7 +812,7 @@ func TestData_Reverse(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Reverse(); !reflect.DeepEqual(got, tt.want) {
+			if got := d.Reverse(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})
@@ -927,7 +863,7 @@ func TestData_ArgReverse(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.ArgReverse(); !reflect.DeepEqual(got, tt.want) {
+			if got := d.ArgReverse(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})
@@ -978,7 +914,7 @@ func TestData_DataReverse(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.DataReverse(); !reflect.DeepEqual(got, tt.want) {
+			if got := d.DataReverse(); !got.Equal(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})

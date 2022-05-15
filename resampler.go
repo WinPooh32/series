@@ -19,6 +19,16 @@ const (
 	OriginStartDay
 )
 
+// InterpolationMethod is the method of filling NaN values.
+type InterpolationMethod int
+
+const (
+	// InterpolationLinear fills NaNs by linear interpolation method.
+	InterpolationLinear InterpolationMethod = iota
+	// InterpolationPad fills NaNs by existing values.
+	InterpolationPad
+)
+
 // Resampler resamples time-series data.
 // Not full groups will are filled by NaNs.
 type Resampler struct {
@@ -61,6 +71,11 @@ func (res Resampler) Last() Data {
 func (res Resampler) Apply(agg AggregateFunc) Data {
 	return res.downsample(agg)
 }
+
+// // Interpolate fills all NaNs between known values after applied upsamping.
+// func (res Resampler) Interpolate(method InterpolationMethod) Data {
+// 	return
+// }
 
 func (res Resampler) downsample(agg AggregateFunc) Data {
 	if agg == nil {

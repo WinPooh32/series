@@ -53,6 +53,45 @@ func (d Data) Freq() int64 {
 	return d.freq
 }
 
+func (d Data) Equal(r Data, eps Dtype) bool {
+	return d.ArgEqual(r) && d.DataEqual(r, eps)
+}
+
+func (d Data) ArgEqual(r Data) bool {
+	slLeft := d.index
+	slRight := r.index
+
+	if len(slLeft) != len(slRight) {
+		return false
+	}
+
+	for i := range slLeft {
+		if slLeft[i] != slRight[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func (d Data) DataEqual(r Data, eps Dtype) bool {
+	slLeft := d.data
+	slRight := r.data
+
+	if len(slLeft) != len(slRight) {
+		return false
+	}
+
+	for i := range slLeft {
+		l := slLeft[i]
+		r := slRight[i]
+
+		if dst := math.Abs(l - r); dst >= eps && !(math.IsNaN(l) && math.IsNaN(r)) {
+			return false
+		}
+	}
+	return true
+}
+
 // Slice makes slice of data.
 func (d Data) Slice(l, r int) Data {
 	return Data{
