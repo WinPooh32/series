@@ -1034,3 +1034,63 @@ func TestData_Shift(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Resize(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	type args struct {
+		newLen int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Data
+	}{
+		{
+			"len + 0",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{3},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{1, 2, 3}),
+		},
+		{
+			"len + 1",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{4},
+			MakeData(1, []int64{1, 2, 3, math.MaxInt64}, []Dtype{1, 2, 3, NaN}),
+		},
+		{
+			"len - 1",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{2},
+			MakeData(1, []int64{1, 2}, []Dtype{1, 2}),
+		},
+		{
+			"newLen == 0",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{0},
+			MakeData(1, []int64{}, []Dtype{}),
+		},
+		{
+			"oldLen == 0, newLen == 3",
+			fields{1, []int64{}, []Dtype{}},
+			args{3},
+			MakeData(1, []int64{math.MaxInt64, math.MaxInt64, math.MaxInt64}, []Dtype{NaN, NaN, NaN}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Resize(tt.args.newLen); !got.Equal(tt.want, Eps) {
+				t.Errorf("Data.Resize() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
