@@ -111,6 +111,36 @@ func (d Data) Clone() Data {
 	return clone
 }
 
+// Resize resizes underlying arrays.
+//
+// New index values are filled by MaxInt64.
+// New data values are filled by NaN.
+func (d Data) Resize(newLen int) Data {
+	if newLen <= 0 {
+		panic("newLen must be positive non zero value")
+	}
+
+	oldLen := d.Len()
+
+	switch {
+	case newLen < oldLen:
+		d.index = d.index[:newLen]
+		d.data = d.data[:newLen]
+	case newLen > oldLen:
+		dt := newLen - oldLen
+
+		for i := 0; i < dt; i++ {
+			d.index = append(d.index, math.MaxInt64)
+		}
+
+		for i := 0; i < dt; i++ {
+			d.data = append(d.data, math.NaN())
+		}
+	}
+
+	return d
+}
+
 func (d Data) Add(r Data) Data {
 	// Slices prevent implicit bounds checks.
 	sl := d.data
