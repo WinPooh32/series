@@ -968,3 +968,69 @@ func TestData_Diff(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Shift(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	type args struct {
+		periods int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Data
+	}{
+		{
+			"right shift",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{1},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, 1, 2}),
+		},
+		{
+			"right shift overflow",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{4},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+		},
+		{
+			"right shift equal to data length",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{3},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+		},
+		{
+			"left shift",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{-1},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{2, 3, NaN}),
+		},
+		{
+			"left shift equal to data length",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{-3},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+		},
+		{
+			"left shift overflow",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{-4},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Shift(tt.args.periods); !got.Equal(tt.want, Eps) {
+				t.Errorf("Data.Shift() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

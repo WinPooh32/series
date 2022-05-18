@@ -72,38 +72,6 @@ func TestWindow_Mean(t *testing.T) {
 	}
 }
 
-func TestWindow_Shift(t *testing.T) {
-	type fields struct {
-		len  int
-		data Data
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   Data
-	}{
-		{
-			"odd length",
-			fields{
-				len:  3,
-				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}),
-			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, NaN, NaN, 1, 1, 2}),
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			w := Window{
-				len:  tt.fields.len,
-				data: tt.fields.data,
-			}
-			if got := w.Shift(); !got.Equal(tt.want, Eps) {
-				t.Errorf("Window.Shift() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestWindow_Min(t *testing.T) {
 	type fields struct {
 		len  int

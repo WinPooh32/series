@@ -27,17 +27,6 @@ func (w Window) Std(ma Data) Data {
 	return w.applyStd(ma)
 }
 
-func (w Window) Shift() Data {
-	switch {
-	case w.len == 0:
-		return w.data
-	case w.len > 0:
-		return w.applyShiftPisitive()
-	default:
-		return w.applyShiftNegative()
-	}
-}
-
 func (w Window) Apply(agg AggregateFunc) Data {
 	var (
 		clone  = w.data.Clone()
@@ -53,42 +42,6 @@ func (w Window) Apply(agg AggregateFunc) Data {
 		slice := w.data.Slice(l, r)
 		data[r-1] = agg(slice)
 	})
-
-	return clone
-}
-
-func (w Window) applyShiftPisitive() Data {
-	var (
-		clone  = w.data.Clone()
-		data   = clone.Data()
-		period = w.len
-	)
-
-	dst := data[period:]
-	src := data
-	copy(dst, src)
-
-	for i := 0; i < period; i++ {
-		data[i] = math.NaN()
-	}
-
-	return clone
-}
-
-func (w Window) applyShiftNegative() Data {
-	var (
-		clone  = w.data.Clone()
-		data   = clone.Data()
-		period = -(w.len)
-	)
-
-	dst := data[:len(data)-period]
-	src := data[period:]
-	copy(dst, src)
-
-	for i := len(data) - period; i < len(data); i++ {
-		data[i] = math.NaN()
-	}
 
 	return clone
 }

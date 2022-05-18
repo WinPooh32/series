@@ -403,6 +403,43 @@ func (d Data) Diff(periods int) Data {
 	return d
 }
 
+// Shift shifts data by specified periods count.
+func (d Data) Shift(periods int) Data {
+	if periods == 0 {
+		return d
+	}
+
+	sl := d.Data()
+
+	var (
+		naVals []Dtype
+		dst    []Dtype
+		src    []Dtype
+	)
+
+	if shlen := int(math.Abs(Dtype(periods))); shlen < len(sl) {
+		if periods > 0 {
+			naVals = sl[:shlen]
+			dst = sl[shlen:]
+			src = sl
+		} else {
+			naVals = sl[shlen:]
+			dst = sl[:len(sl)-shlen]
+			src = sl[shlen:]
+		}
+
+		copy(dst, src)
+	} else {
+		naVals = sl
+	}
+
+	for i := range naVals {
+		naVals[i] = math.NaN()
+	}
+
+	return d
+}
+
 // Rolling provides rolling window calculations.
 func (d Data) Rolling(window int) Window {
 	return Window{
