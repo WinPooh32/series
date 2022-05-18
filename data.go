@@ -366,22 +366,22 @@ func (d Data) Pad() Data {
 	return d
 }
 
-// Diff
-func (d Data) Diff(period int) Data {
-	if period < 0 {
+// Diff calculates the difference of a series data elements.
+func (d Data) Diff(periods int) Data {
+	if periods < 0 {
 		panic("period must be positive value")
-	} else if period == 0 {
+	} else if periods == 0 {
 		return d
 	}
 
 	sl := d.Data()
-	total := period - 1
+	total := periods - 1
 
 	if len(sl) < total {
 		panic("total can't be greater sl length!")
 	}
 
-	if len(sl) > period {
+	if len(sl) > periods {
 		lv := sl[:len(sl)-total]
 		rv := sl[total:]
 
