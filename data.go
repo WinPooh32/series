@@ -116,8 +116,8 @@ func (d Data) Clone() Data {
 // New index values are filled by MaxInt64.
 // New data values are filled by NaN.
 func (d Data) Resize(newLen int) Data {
-	if newLen <= 0 {
-		panic("newLen must be positive non zero value")
+	if newLen < 0 {
+		panic("newLen must be positive value")
 	}
 
 	oldLen := d.Len()
