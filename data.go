@@ -366,6 +366,43 @@ func (d Data) Pad() Data {
 	return d
 }
 
+// Diff
+func (d Data) Diff(period int) Data {
+	if period < 0 {
+		panic("period must be positive value")
+	} else if period == 0 {
+		return d
+	}
+
+	sl := d.Data()
+	total := period - 1
+
+	if len(sl) < total {
+		panic("total can't be greater sl length!")
+	}
+
+	if len(sl) > period {
+		lv := sl[:len(sl)-total]
+		rv := sl[total:]
+
+		if len(rv) > len(lv) {
+			panic("rv's length can't be greater than lv's length!")
+		}
+
+		for i := range rv {
+			rv[i] -= lv[i]
+		}
+	}
+
+	naVals := sl[:total]
+
+	for i := range naVals {
+		naVals[i] = math.NaN()
+	}
+
+	return d
+}
+
 // Rolling provides rolling window calculations.
 func (d Data) Rolling(window int) Window {
 	return Window{

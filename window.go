@@ -27,10 +27,6 @@ func (w Window) Std(ma Data) Data {
 	return w.applyStd(ma)
 }
 
-func (w Window) Diff() Data {
-	return w.applyDiff()
-}
-
 func (w Window) Shift() Data {
 	switch {
 	case w.len == 0:
@@ -57,28 +53,6 @@ func (w Window) Apply(agg AggregateFunc) Data {
 		slice := w.data.Slice(l, r)
 		data[r-1] = agg(slice)
 	})
-
-	return clone
-}
-
-func (w Window) applyDiff() Data {
-	var (
-		clone  = w.data.Clone()
-		data   = clone.Data()
-		period = w.len
-
-		orig = w.data.Data()
-	)
-
-	total := period - 1
-
-	for i := total; i < len(data); i++ {
-		data[i] -= orig[i-total]
-	}
-
-	for i := 0; i < total; i++ {
-		data[i] = math.NaN()
-	}
 
 	return clone
 }

@@ -920,3 +920,51 @@ func TestData_DataReverse(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Diff(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	type args struct {
+		period int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Data
+	}{
+		{
+			"data length is less then period length",
+			fields{1, []int64{1, 2}, []Dtype{1, 1}},
+			args{3},
+			MakeData(1, []int64{1, 2}, []Dtype{NaN, NaN}),
+		},
+		{
+			"data length is equal to period length",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 1, 2}},
+			args{3},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+		},
+		{
+			"even length",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}},
+			args{3},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, NaN, NaN, 2, 4, 6}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Diff(tt.args.period); !got.Equal(tt.want, Eps) {
+				t.Errorf("Data.Diff() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
