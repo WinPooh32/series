@@ -141,6 +141,13 @@ func (d Data) Resize(newLen int) Data {
 	return d
 }
 
+// Append appends new values to series data.
+func (d Data) Append(r Data) Data {
+	d.index = append(d.index, r.index...)
+	d.data = append(d.data, r.data...)
+	return d
+}
+
 func (d Data) Add(r Data) Data {
 	// Slices prevent implicit bounds checks.
 	sl := d.data
