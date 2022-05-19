@@ -405,33 +405,28 @@ func (d Data) Pad() Data {
 
 // Diff calculates the difference of a series data elements.
 func (d Data) Diff(periods int) Data {
+	sl := d.Data()
+
 	if periods < 0 {
 		panic("period must be positive value")
 	} else if periods == 0 {
 		return d
 	}
 
-	sl := d.Data()
-	total := periods - 1
-
-	if len(sl) < total {
-		panic("total can't be greater sl length!")
-	}
+	var naVals []Dtype
 
 	if len(sl) > periods {
-		lv := sl[:len(sl)-total]
-		rv := sl[total:]
+		lv := sl[:len(sl)-periods]
+		rv := sl[periods:]
 
-		if len(rv) > len(lv) {
-			panic("rv's length can't be greater than lv's length!")
-		}
-
-		for i := range rv {
+		for i := len(rv) - 1; i >= 0; i-- {
 			rv[i] -= lv[i]
 		}
-	}
 
-	naVals := sl[:total]
+		naVals = sl[:periods]
+	} else {
+		naVals = sl
+	}
 
 	for i := range naVals {
 		naVals[i] = math.NaN()

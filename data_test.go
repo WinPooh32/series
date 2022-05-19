@@ -954,6 +954,12 @@ func TestData_Diff(t *testing.T) {
 			args{3},
 			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, NaN, NaN, 2, 4, 6}),
 		},
+		{
+			"diff 1",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}},
+			args{1},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, 0, 1, 1, 2, 3}),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
