@@ -37,7 +37,7 @@ func TestData_Resample(t *testing.T) {
 				freq:   2,
 				origin: OriginStart,
 			},
-			MakeData(2, []int64{2, 4, 6}, []Dtype{3, 7, 11}),
+			MakeData(2, []int64{1, 3, 5}, []Dtype{3, 7, 11}),
 		},
 		{
 			"odd length",
@@ -46,7 +46,7 @@ func TestData_Resample(t *testing.T) {
 				freq:   2,
 				origin: OriginStart,
 			},
-			MakeData(2, []int64{2, 4, 6, 8}, []Dtype{3, 7, 11, 7}),
+			MakeData(2, []int64{1, 3, 5, 7}, []Dtype{3, 7, 11, 7}),
 		},
 		{
 			"even length minutes freq",
@@ -69,9 +69,9 @@ func TestData_Resample(t *testing.T) {
 			MakeData(
 				2*minute,
 				[]int64{
-					2 * minute,
-					4 * minute,
-					6 * minute,
+					1 * minute,
+					3 * minute,
+					5 * minute,
 				},
 				[]Dtype{3, 7, 11},
 			),
@@ -98,10 +98,10 @@ func TestData_Resample(t *testing.T) {
 			MakeData(
 				2*minute,
 				[]int64{
-					2 * minute,
-					4 * minute,
-					6 * minute,
-					8 * minute,
+					1 * minute,
+					3 * minute,
+					5 * minute,
+					7 * minute,
 				},
 				[]Dtype{3, 7, 11, 7},
 			),
@@ -127,9 +127,9 @@ func TestData_Resample(t *testing.T) {
 			MakeData(
 				1*minute+30*second,
 				[]int64{
-					120 * second,
-					210 * second,
-					300 * second,
+					60 * second,
+					150 * second,
+					240 * second,
 				},
 				[]Dtype{3, 7, 11},
 			),
@@ -156,10 +156,10 @@ func TestData_Resample(t *testing.T) {
 			MakeData(
 				1*minute+30*second,
 				[]int64{
-					120 * second,
-					210 * second,
-					300 * second,
-					390 * second,
+					60 * second,
+					150 * second,
+					240 * second,
+					330 * second,
 				},
 				[]Dtype{3, 7, 11, 7},
 			),
@@ -185,9 +185,9 @@ func TestData_Resample(t *testing.T) {
 			MakeData(
 				2*minute,
 				[]int64{
-					dayStart + 2*minute,
-					dayStart + 4*minute,
-					dayStart + 6*minute,
+					dayStart + 1*minute,
+					dayStart + 3*minute,
+					dayStart + 5*minute,
 				},
 				[]Dtype{3, 7, 11},
 			),

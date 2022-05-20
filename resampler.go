@@ -107,7 +107,7 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		value Dtype
 		beg   = 0
 		end   = endPoint
-		idx   = srcIndex[end-1]
+		idx   = srcIndex[0]
 	)
 
 	for i := 0; i < bucketsTotal; i++ {
