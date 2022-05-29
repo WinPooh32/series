@@ -412,6 +412,63 @@ func (d Data) Pad() Data {
 	return d
 }
 
+// Lerp fills NaNs between known values by linear interpolation method.
+func (d Data) Lerp() Data {
+	values := d.data
+
+	if len(values) == 0 {
+		return d
+	}
+
+	fill := func(y []Dtype, k, b Dtype) {
+		for x := range y {
+			y[x] = k*Dtype(x+1) + b
+		}
+	}
+
+	var beg, end int
+
+	// Find first non-NaN value.
+	for i := 0; ; i++ {
+		if v := values[i]; !math.IsNaN(v) {
+			beg = i
+			break
+		}
+		if i >= len(values) {
+			// All values are NaNs.
+			// Exit.
+			return d
+		}
+	}
+
+	var left, right Dtype
+
+	left = values[beg]
+
+	for i := beg + 1; i < len(values); i++ {
+		val := values[i]
+
+		if math.IsNaN(val) {
+			continue
+		}
+
+		end = i
+		right = val
+
+		if dst := end - beg; dst >= 2 {
+			line := values[beg+1 : end]
+			k := (right - left) / Dtype(dst)
+			b := left
+			fill(line, k, b)
+		}
+
+		beg = end
+		left = right
+	}
+
+	return d
+}
+
 // Diff calculates the difference of a series data elements.
 func (d Data) Diff(periods int) Data {
 	sl := d.Data()

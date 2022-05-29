@@ -27,6 +27,8 @@ const (
 	InterpolationLinear InterpolationMethod = iota
 	// InterpolationPad fills NaNs by existing values.
 	InterpolationPad
+	// InterpolationNone doesn't fill NaNs.
+	InterpolationNone
 )
 
 // Resampler resamples time-series data.
@@ -72,10 +74,98 @@ func (res Resampler) Apply(agg AggregateFunc) Data {
 	return res.downsample(agg)
 }
 
-// // Interpolate fills all NaNs between known values after applied upsamping.
-// func (res Resampler) Interpolate(method InterpolationMethod) Data {
-// 	return
-// }
+// Interpolate fills all NaNs between known values after applied upsamping.
+func (res Resampler) Interpolate(method InterpolationMethod) Data {
+	result := res.upsample()
+
+	switch method {
+	case InterpolationLinear:
+		return result.Lerp()
+	case InterpolationPad:
+		return result.Pad()
+	case InterpolationNone:
+		return result
+	default:
+		return result
+	}
+}
+
+func (res Resampler) upsample() Data {
+	index := res.data.index
+	data := res.data.data
+
+	firstIdx := index[0]
+	lastIdx := index[len(index)-1]
+
+	oldFreq := Dtype(res.data.freq)
+	newFreq := Dtype(res.freq)
+
+	freq := math.Ceil(oldFreq / newFreq)
+
+	newCap := int(lastIdx-firstIdx) + 1
+
+	var (
+		newIndex []int64
+		newData  []Dtype
+	)
+
+	if cap(index) >= newCap {
+		newIndex = index[:0]
+	} else {
+		newIndex = make([]int64, 0, newCap)
+	}
+
+	newIndex = res.reindex(newIndex, firstIdx, lastIdx, int(newFreq))
+
+	if cap(data) >= newCap {
+		newData = data[:0]
+	} else {
+		newData = make([]Dtype, 0, newCap)
+	}
+
+	newData = res.fillData(newData[:newCap], data, int(freq))
+
+	return MakeData(res.freq, newIndex, newData)
+}
+
+func (Resampler) reindex(dst []int64, startValue, endValue int64, freq int) []int64 {
+	for value := startValue; value <= endValue; value += int64(freq) {
+		dst = append(dst, value)
+	}
+	return dst
+}
+
+func (Resampler) fillData(dst, src []Dtype, step int) []Dtype {
+	// under the hood src and dst can be same array,
+	// then fill dst at backward direction.
+	i := len(dst) - 1
+	j := len(src) - 1
+
+	for i >= 0 && j >= 0 {
+		dst[i] = src[j]
+
+		// Fill new values by NaNs.
+		next := i - step
+
+		beg := next
+		end := i
+
+		if beg < 0 {
+			beg = 0
+		}
+
+		between := dst[beg:end]
+
+		for k := len(between) - 1; k >= 0; k-- {
+			between[k] = math.NaN()
+		}
+
+		i = next
+		j--
+	}
+
+	return dst
+}
 
 func (res Resampler) downsample(agg AggregateFunc) Data {
 	if agg == nil {

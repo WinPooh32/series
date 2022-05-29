@@ -7,6 +7,76 @@ import (
 	"github.com/WinPooh32/series/math"
 )
 
+func TestData_Resample_Interpolate(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	type args struct {
+		freq   int64
+		origin ResampleOrigin
+		method InterpolationMethod
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Data
+	}{
+		{
+			"freq=2 to 1 length upsample",
+			fields{2, []int64{2, 4, 6, 8}, []Dtype{2, 4, 6, 8}},
+			args{
+				freq:   1,
+				origin: OriginStart,
+				method: InterpolationNone,
+			},
+			MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}),
+		},
+		{
+			"freq=4 to 1 length upsample",
+			fields{4, []int64{0, 4, 8, 12, 16}, []Dtype{0, 4, 8, 12, 16}},
+			args{
+				freq:   1,
+				origin: OriginStart,
+				method: InterpolationNone,
+			},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				[]Dtype{0, NaN, NaN, NaN, 4, NaN, NaN, NaN, 8, NaN, NaN, NaN, 12, NaN, NaN, NaN, 16},
+			),
+		},
+		{
+			"freq=4 to 1 length upsample lerp",
+			fields{4, []int64{0, 4, 8, 12, 16}, []Dtype{0, 4, 8, 12, 16}},
+			args{
+				freq:   1,
+				origin: OriginStart,
+				method: InterpolationLinear,
+			},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				[]Dtype{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+			),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Resample(tt.args.freq, OriginStart).Interpolate(tt.args.method); !got.Equal(tt.want, Eps) {
+				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestData_Resample(t *testing.T) {
 	const (
 		second = int64((1 * time.Second) / time.Millisecond)
@@ -1154,6 +1224,99 @@ func TestData_Equal(t *testing.T) {
 			}
 			if got := d.Equal(tt.args.r, tt.args.eps); got != tt.want {
 				t.Errorf("Data.DataEqual() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestData_Lerp(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"simple 1 gap - 1",
+			fields{1, []int64{0, 1, 2, 3}, []Dtype{0, 1, NaN, 3}},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3},
+				[]Dtype{0, 1, 2, 3},
+			),
+		},
+		{
+			"simple 1 gap - 2",
+			fields{3, []int64{0, 1, 2, 3}, []Dtype{2, 5, NaN, 11}},
+			MakeData(
+				3,
+				[]int64{0, 1, 2, 3},
+				[]Dtype{2, 5, 8, 11},
+			),
+		},
+		{
+			"simple 2 gaps row",
+			fields{3, []int64{0, 1, 2, 3, 4}, []Dtype{2, 5, NaN, NaN, 11}},
+			MakeData(
+				3,
+				[]int64{0, 1, 2, 3, 4},
+				[]Dtype{2, 5, 7, 9, 11},
+			),
+		},
+		{
+			"simple 2 gaps at end",
+			fields{3, []int64{0, 1, 2, 3}, []Dtype{2, 5, NaN, NaN}},
+			MakeData(
+				3,
+				[]int64{0, 1, 2, 3},
+				[]Dtype{2, 5, NaN, NaN},
+			),
+		},
+		{
+			"simple 2 gaps at begin",
+			fields{3, []int64{0, 1, 2, 3}, []Dtype{NaN, NaN, 2, 5}},
+			MakeData(
+				3,
+				[]int64{0, 1, 2, 3},
+				[]Dtype{NaN, NaN, 2, 5},
+			),
+		},
+		{
+			"complex - 1",
+			fields{3, []int64{-1, 0, 1, 2, 3, 4, 5}, []Dtype{NaN, 2, 5, NaN, NaN, 11, NaN}},
+			MakeData(
+				3,
+				[]int64{-1, 0, 1, 2, 3, 4, 5},
+				[]Dtype{NaN, 2, 5, 7, 9, 11, NaN},
+			),
+		},
+		{
+			"complex - 2",
+			fields{
+				3,
+				[]int64{-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+				[]Dtype{NaN, 2, 5, NaN, NaN, 11, NaN, 16, NaN, NaN, NaN},
+			},
+			MakeData(
+				3,
+				[]int64{-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+				[]Dtype{NaN, 2, 5, 7, 9, 11, 13.5, 16, NaN, NaN, NaN},
+			),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Lerp(); !got.Equal(tt.want, Eps) {
+				t.Errorf("Data.Lerp() = %v, want %v", got, tt.want)
 			}
 		})
 	}
