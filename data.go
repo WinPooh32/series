@@ -70,6 +70,7 @@ func (d Data) ArgEqual(r Data) bool {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -82,13 +83,21 @@ func (d Data) DataEqual(r Data, eps Dtype) bool {
 	}
 
 	for i := range slLeft {
-		l := slLeft[i]
-		r := slRight[i]
+		left := slLeft[i]
+		right := slRight[i]
 
-		if dst := math.Abs(l - r); dst >= eps && !(math.IsNaN(l) && math.IsNaN(r)) {
+		nanL := math.IsNaN(left)
+		nanR := math.IsNaN(right)
+
+		nanEq := nanL && nanR
+
+		if (nanL || nanR) && !nanEq {
+			return false
+		} else if dst := math.Abs(left - right); dst >= eps {
 			return false
 		}
 	}
+
 	return true
 }
 
