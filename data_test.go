@@ -1100,3 +1100,61 @@ func TestData_Resize(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Equal(t *testing.T) {
+	type fields struct {
+		freq  int64
+		index []int64
+		data  []Dtype
+	}
+	type args struct {
+		r   Data
+		eps Dtype
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			"NaNs vs NaNs",
+			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}},
+			args{
+				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}),
+				eps: Eps,
+			},
+			true,
+		},
+		{
+			"zeros vs NaNs",
+			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, 0, 4, 0, 6, 0, 8}},
+			args{
+				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}),
+				eps: Eps,
+			},
+			false,
+		},
+		{
+			"NaNs vs zeros",
+			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}},
+			args{
+				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, 0, 4, 0, 6, 0, 8}),
+				eps: Eps,
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:  tt.fields.freq,
+				index: tt.fields.index,
+				data:  tt.fields.data,
+			}
+			if got := d.Equal(tt.args.r, tt.args.eps); got != tt.want {
+				t.Errorf("Data.DataEqual() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
