@@ -1085,6 +1085,12 @@ func TestData_Shift(t *testing.T) {
 			MakeData(1, []int64{1, 2, 3}, []Dtype{2, 3, NaN}),
 		},
 		{
+			"left shift -2",
+			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			args{-2},
+			MakeData(1, []int64{1, 2, 3}, []Dtype{3, NaN, NaN}),
+		},
+		{
 			"left shift equal to data length",
 			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
 			args{-3},
