@@ -92,7 +92,7 @@ func (res Resampler) Interpolate(method InterpolationMethod) Data {
 
 func (res Resampler) upsample() Data {
 	index := res.data.index
-	data := res.data.data
+	values := res.data.values
 
 	firstIdx := index[0]
 	lastIdx := index[len(index)-1]
@@ -117,13 +117,13 @@ func (res Resampler) upsample() Data {
 
 	newIndex = res.reindex(newIndex, firstIdx, lastIdx, int(newFreq))
 
-	if cap(data) >= newCap {
-		newData = data[:0]
+	if cap(values) >= newCap {
+		newData = values[:0]
 	} else {
 		newData = make([]Dtype, 0, newCap)
 	}
 
-	newData = res.fillData(newData[:newCap], data, int(freq))
+	newData = res.fillData(newData[:newCap], values, int(freq))
 
 	return MakeData(res.freq, newIndex, newData)
 }

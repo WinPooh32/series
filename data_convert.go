@@ -27,38 +27,38 @@ func (d Data) IndexAsFloat64() (index []float64) {
 	return index
 }
 
-// DataAsInt32 returns copy of underlying data slice converted to int32 array.
-func (d Data) DataAsInt32() (data []int32) {
-	data = make([]int32, len(d.data))
-	for i, v := range d.data {
-		data[i] = int32(v)
+// DataAsInt32 returns copy of underlying values slice converted to int32 array.
+func (d Data) DataAsInt32() (values []int32) {
+	values = make([]int32, len(d.values))
+	for i, v := range d.values {
+		values[i] = int32(v)
 	}
-	return data
+	return values
 }
 
-// DataAsInt64 returns copy of underlying data slice converted to float32 array.
-func (d Data) DataAsInt64() (data []int64) {
-	data = make([]int64, len(d.data))
-	for i, v := range d.data {
-		data[i] = int64(v)
+// DataAsInt64 returns copy of underlying values slice converted to float32 array.
+func (d Data) DataAsInt64() (values []int64) {
+	values = make([]int64, len(d.values))
+	for i, v := range d.values {
+		values[i] = int64(v)
 	}
-	return data
+	return values
 }
 
-// DataAsFloat32 returns copy of underlying data slice converted to float32 array.
-func (d Data) DataAsFloat32() (data []float32) {
-	data = make([]float32, len(d.data))
-	for i, v := range d.data {
-		data[i] = float32(v)
+// DataAsFloat32 returns copy of underlying values slice converted to float32 array.
+func (d Data) DataAsFloat32() (values []float32) {
+	values = make([]float32, len(d.values))
+	for i, v := range d.values {
+		values[i] = float32(v)
 	}
-	return data
+	return values
 }
 
-// DataAsFloat64 returns copy of underlying data slice converted to float64 array.
-func (d Data) DataAsFloat64() (data []float64) {
-	data = make([]float64, len(d.data))
-	for i, v := range d.data {
-		data[i] = float64(v)
+// DataAsFloat64 returns copy of underlying values slice converted to float64 array.
+func (d Data) DataAsFloat64() (values []float64) {
+	values = make([]float64, len(d.values))
+	for i, v := range d.values {
+		values[i] = float64(v)
 	}
-	return data
+	return values
 }

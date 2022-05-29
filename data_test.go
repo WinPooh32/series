@@ -9,9 +9,9 @@ import (
 
 func TestData_Resample_Interpolate(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		freq   int64
@@ -66,9 +66,9 @@ func TestData_Resample_Interpolate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Resample(tt.args.freq, OriginStart).Interpolate(tt.args.method); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
@@ -86,9 +86,9 @@ func TestData_Resample(t *testing.T) {
 	dayStart := time.Date(2022, 5, 7, 0, 0, 0, 0, time.UTC).UnixMilli()
 
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		freq   int64
@@ -266,9 +266,9 @@ func TestData_Resample(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
@@ -279,9 +279,9 @@ func TestData_Resample(t *testing.T) {
 
 func TestData_Add(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		r Data
@@ -304,9 +304,9 @@ func TestData_Add(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Add(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Add() = %v, want %v", got, tt.want)
@@ -317,9 +317,9 @@ func TestData_Add(t *testing.T) {
 
 func TestData_Sub(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		r Data
@@ -342,9 +342,9 @@ func TestData_Sub(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Sub(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Sub() = %v, want %v", got, tt.want)
@@ -355,9 +355,9 @@ func TestData_Sub(t *testing.T) {
 
 func TestData_Mul(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		r Data
@@ -380,9 +380,9 @@ func TestData_Mul(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Mul(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Mul() = %v, want %v", got, tt.want)
@@ -393,9 +393,9 @@ func TestData_Mul(t *testing.T) {
 
 func TestData_Div(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		r Data
@@ -418,9 +418,9 @@ func TestData_Div(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Div(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Div() = %v, want %v", got, tt.want)
@@ -431,9 +431,9 @@ func TestData_Div(t *testing.T) {
 
 func TestData_AddScalar(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		s Dtype
@@ -456,9 +456,9 @@ func TestData_AddScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.AddScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.AddScalar() = %v, want %v", got, tt.want)
@@ -469,9 +469,9 @@ func TestData_AddScalar(t *testing.T) {
 
 func TestData_SubScalar(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		s Dtype
@@ -494,9 +494,9 @@ func TestData_SubScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.SubScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.SubScalar() = %v, want %v", got, tt.want)
@@ -507,9 +507,9 @@ func TestData_SubScalar(t *testing.T) {
 
 func TestData_MulScalar(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		s Dtype
@@ -532,9 +532,9 @@ func TestData_MulScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.MulScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.MulScalar() = %v, want %v", got, tt.want)
@@ -545,9 +545,9 @@ func TestData_MulScalar(t *testing.T) {
 
 func TestData_DivScalar(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		s Dtype
@@ -570,9 +570,9 @@ func TestData_DivScalar(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.DivScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.DivScalar() = %v, want %v", got, tt.want)
@@ -583,9 +583,9 @@ func TestData_DivScalar(t *testing.T) {
 
 func TestData_Fillna(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		value   Dtype
@@ -600,9 +600,9 @@ func TestData_Fillna(t *testing.T) {
 		{
 			name: "simple fillna",
 			fields: fields{
-				freq:  1,
-				index: []int64{1, 2, 3, 4, 5},
-				data:  []Dtype{NaN, NaN, 5, 2, NaN},
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5},
+				values: []Dtype{NaN, NaN, 5, 2, NaN},
 			},
 			args: args{
 				value: 0,
@@ -613,9 +613,9 @@ func TestData_Fillna(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Fillna(tt.args.value); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Fillna() = %v, want %v", got, tt.want)
@@ -626,9 +626,9 @@ func TestData_Fillna(t *testing.T) {
 
 func TestData_Pad(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -638,9 +638,9 @@ func TestData_Pad(t *testing.T) {
 		{
 			name: "simple pad",
 			fields: fields{
-				freq:  1,
-				index: []int64{-1, 0, 1, 2, 3, 4, 5},
-				data:  []Dtype{NaN, 0, NaN, NaN, 5, 2, NaN},
+				freq:   1,
+				index:  []int64{-1, 0, 1, 2, 3, 4, 5},
+				values: []Dtype{NaN, 0, NaN, NaN, 5, 2, NaN},
 			},
 			want: MakeData(1, []int64{-1, 0, 1, 2, 3, 4, 5}, []Dtype{NaN, 0, 0, 0, 5, 2, 2}),
 		},
@@ -648,20 +648,20 @@ func TestData_Pad(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 
 			d.Pad()
 
-			if len(d.data) != len(tt.want.data) {
-				t.Fatalf("Data.Pad() = %v, want %v", d.data, tt.want.data)
+			if len(d.values) != len(tt.want.values) {
+				t.Fatalf("Data.Pad() = %v, want %v", d.values, tt.want.values)
 			}
 
-			for i, v := range tt.want.data {
-				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
-					t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+			for i, v := range tt.want.values {
+				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
+					t.Fatalf("Data.ArgSort() = %v, want %v", d.values, tt.want.values)
 				}
 			}
 		})
@@ -670,9 +670,9 @@ func TestData_Pad(t *testing.T) {
 
 func TestData_Sort(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -682,9 +682,9 @@ func TestData_Sort(t *testing.T) {
 		{
 			name: "simple Sort",
 			fields: fields{
-				freq:  1,
-				index: []int64{1, 2, 3, 4, 5},
-				data:  []Dtype{NaN, NaN, 5, 2, NaN},
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5},
+				values: []Dtype{NaN, NaN, 5, 2, NaN},
 			},
 			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []Dtype{NaN, NaN, NaN, 2, 5}),
 		},
@@ -692,20 +692,20 @@ func TestData_Sort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 
 			d.Sort()
 
-			if len(d.data) != len(tt.want.data) {
-				t.Fatalf("Data.Sort() = %v, want %v", d.data, tt.want.data)
+			if len(d.values) != len(tt.want.values) {
+				t.Fatalf("Data.Sort() = %v, want %v", d.values, tt.want.values)
 			}
 
-			for i, v := range tt.want.data {
-				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
-					t.Fatalf("Data.Sort() = %v, want %v", d.data, tt.want.data)
+			for i, v := range tt.want.values {
+				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
+					t.Fatalf("Data.Sort() = %v, want %v", d.values, tt.want.values)
 				}
 			}
 		})
@@ -714,9 +714,9 @@ func TestData_Sort(t *testing.T) {
 
 func TestData_SortStable(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -726,9 +726,9 @@ func TestData_SortStable(t *testing.T) {
 		{
 			name: "simple SortStable",
 			fields: fields{
-				freq:  1,
-				index: []int64{1, 2, 3, 4, 5},
-				data:  []Dtype{NaN, NaN, 5, 2, NaN},
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5},
+				values: []Dtype{NaN, NaN, 5, 2, NaN},
 			},
 			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []Dtype{NaN, NaN, NaN, 2, 5}),
 		},
@@ -736,20 +736,20 @@ func TestData_SortStable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 
 			d.SortStable()
 
-			if len(d.data) != len(tt.want.data) {
-				t.Fatalf("Data.SortStable() = %v, want %v", d.data, tt.want.data)
+			if len(d.values) != len(tt.want.values) {
+				t.Fatalf("Data.SortStable() = %v, want %v", d.values, tt.want.values)
 			}
 
-			for i, v := range tt.want.data {
-				if v != d.data[i] && (!math.IsNaN(v) || !math.IsNaN(d.data[i])) {
-					t.Fatalf("Data.SortStable() = %v, want %v", d.data, tt.want.data)
+			for i, v := range tt.want.values {
+				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
+					t.Fatalf("Data.SortStable() = %v, want %v", d.values, tt.want.values)
 				}
 			}
 		})
@@ -758,9 +758,9 @@ func TestData_SortStable(t *testing.T) {
 
 func TestData_ArgSort(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -770,9 +770,9 @@ func TestData_ArgSort(t *testing.T) {
 		{
 			name: "simple ArgSort",
 			fields: fields{
-				freq:  1,
-				index: []int64{4, 1, 3, 2, 5},
-				data:  []Dtype{2, NaN, 5, NaN, NaN},
+				freq:   1,
+				index:  []int64{4, 1, 3, 2, 5},
+				values: []Dtype{2, NaN, 5, NaN, NaN},
 			},
 			want: MakeData(
 				1,
@@ -783,15 +783,15 @@ func TestData_ArgSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 
 			d.ArgSort()
 
 			if !d.Equals(tt.want, Eps) {
-				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
+				t.Fatalf("Data.ArgSort() = %v, want %v", d.values, tt.want.values)
 			}
 		})
 	}
@@ -799,9 +799,9 @@ func TestData_ArgSort(t *testing.T) {
 
 func TestData_ArgSortStable(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -811,9 +811,9 @@ func TestData_ArgSortStable(t *testing.T) {
 		{
 			name: "simple ArgSortStable",
 			fields: fields{
-				freq:  1,
-				index: []int64{4, 1, 3, 2, 5},
-				data:  []Dtype{2, NaN, 5, NaN, NaN},
+				freq:   1,
+				index:  []int64{4, 1, 3, 2, 5},
+				values: []Dtype{2, NaN, 5, NaN, NaN},
 			},
 			want: MakeData(
 				1,
@@ -824,15 +824,15 @@ func TestData_ArgSortStable(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 
 			d.ArgSortStable()
 
 			if !d.Equals(tt.want, Eps) {
-				t.Fatalf("Data.ArgSortStable() = %v, want %v", d.data, tt.want.data)
+				t.Fatalf("Data.ArgSortStable() = %v, want %v", d.values, tt.want.values)
 			}
 		})
 	}
@@ -840,9 +840,9 @@ func TestData_ArgSortStable(t *testing.T) {
 
 func TestData_Reverse(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -878,9 +878,9 @@ func TestData_Reverse(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Reverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
@@ -891,9 +891,9 @@ func TestData_Reverse(t *testing.T) {
 
 func TestData_ArgReverse(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -929,9 +929,9 @@ func TestData_ArgReverse(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.ArgReverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
@@ -942,9 +942,9 @@ func TestData_ArgReverse(t *testing.T) {
 
 func TestData_DataReverse(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -980,9 +980,9 @@ func TestData_DataReverse(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.DataReverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
@@ -993,9 +993,9 @@ func TestData_DataReverse(t *testing.T) {
 
 func TestData_Diff(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		period int
@@ -1034,9 +1034,9 @@ func TestData_Diff(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Diff(tt.args.period); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Diff() = %v, want %v", got, tt.want)
@@ -1047,9 +1047,9 @@ func TestData_Diff(t *testing.T) {
 
 func TestData_Shift(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		periods int
@@ -1106,9 +1106,9 @@ func TestData_Shift(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Shift(tt.args.periods); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Shift() = %v, want %v", got, tt.want)
@@ -1119,9 +1119,9 @@ func TestData_Shift(t *testing.T) {
 
 func TestData_Resize(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		newLen int
@@ -1166,9 +1166,9 @@ func TestData_Resize(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Resize(tt.args.newLen); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resize() = %v, want %v", got, tt.want)
@@ -1179,9 +1179,9 @@ func TestData_Resize(t *testing.T) {
 
 func TestData_Equal(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	type args struct {
 		r   Data
@@ -1224,9 +1224,9 @@ func TestData_Equal(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Equals(tt.args.r, tt.args.eps); got != tt.want {
 				t.Errorf("Data.DataEqual() = %v, want %v", got, tt.want)
@@ -1237,9 +1237,9 @@ func TestData_Equal(t *testing.T) {
 
 func TestData_Lerp(t *testing.T) {
 	type fields struct {
-		freq  int64
-		index []int64
-		data  []Dtype
+		freq   int64
+		index  []int64
+		values []Dtype
 	}
 	tests := []struct {
 		name   string
@@ -1317,9 +1317,9 @@ func TestData_Lerp(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := Data{
-				freq:  tt.fields.freq,
-				index: tt.fields.index,
-				data:  tt.fields.data,
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
 			}
 			if got := d.Lerp(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Lerp() = %v, want %v", got, tt.want)

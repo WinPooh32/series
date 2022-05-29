@@ -4,23 +4,23 @@ import (
 	"github.com/WinPooh32/series/math"
 )
 
-// Data is the series data container.
+// Data is the series values container.
 type Data struct {
-	freq  int64
-	index []int64
-	data  []Dtype
+	freq   int64
+	index  []int64
+	values []Dtype
 }
 
 // MakeData makes series data instance.
-// freq is the size of data sample.
-func MakeData(freq int64, index []int64, data []Dtype) Data {
-	if len(index) != len(data) {
-		panic("length of index and data must be equal")
+// freq is the size of values sample.
+func MakeData(freq int64, index []int64, values []Dtype) Data {
+	if len(index) != len(values) {
+		panic("length of index and values must be equal")
 	}
 	return Data{
-		freq:  freq,
-		index: index,
-		data:  data,
+		freq:   freq,
+		index:  index,
+		values: values,
 	}
 }
 
@@ -29,21 +29,21 @@ func (d Data) ArgAt(i int) int64 {
 	return d.index[i]
 }
 
-// At returns data value at i offset.
+// At returns values value at i offset.
 func (d Data) At(i int) Dtype {
-	return d.data[i]
+	return d.values[i]
 }
 
-// Index returns underlying index slice.
+// Index returns underlying index valuesice.
 func (d Data) Index() (index []int64) {
 	return d.index
 }
 
-func (d Data) Data() (data []Dtype) {
-	return d.data
+func (d Data) Data() (values []Dtype) {
+	return d.values
 }
 
-// Len returns size of series data.
+// Len returns size of series values.
 func (d Data) Len() int {
 	return len(d.index)
 }
@@ -58,15 +58,15 @@ func (d Data) Equals(r Data, eps Dtype) bool {
 }
 
 func (d Data) ArgEquals(r Data) bool {
-	slLeft := d.index
-	slRight := r.index
+	valuesLeft := d.index
+	valuesRight := r.index
 
-	if len(slLeft) != len(slRight) {
+	if len(valuesLeft) != len(valuesRight) {
 		return false
 	}
 
-	for i := range slLeft {
-		if slLeft[i] != slRight[i] {
+	for i := range valuesLeft {
+		if valuesLeft[i] != valuesRight[i] {
 			return false
 		}
 	}
@@ -75,16 +75,16 @@ func (d Data) ArgEquals(r Data) bool {
 }
 
 func (d Data) DataEquals(r Data, eps Dtype) bool {
-	slLeft := d.data
-	slRight := r.data
+	valuesLeft := d.values
+	valuesRight := r.values
 
-	if len(slLeft) != len(slRight) {
+	if len(valuesLeft) != len(valuesRight) {
 		return false
 	}
 
-	for i := range slLeft {
-		left := slLeft[i]
-		right := slRight[i]
+	for i := range valuesLeft {
+		left := valuesLeft[i]
+		right := valuesRight[i]
 
 		nanL := math.IsNaN(left)
 		nanR := math.IsNaN(right)
@@ -101,21 +101,21 @@ func (d Data) DataEquals(r Data, eps Dtype) bool {
 	return true
 }
 
-// Slice makes slice of data.
+// Slice makes valuesice of values.
 func (d Data) Slice(l, r int) Data {
 	return Data{
 		d.freq,
 		d.index[l:r],
-		d.data[l:r],
+		d.values[l:r],
 	}
 }
 
-// Clone makes full copy of data.
+// Clone makes full copy of values.
 func (d Data) Clone() Data {
 	clone := Data{
-		freq:  d.freq,
-		index: append([]int64(nil), d.index...),
-		data:  append([]Dtype(nil), d.data...),
+		freq:   d.freq,
+		index:  append([]int64(nil), d.index...),
+		values: append([]Dtype(nil), d.values...),
 	}
 	return clone
 }
@@ -123,7 +123,7 @@ func (d Data) Clone() Data {
 // Resize resizes underlying arrays.
 //
 // New index values are filled by MaxInt64.
-// New data values are filled by NaN.
+// New values values are filled by NaN.
 func (d Data) Resize(newLen int) Data {
 	if newLen < 0 {
 		panic("newLen must be positive value")
@@ -134,7 +134,7 @@ func (d Data) Resize(newLen int) Data {
 	switch {
 	case newLen < oldLen:
 		d.index = d.index[:newLen]
-		d.data = d.data[:newLen]
+		d.values = d.values[:newLen]
 	case newLen > oldLen:
 		dt := newLen - oldLen
 
@@ -143,31 +143,31 @@ func (d Data) Resize(newLen int) Data {
 		}
 
 		for i := 0; i < dt; i++ {
-			d.data = append(d.data, math.NaN())
+			d.values = append(d.values, math.NaN())
 		}
 	}
 
 	return d
 }
 
-// Append appends new values to series data.
+// Append appends new values to series values.
 func (d Data) Append(r Data) Data {
 	d.index = append(d.index, r.index...)
-	d.data = append(d.data, r.data...)
+	d.values = append(d.values, r.values...)
 	return d
 }
 
 func (d Data) Add(r Data) Data {
 	// Slices prevent implicit bounds checks.
-	sl := d.data
-	sr := r.data
+	values := d.values
+	sr := r.values
 
-	if len(sl) != len(sr) {
-		panic("sizes of data series must be equal")
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
 	}
 
-	for i := range sl {
-		sl[i] += sr[i]
+	for i := range values {
+		values[i] += sr[i]
 	}
 
 	return d
@@ -175,15 +175,15 @@ func (d Data) Add(r Data) Data {
 
 func (d Data) Sub(r Data) Data {
 	// Slices prevent implicit bounds checks.
-	sl := d.data
-	sr := r.data
+	values := d.values
+	sr := r.values
 
-	if len(sl) != len(sr) {
-		panic("sizes of data series must be equal")
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
 	}
 
-	for i := range sl {
-		sl[i] -= sr[i]
+	for i := range values {
+		values[i] -= sr[i]
 	}
 
 	return d
@@ -191,15 +191,15 @@ func (d Data) Sub(r Data) Data {
 
 func (d Data) Mul(r Data) Data {
 	// Slices prevent implicit bounds checks.
-	sl := d.data
-	sr := r.data
+	values := d.values
+	sr := r.values
 
-	if len(sl) != len(sr) {
-		panic("sizes of data series must be equal")
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
 	}
 
-	for i := range sl {
-		sl[i] *= sr[i]
+	for i := range values {
+		values[i] *= sr[i]
 	}
 
 	return d
@@ -207,143 +207,143 @@ func (d Data) Mul(r Data) Data {
 
 func (d Data) Div(r Data) Data {
 	// Slices prevent implicit bounds checks.
-	sl := d.data
-	sr := r.data
+	values := d.values
+	sr := r.values
 
-	if len(sl) != len(sr) {
-		panic("sizes of data series must be equal")
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
 	}
 
-	for i := range sl {
-		sl[i] /= sr[i]
+	for i := range values {
+		values[i] /= sr[i]
 	}
 
 	return d
 }
 
 func (d Data) AddScalar(s Dtype) Data {
-	sl := d.data
-	for i := range sl {
-		sl[i] += s
+	values := d.values
+	for i := range values {
+		values[i] += s
 	}
 	return d
 }
 
 func (d Data) SubScalar(s Dtype) Data {
-	sl := d.data
-	for i := range sl {
-		sl[i] -= s
+	values := d.values
+	for i := range values {
+		values[i] -= s
 	}
 	return d
 }
 
 func (d Data) MulScalar(s Dtype) Data {
-	sl := d.data
-	for i := range sl {
-		sl[i] *= s
+	values := d.values
+	for i := range values {
+		values[i] *= s
 	}
 	return d
 }
 
 func (d Data) DivScalar(s Dtype) Data {
-	sl := d.data
-	for i := range sl {
-		sl[i] /= s
+	values := d.values
+	for i := range values {
+		values[i] /= s
 	}
 	return d
 }
 
-// Log applies natural logarithm function to values of data.
+// Log applies natural logarithm function to values of values.
 func (d Data) Log() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = math.Log(v)
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Log(v)
 	}
 	return d
 }
 
 // Abs replace each elemnt by their absolute value.
 func (d Data) Abs() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = math.Abs(v)
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Abs(v)
 	}
 	return d
 }
 
 // Floor returns the greatest integer value less than or equal to x.
 func (d Data) Floor() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = math.Floor(v)
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Floor(v)
 	}
 	return d
 }
 
 // Trunc returns the integer value of x.
 func (d Data) Trunc() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = math.Trunc(v)
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Trunc(v)
 	}
 	return d
 }
 
 // Round returns the nearest integer, rounding half away from zero.
 func (d Data) Round() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = Dtype(math.Round(v))
+	values := d.values
+	for i, v := range values {
+		values[i] = Dtype(math.Round(v))
 	}
 	return d
 }
 
 // RoundToEven returns the nearest integer, rounding ties to even.
 func (d Data) RoundToEven() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = Dtype(math.RoundToEven(v))
+	values := d.values
+	for i, v := range values {
+		values[i] = Dtype(math.RoundToEven(v))
 	}
 	return d
 }
 
 func (d Data) Ceil() Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = math.Ceil(v)
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Ceil(v)
 	}
 	return d
 }
 
-// Apply applies user's function to every value of data.
+// Apply applies user's function to every value of values.
 func (d Data) Apply(fn func(Dtype) Dtype) Data {
-	sl := d.data
-	for i, v := range sl {
-		sl[i] = fn(v)
+	values := d.values
+	for i, v := range values {
+		values[i] = fn(v)
 	}
 	return d
 }
 
-// Reverse reverses index and data values.
+// Reverse reverses index and values values.
 func (d Data) Reverse() Data {
 	return d.ArgReverse().DataReverse()
 }
 
 // Reverse reverses only index values.
 func (d Data) ArgReverse() Data {
-	sl := d.index
+	values := d.index
 
-	if l := len(sl); l <= 1 {
+	if l := len(values); l <= 1 {
 		return d
 	} else if l == 2 {
-		sl[0], sl[1] = sl[1], sl[0]
+		values[0], values[1] = values[1], values[0]
 		return d
 	}
 
-	half := len(sl) / 2
+	half := len(values) / 2
 
-	left := sl[:half]
-	right := sl[half:]
+	left := values[:half]
+	right := values[half:]
 
 	l := 0
 	r := len(right) - 1
@@ -357,21 +357,21 @@ func (d Data) ArgReverse() Data {
 	return d
 }
 
-// Reverse reverses only data values.
+// Reverse reverses only values values.
 func (d Data) DataReverse() Data {
-	sl := d.data
+	values := d.values
 
-	if l := len(sl); l <= 1 {
+	if l := len(values); l <= 1 {
 		return d
 	} else if l == 2 {
-		sl[0], sl[1] = sl[1], sl[0]
+		values[0], values[1] = values[1], values[0]
 		return d
 	}
 
-	half := len(sl) / 2
+	half := len(values) / 2
 
-	left := sl[:half]
-	right := sl[half:]
+	left := values[:half]
+	right := values[half:]
 
 	l := 0
 	r := len(right) - 1
@@ -387,10 +387,10 @@ func (d Data) DataReverse() Data {
 
 // Fillna fills NaN values.
 func (d Data) Fillna(value Dtype) Data {
-	sl := d.Data()
-	for i, v := range sl {
+	values := d.Data()
+	for i, v := range values {
 		if math.IsNaN(v) {
-			sl[i] = value
+			values[i] = value
 		}
 	}
 	return d
@@ -398,12 +398,12 @@ func (d Data) Fillna(value Dtype) Data {
 
 // Pad fills NaNs by known previous values.
 func (d Data) Pad() Data {
-	sl := d.Data()
+	values := d.Data()
 	gg := math.NaN()
-	for i, v := range sl {
+	for i, v := range values {
 		if math.IsNaN(v) {
 			if !math.IsNaN(gg) {
-				sl[i] = gg
+				values[i] = gg
 			}
 		} else {
 			gg = v
@@ -414,7 +414,7 @@ func (d Data) Pad() Data {
 
 // Lerp fills NaNs between known values by linear interpolation method.
 func (d Data) Lerp() Data {
-	values := d.data
+	values := d.values
 
 	if len(values) == 0 {
 		return d
@@ -469,9 +469,9 @@ func (d Data) Lerp() Data {
 	return d
 }
 
-// Diff calculates the difference of a series data elements.
+// Diff calculates the difference of a series values elements.
 func (d Data) Diff(periods int) Data {
-	sl := d.Data()
+	values := d.Data()
 
 	if periods < 0 {
 		panic("period must be positive value")
@@ -481,17 +481,17 @@ func (d Data) Diff(periods int) Data {
 
 	var naVals []Dtype
 
-	if len(sl) > periods {
-		lv := sl[:len(sl)-periods]
-		rv := sl[periods:]
+	if len(values) > periods {
+		lv := values[:len(values)-periods]
+		rv := values[periods:]
 
 		for i := len(rv) - 1; i >= 0; i-- {
 			rv[i] -= lv[i]
 		}
 
-		naVals = sl[:periods]
+		naVals = values[:periods]
 	} else {
-		naVals = sl
+		naVals = values
 	}
 
 	for i := range naVals {
@@ -501,13 +501,13 @@ func (d Data) Diff(periods int) Data {
 	return d
 }
 
-// Shift shifts data by specified periods count.
+// Shift shifts values by specified periods count.
 func (d Data) Shift(periods int) Data {
 	if periods == 0 {
 		return d
 	}
 
-	sl := d.Data()
+	values := d.Data()
 
 	var (
 		naVals []Dtype
@@ -515,20 +515,20 @@ func (d Data) Shift(periods int) Data {
 		src    []Dtype
 	)
 
-	if shlen := int(math.Abs(Dtype(periods))); shlen < len(sl) {
+	if shlen := int(math.Abs(Dtype(periods))); shlen < len(values) {
 		if periods > 0 {
-			naVals = sl[:shlen]
-			dst = sl[shlen:]
-			src = sl
+			naVals = values[:shlen]
+			dst = values[shlen:]
+			src = values
 		} else {
-			naVals = sl[len(sl)-shlen:]
-			dst = sl[:len(sl)-shlen]
-			src = sl[shlen:]
+			naVals = values[len(values)-shlen:]
+			dst = values[:len(values)-shlen]
+			src = values[shlen:]
 		}
 
 		copy(dst, src)
 	} else {
-		naVals = sl
+		naVals = values
 	}
 
 	for i := range naVals {
@@ -557,13 +557,13 @@ func (d Data) EWM(atype AlphaType, param Dtype, adjust bool, ignoreNA bool) ExpW
 	}
 }
 
-// RollData applies custom function to rolling window of data.
+// RollData applies custom function to rolling window of values.
 // Function accepts window bounds.
 func (d Data) RollData(window int, cb func(l int, r int)) {
-	if len(d.data) <= window {
-		cb(0, len(d.data))
+	if len(d.values) <= window {
+		cb(0, len(d.values))
 	}
-	for i := window; i <= len(d.data); i++ {
+	for i := window; i <= len(d.values); i++ {
 		cb(i-window, i)
 	}
 }

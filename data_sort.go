@@ -8,14 +8,14 @@ import (
 
 type sortable Data
 
-func (x sortable) Len() int { return len(x.data) }
+func (x sortable) Len() int { return len(x.values) }
 
 func (x sortable) Less(i, j int) bool {
-	return x.data[i] < x.data[j] || (math.IsNaN(x.data[i]) && !math.IsNaN(x.data[j]))
+	return x.values[i] < x.values[j] || (math.IsNaN(x.values[i]) && !math.IsNaN(x.values[j]))
 }
 
 func (x sortable) Swap(i, j int) {
-	x.data[i], x.data[j] = x.data[j], x.data[i]
+	x.values[i], x.values[j] = x.values[j], x.values[i]
 	x.index[i], x.index[j] = x.index[j], x.index[i]
 }
 
@@ -26,11 +26,11 @@ func (x argSortable) Len() int { return len(x.index) }
 func (x argSortable) Less(i, j int) bool { return x.index[i] < x.index[j] }
 
 func (x argSortable) Swap(i, j int) {
-	x.data[i], x.data[j] = x.data[j], x.data[i]
+	x.values[i], x.values[j] = x.values[j], x.values[i]
 	x.index[i], x.index[j] = x.index[j], x.index[i]
 }
 
-// ArgSort sorts data's' index.
+// ArgSort sorts data's index.
 func (d Data) ArgSort() {
 	sort.Sort(argSortable(d))
 }
@@ -40,12 +40,12 @@ func (d Data) Sort() {
 	sort.Sort(sortable(d))
 }
 
-// ArgSortStable sorts data's' index using stable sort algorithm.
+// ArgSortStable sorts data's index using stable sort algorithm.
 func (d Data) ArgSortStable() {
 	sort.Stable(argSortable(d))
 }
 
-// SortStable sorts data's' index using stable sort algorithm.
+// SortStable sorts data's index using stable sort algorithm.
 func (d Data) SortStable() {
 	sort.Stable(sortable(d))
 }

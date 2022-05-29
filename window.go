@@ -58,7 +58,7 @@ func (w Window) applyStd(ma Data) Data {
 	for i := total; i < len(data); i++ {
 		p := i + 1
 		v := w.data.Slice(p-period, p)
-		data[i] = Std(v, ma.data[p-1])
+		data[i] = Std(v, ma.values[p-1])
 	}
 
 	for i := 0; i < total; i++ {
