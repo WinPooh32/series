@@ -70,7 +70,7 @@ func TestData_Resample_Interpolate(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Resample(tt.args.freq, OriginStart).Interpolate(tt.args.method); !got.Equal(tt.want, Eps) {
+			if got := d.Resample(tt.args.freq, OriginStart).Interpolate(tt.args.method); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
 			}
 		})
@@ -270,7 +270,7 @@ func TestData_Resample(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !got.Equal(tt.want, Eps) {
+			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
 			}
 		})
@@ -308,7 +308,7 @@ func TestData_Add(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Add(tt.args.r); !got.Equal(tt.want, Eps) {
+			if got := d.Add(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Add() = %v, want %v", got, tt.want)
 			}
 		})
@@ -346,7 +346,7 @@ func TestData_Sub(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Sub(tt.args.r); !got.Equal(tt.want, Eps) {
+			if got := d.Sub(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Sub() = %v, want %v", got, tt.want)
 			}
 		})
@@ -384,7 +384,7 @@ func TestData_Mul(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Mul(tt.args.r); !got.Equal(tt.want, Eps) {
+			if got := d.Mul(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Mul() = %v, want %v", got, tt.want)
 			}
 		})
@@ -422,7 +422,7 @@ func TestData_Div(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Div(tt.args.r); !got.Equal(tt.want, Eps) {
+			if got := d.Div(tt.args.r); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Div() = %v, want %v", got, tt.want)
 			}
 		})
@@ -460,7 +460,7 @@ func TestData_AddScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.AddScalar(tt.args.s); !got.Equal(tt.want, Eps) {
+			if got := d.AddScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.AddScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -498,7 +498,7 @@ func TestData_SubScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.SubScalar(tt.args.s); !got.Equal(tt.want, Eps) {
+			if got := d.SubScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.SubScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -536,7 +536,7 @@ func TestData_MulScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.MulScalar(tt.args.s); !got.Equal(tt.want, Eps) {
+			if got := d.MulScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.MulScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -574,7 +574,7 @@ func TestData_DivScalar(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.DivScalar(tt.args.s); !got.Equal(tt.want, Eps) {
+			if got := d.DivScalar(tt.args.s); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.DivScalar() = %v, want %v", got, tt.want)
 			}
 		})
@@ -617,7 +617,7 @@ func TestData_Fillna(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Fillna(tt.args.value); !got.Equal(tt.want, Eps) {
+			if got := d.Fillna(tt.args.value); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Fillna() = %v, want %v", got, tt.want)
 			}
 		})
@@ -790,7 +790,7 @@ func TestData_ArgSort(t *testing.T) {
 
 			d.ArgSort()
 
-			if !d.Equal(tt.want, Eps) {
+			if !d.Equals(tt.want, Eps) {
 				t.Fatalf("Data.ArgSort() = %v, want %v", d.data, tt.want.data)
 			}
 		})
@@ -831,7 +831,7 @@ func TestData_ArgSortStable(t *testing.T) {
 
 			d.ArgSortStable()
 
-			if !d.Equal(tt.want, Eps) {
+			if !d.Equals(tt.want, Eps) {
 				t.Fatalf("Data.ArgSortStable() = %v, want %v", d.data, tt.want.data)
 			}
 		})
@@ -882,7 +882,7 @@ func TestData_Reverse(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Reverse(); !got.Equal(tt.want, Eps) {
+			if got := d.Reverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})
@@ -933,7 +933,7 @@ func TestData_ArgReverse(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.ArgReverse(); !got.Equal(tt.want, Eps) {
+			if got := d.ArgReverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})
@@ -984,7 +984,7 @@ func TestData_DataReverse(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.DataReverse(); !got.Equal(tt.want, Eps) {
+			if got := d.DataReverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1038,7 +1038,7 @@ func TestData_Diff(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Diff(tt.args.period); !got.Equal(tt.want, Eps) {
+			if got := d.Diff(tt.args.period); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Diff() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1110,7 +1110,7 @@ func TestData_Shift(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Shift(tt.args.periods); !got.Equal(tt.want, Eps) {
+			if got := d.Shift(tt.args.periods); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Shift() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1170,7 +1170,7 @@ func TestData_Resize(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Resize(tt.args.newLen); !got.Equal(tt.want, Eps) {
+			if got := d.Resize(tt.args.newLen); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resize() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1228,7 +1228,7 @@ func TestData_Equal(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Equal(tt.args.r, tt.args.eps); got != tt.want {
+			if got := d.Equals(tt.args.r, tt.args.eps); got != tt.want {
 				t.Errorf("Data.DataEqual() = %v, want %v", got, tt.want)
 			}
 		})
@@ -1321,7 +1321,7 @@ func TestData_Lerp(t *testing.T) {
 				index: tt.fields.index,
 				data:  tt.fields.data,
 			}
-			if got := d.Lerp(); !got.Equal(tt.want, Eps) {
+			if got := d.Lerp(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Lerp() = %v, want %v", got, tt.want)
 			}
 		})

@@ -53,11 +53,11 @@ func (d Data) Freq() int64 {
 	return d.freq
 }
 
-func (d Data) Equal(r Data, eps Dtype) bool {
-	return d.ArgEqual(r) && d.DataEqual(r, eps)
+func (d Data) Equals(r Data, eps Dtype) bool {
+	return d.ArgEquals(r) && d.DataEquals(r, eps)
 }
 
-func (d Data) ArgEqual(r Data) bool {
+func (d Data) ArgEquals(r Data) bool {
 	slLeft := d.index
 	slRight := r.index
 
@@ -74,7 +74,7 @@ func (d Data) ArgEqual(r Data) bool {
 	return true
 }
 
-func (d Data) DataEqual(r Data, eps Dtype) bool {
+func (d Data) DataEquals(r Data, eps Dtype) bool {
 	slLeft := d.data
 	slRight := r.data
 

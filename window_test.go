@@ -33,7 +33,7 @@ func TestWindow_Sum(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Sum(); !got.Equal(tt.want, Eps) {
+			if got := w.Sum(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Window.Sum() = %v, want %v", got, tt.want)
 			}
 		})
@@ -65,7 +65,7 @@ func TestWindow_Mean(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Mean(); !got.Equal(tt.want, Eps) {
+			if got := w.Mean(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Window.Mean() = %v, want %v", got, tt.want)
 			}
 		})
@@ -97,7 +97,7 @@ func TestWindow_Min(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Min(); !got.Equal(tt.want, Eps) {
+			if got := w.Min(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Window.Min() = %v, want %v", got, tt.want)
 			}
 		})
@@ -129,7 +129,7 @@ func TestWindow_Max(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Max(); !got.Equal(tt.want, Eps) {
+			if got := w.Max(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Window.Max() = %v, want %v", got, tt.want)
 			}
 		})
@@ -164,7 +164,7 @@ func TestWindow_Std(t *testing.T) {
 
 			ma := tt.fields.data.Rolling(3).Mean()
 
-			if got := w.Std(ma); !got.Equal(tt.want, Eps) {
+			if got := w.Std(ma); !got.Equals(tt.want, Eps) {
 				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
 			}
 		})

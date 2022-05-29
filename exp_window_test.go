@@ -47,7 +47,7 @@ func TestExpWindow_Mean(t *testing.T) {
 				ignoreNA: tt.fields.ignoreNA,
 			}
 
-			if got := w.Mean(); !got.Equal(tt.want, 10e-4) {
+			if got := w.Mean(); !got.Equals(tt.want, 10e-4) {
 				t.Errorf("ExpWindow.Mean() = %v, want %v", got, tt.want)
 			}
 		})
