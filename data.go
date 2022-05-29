@@ -521,7 +521,7 @@ func (d Data) Shift(periods int) Data {
 			dst = sl[shlen:]
 			src = sl
 		} else {
-			naVals = sl[shlen:]
+			naVals = sl[len(sl)-shlen:]
 			dst = sl[:len(sl)-shlen]
 			src = sl[shlen:]
 		}
