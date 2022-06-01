@@ -1,5 +1,6 @@
 # Series
 
+![test](https://github.com/WinPooh32/series/actions/workflows/test.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/WinPooh32/series)](https://goreportcard.com/report/github.com/WinPooh32/series)
 [![Go Reference](https://pkg.go.dev/badge/github.com/WinPooh32/series.svg)](https://pkg.go.dev/github.com/WinPooh32/series)
 
