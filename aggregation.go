@@ -12,7 +12,7 @@ func Mean(data Data) Dtype {
 	var (
 		count int
 		mean  Dtype
-		items = data.Data()
+		items = data.Values()
 		inv   = 1.0 / Dtype(len(items))
 	)
 	for _, v := range items {
@@ -33,7 +33,7 @@ func Sum(data Data) Dtype {
 	var (
 		sum   Dtype
 		count int
-		items = data.Data()
+		items = data.Values()
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -53,7 +53,7 @@ func Min(data Data) Dtype {
 	var (
 		min   Dtype = maxReal
 		count int
-		items = data.Data()
+		items = data.Values()
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -75,7 +75,7 @@ func Max(data Data) Dtype {
 	var (
 		max   Dtype = -maxReal
 		count int
-		items = data.Data()
+		items = data.Values()
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
@@ -98,7 +98,7 @@ func Argmin(data Data) int {
 	var (
 		min   Dtype = maxReal
 		pos   int
-		items = data.Data()
+		items = data.Values()
 	)
 	for i, v := range items {
 		if math.IsNaN(v) {
@@ -118,7 +118,7 @@ func Argmax(data Data) int {
 	var (
 		max   Dtype = -maxReal
 		pos   int   = -1
-		items       = data.Data()
+		items       = data.Values()
 	)
 	for i, v := range items {
 		if math.IsNaN(v) {
@@ -137,7 +137,7 @@ func Argmax(data Data) int {
 func Std(data Data, mean Dtype) Dtype {
 	var (
 		count  int
-		items  = data.Data()
+		items  = data.Values()
 		inv    = 1.0 / Dtype(len(items)-1)
 		stdDev Dtype
 	)
@@ -156,7 +156,7 @@ func Std(data Data, mean Dtype) Dtype {
 }
 
 func First(data Data) Dtype {
-	items := data.Data()
+	items := data.Values()
 	if len(items) == 0 {
 		return math.NaN()
 	}
@@ -164,7 +164,7 @@ func First(data Data) Dtype {
 }
 
 func Last(data Data) Dtype {
-	items := data.Data()
+	items := data.Values()
 	if len(items) == 0 {
 		return math.NaN()
 	}

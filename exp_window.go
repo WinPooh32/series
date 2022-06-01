@@ -66,13 +66,13 @@ func (w ExpWindow) applyMean(data Data, alpha Dtype) Data {
 
 func (ExpWindow) adjustedMean(data Data, alpha Dtype, ignoreNA bool) {
 	var (
-		items  []Dtype = data.Data()
+		values []Dtype = data.Values()
 		weight Dtype   = 1
 		last   Dtype   = 0
 	)
 
 	alpha = 1 - alpha
-	for t, x := range items {
+	for t, x := range values {
 
 		w := alpha*weight + 1
 
@@ -80,7 +80,7 @@ func (ExpWindow) adjustedMean(data Data, alpha Dtype, ignoreNA bool) {
 			if ignoreNA {
 				weight = w
 			}
-			items[t] = last
+			values[t] = last
 			continue
 		}
 
@@ -88,32 +88,32 @@ func (ExpWindow) adjustedMean(data Data, alpha Dtype, ignoreNA bool) {
 
 		weight = w
 
-		items[t] = last
+		values[t] = last
 	}
 }
 
 func (ExpWindow) notadjustedMean(data Data, alpha Dtype, ignoreNA bool) {
 	var (
-		count int
-		items []Dtype = data.Data()
-		beta  Dtype   = 1 - alpha
-		last  Dtype   = items[0]
+		count  int
+		values []Dtype = data.Values()
+		beta   Dtype   = 1 - alpha
+		last   Dtype   = values[0]
 	)
 	if math.IsNaN(last) {
 		last = 0
-		items[0] = last
+		values[0] = last
 	}
-	for t := 1; t < len(items); t++ {
-		x := items[t]
+	for t := 1; t < len(values); t++ {
+		x := values[t]
 
 		if math.IsNaN(x) {
-			items[t] = last
+			values[t] = last
 			continue
 		}
 
 		// yt = (1−α)*y(t−1) + α*x(t)
 		last = (beta * last) + (alpha * x)
-		items[t] = last
+		values[t] = last
 
 		count++
 	}

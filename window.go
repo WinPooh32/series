@@ -30,17 +30,17 @@ func (w Window) Std(ma Data) Data {
 func (w Window) Apply(agg AggregateFunc) Data {
 	var (
 		clone  = w.data.Clone()
-		data   = clone.Data()
+		values = clone.Values()
 		period = w.len
 	)
 
 	for i := 0; i < w.len-1; i++ {
-		data[i] = math.NaN()
+		values[i] = math.NaN()
 	}
 
 	w.data.RollData(period, func(l int, r int) {
 		slice := w.data.Slice(l, r)
-		data[r-1] = agg(slice)
+		values[r-1] = agg(slice)
 	})
 
 	return clone
@@ -49,20 +49,20 @@ func (w Window) Apply(agg AggregateFunc) Data {
 func (w Window) applyStd(ma Data) Data {
 	var (
 		clone  = w.data.Clone()
-		data   = clone.Data()
+		values = clone.Values()
 		period = w.len
 	)
 
 	total := period - 1
 
-	for i := total; i < len(data); i++ {
+	for i := total; i < len(values); i++ {
 		p := i + 1
 		v := w.data.Slice(p-period, p)
-		data[i] = Std(v, ma.values[p-1])
+		values[i] = Std(v, ma.values[p-1])
 	}
 
 	for i := 0; i < total; i++ {
-		data[i] = math.NaN()
+		values[i] = math.NaN()
 	}
 
 	return clone

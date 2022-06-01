@@ -34,12 +34,13 @@ func (d Data) At(i int) Dtype {
 	return d.values[i]
 }
 
-// Index returns underlying index valuesice.
+// Index returns underlying index values.
 func (d Data) Index() (index []int64) {
 	return d.index
 }
 
-func (d Data) Data() (values []Dtype) {
+// Values returns data  data values.
+func (d Data) Values() (values []Dtype) {
 	return d.values
 }
 
@@ -53,6 +54,8 @@ func (d Data) Freq() int64 {
 	return d.freq
 }
 
+// Equals tests data searies are equal to each other.
+// NaN values are considered to be equal.
 func (d Data) Equals(r Data, eps Dtype) bool {
 	return d.ArgEquals(r) && d.DataEquals(r, eps)
 }
@@ -387,7 +390,7 @@ func (d Data) DataReverse() Data {
 
 // Fillna fills NaN values.
 func (d Data) Fillna(value Dtype) Data {
-	values := d.Data()
+	values := d.Values()
 	for i, v := range values {
 		if math.IsNaN(v) {
 			values[i] = value
@@ -398,7 +401,7 @@ func (d Data) Fillna(value Dtype) Data {
 
 // Pad fills NaNs by known previous values.
 func (d Data) Pad() Data {
-	values := d.Data()
+	values := d.Values()
 	gg := math.NaN()
 	for i, v := range values {
 		if math.IsNaN(v) {
@@ -471,7 +474,7 @@ func (d Data) Lerp() Data {
 
 // Diff calculates the difference of a series values elements.
 func (d Data) Diff(periods int) Data {
-	values := d.Data()
+	values := d.Values()
 
 	if periods < 0 {
 		panic("period must be positive value")
@@ -507,7 +510,7 @@ func (d Data) Shift(periods int) Data {
 		return d
 	}
 
-	values := d.Data()
+	values := d.Values()
 
 	var (
 		naVals []Dtype
