@@ -24,8 +24,8 @@ func MakeData(freq int64, index []int64, values []Dtype) Data {
 	}
 }
 
-// ArgAt returns index value at i offset.
-func (d Data) ArgAt(i int) int64 {
+// IndexAt returns index value at i offset.
+func (d Data) IndexAt(i int) int64 {
 	return d.index[i]
 }
 
@@ -57,10 +57,10 @@ func (d Data) Freq() int64 {
 // Equals tests data searies are equal to each other.
 // NaN values are considered to be equal.
 func (d Data) Equals(r Data, eps Dtype) bool {
-	return d.ArgEquals(r) && d.DataEquals(r, eps)
+	return d.IndexEquals(r) && d.ValuesEquals(r, eps)
 }
 
-func (d Data) ArgEquals(r Data) bool {
+func (d Data) IndexEquals(r Data) bool {
 	valuesLeft := d.index
 	valuesRight := r.index
 
@@ -77,7 +77,7 @@ func (d Data) ArgEquals(r Data) bool {
 	return true
 }
 
-func (d Data) DataEquals(r Data, eps Dtype) bool {
+func (d Data) ValuesEquals(r Data, eps Dtype) bool {
 	valuesLeft := d.values
 	valuesRight := r.values
 
@@ -329,11 +329,11 @@ func (d Data) Apply(fn func(Dtype) Dtype) Data {
 
 // Reverse reverses index and values values.
 func (d Data) Reverse() Data {
-	return d.ArgReverse().DataReverse()
+	return d.IndexReverse().DataReverse()
 }
 
 // Reverse reverses only index values.
-func (d Data) ArgReverse() Data {
+func (d Data) IndexReverse() Data {
 	values := d.index
 
 	if l := len(values); l <= 1 {

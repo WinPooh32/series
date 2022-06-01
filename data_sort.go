@@ -30,8 +30,8 @@ func (x argSortable) Swap(i, j int) {
 	x.index[i], x.index[j] = x.index[j], x.index[i]
 }
 
-// ArgSort sorts data's index.
-func (d Data) ArgSort() {
+// IndexSort sorts data's index.
+func (d Data) IndexSort() {
 	sort.Sort(argSortable(d))
 }
 
@@ -40,8 +40,8 @@ func (d Data) Sort() {
 	sort.Sort(sortable(d))
 }
 
-// ArgSortStable sorts data's index using stable sort algorithm.
-func (d Data) ArgSortStable() {
+// IndexSortStable sorts data's index using stable sort algorithm.
+func (d Data) IndexSortStable() {
 	sort.Stable(argSortable(d))
 }
 

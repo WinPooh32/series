@@ -92,7 +92,7 @@ func Max(data Data) Dtype {
 	return max
 }
 
-// Argmin returns index of the smallest value of series data.
+// Argmin returns offset of the smallest value of series data.
 // If the minimum is achieved in multiple locations, the first row position is returned.
 func Argmin(data Data) int {
 	var (
@@ -112,7 +112,7 @@ func Argmin(data Data) int {
 	return pos
 }
 
-// Argmax returns index of the biggest value of series data.
+// Argmax returns offset of the biggest value of series data.
 // If the maximum is achieved in multiple locations, the first row position is returned.
 func Argmax(data Data) int {
 	var (

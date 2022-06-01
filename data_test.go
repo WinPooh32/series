@@ -661,7 +661,7 @@ func TestData_Pad(t *testing.T) {
 
 			for i, v := range tt.want.values {
 				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
-					t.Fatalf("Data.ArgSort() = %v, want %v", d.values, tt.want.values)
+					t.Fatalf("Data.IndexSort() = %v, want %v", d.values, tt.want.values)
 				}
 			}
 		})
@@ -756,7 +756,7 @@ func TestData_SortStable(t *testing.T) {
 	}
 }
 
-func TestData_ArgSort(t *testing.T) {
+func TestData_IndexSort(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
@@ -768,7 +768,7 @@ func TestData_ArgSort(t *testing.T) {
 		want   Data
 	}{
 		{
-			name: "simple ArgSort",
+			name: "simple IndexSort",
 			fields: fields{
 				freq:   1,
 				index:  []int64{4, 1, 3, 2, 5},
@@ -788,16 +788,16 @@ func TestData_ArgSort(t *testing.T) {
 				values: tt.fields.values,
 			}
 
-			d.ArgSort()
+			d.IndexSort()
 
 			if !d.Equals(tt.want, Eps) {
-				t.Fatalf("Data.ArgSort() = %v, want %v", d.values, tt.want.values)
+				t.Fatalf("Data.IndexSort() = %v, want %v", d.values, tt.want.values)
 			}
 		})
 	}
 }
 
-func TestData_ArgSortStable(t *testing.T) {
+func TestData_IndexSortStable(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
@@ -809,7 +809,7 @@ func TestData_ArgSortStable(t *testing.T) {
 		want   Data
 	}{
 		{
-			name: "simple ArgSortStable",
+			name: "simple IndexSortStable",
 			fields: fields{
 				freq:   1,
 				index:  []int64{4, 1, 3, 2, 5},
@@ -829,10 +829,10 @@ func TestData_ArgSortStable(t *testing.T) {
 				values: tt.fields.values,
 			}
 
-			d.ArgSortStable()
+			d.IndexSortStable()
 
 			if !d.Equals(tt.want, Eps) {
-				t.Fatalf("Data.ArgSortStable() = %v, want %v", d.values, tt.want.values)
+				t.Fatalf("Data.IndexSortStable() = %v, want %v", d.values, tt.want.values)
 			}
 		})
 	}
@@ -889,7 +889,7 @@ func TestData_Reverse(t *testing.T) {
 	}
 }
 
-func TestData_ArgReverse(t *testing.T) {
+func TestData_IndexReverse(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
@@ -933,7 +933,7 @@ func TestData_ArgReverse(t *testing.T) {
 				index:  tt.fields.index,
 				values: tt.fields.values,
 			}
-			if got := d.ArgReverse(); !got.Equals(tt.want, Eps) {
+			if got := d.IndexReverse(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Reverse() = %v, want %v", got, tt.want)
 			}
 		})
