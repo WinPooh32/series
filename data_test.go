@@ -79,11 +79,15 @@ func TestData_Resample_Interpolate(t *testing.T) {
 
 func TestData_Resample(t *testing.T) {
 	const (
-		second = int64((1 * time.Second) / time.Millisecond)
-		minute = int64((1 * time.Minute) / time.Millisecond)
+		second = int64(time.Second)
+		minute = int64(time.Minute)
 	)
 
-	dayStart := time.Date(2022, 5, 7, 0, 0, 0, 0, time.UTC).UnixMilli()
+	dayStart := time.Date(2022, 5, 7, 0, 0, 0, 0, time.UTC).UnixNano()
+
+	freq := 2 * minute
+	point := dayStart + 1*minute
+	nearestFrameBegin := freq * (point / freq)
 
 	type fields struct {
 		freq   int64
@@ -239,7 +243,7 @@ func TestData_Resample(t *testing.T) {
 			fields{
 				1 * minute,
 				[]int64{
-					dayStart + 1*minute,
+					dayStart + 1*minute + 1*second,
 					dayStart + 2*minute,
 					dayStart + 3*minute,
 					dayStart + 4*minute,
@@ -255,9 +259,9 @@ func TestData_Resample(t *testing.T) {
 			MakeData(
 				2*minute,
 				[]int64{
-					dayStart + 1*minute,
-					dayStart + 3*minute,
-					dayStart + 5*minute,
+					nearestFrameBegin,
+					nearestFrameBegin + 2*minute,
+					nearestFrameBegin + 4*minute,
 				},
 				[]Dtype{3, 7, 11},
 			),
@@ -270,7 +274,7 @@ func TestData_Resample(t *testing.T) {
 				index:  tt.fields.index,
 				values: tt.fields.values,
 			}
-			if got := d.Resample(tt.args.freq, OriginStart).Sum(); !got.Equals(tt.want, Eps) {
+			if got := d.Resample(tt.args.freq, tt.args.origin).Sum(); !got.Equals(tt.want, Eps) {
 				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
 			}
 		})

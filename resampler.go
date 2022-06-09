@@ -169,7 +169,7 @@ func (Resampler) fillData(dst, src []Dtype, step int) []Dtype {
 
 func (res Resampler) downsample(agg AggregateFunc) Data {
 	if agg == nil {
-		panic("aggregation func must not be null!")
+		panic("aggregation func must not be nil!")
 	}
 
 	if len(res.data.index) == 0 {
@@ -188,20 +188,20 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		aggValue = make([]Dtype, 0, bucketsTotal)
 		aggIndex = make([]int64, 0, bucketsTotal)
 
-		startPointTS = srcIndex[0]
-		endPointTS   = res.adjust(startPointTS)
-		endPoint     = int(math.Ceil(Dtype(endPointTS) / Dtype(res.data.freq)))
-	)
-
-	var (
 		value Dtype
 		beg   = 0
-		end   = endPoint
-		idx   = srcIndex[0]
+		end   = bucket
+		idx   = res.align(srcIndex[0])
 	)
 
-	for i := 0; i < bucketsTotal; i++ {
-		if end > len(srcIndex) {
+	for i := 0; ; i++ {
+		if end >= len(srcIndex) {
+			end = len(srcIndex)
+
+			if beg >= end {
+				break
+			}
+
 			value = agg(data.Slice(beg, len(srcIndex)))
 
 			aggValue = append(aggValue, value)
@@ -210,7 +210,8 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 			break
 		}
 
-		value = agg(data.Slice(beg, end))
+		view := data.Slice(beg, end)
+		value = agg(view)
 
 		aggValue = append(aggValue, value)
 		aggIndex = append(aggIndex, idx)
@@ -223,19 +224,22 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 	return MakeData(res.freq, aggIndex, aggValue)
 }
 
-func (res Resampler) adjust(startPoint int64) int64 {
-	var nextPoint int64
+func (res Resampler) align(point int64) int64 {
+	var newPoint int64
+
+	freq := res.freq
 
 	switch res.origin {
 	case OriginStart:
-		nextPoint = res.freq
+		newPoint = point
 	case OriginEpoch:
-		nextPoint = (startPoint/res.freq+1)*res.freq - startPoint
+		newPoint = freq * (point / freq)
 	case OriginStartDay:
-		t := time.Unix(0, startPoint*int64(time.Millisecond))
-		dayStart := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
-		nextPoint = dayStart.AddDate(0, 0, 1).UnixMilli()
+		t := time.Unix(0, point)
+		dayStart := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
+		point = int64(dayStart.Sub(t))
+		newPoint = freq * (point / freq)
 	}
 
-	return nextPoint
+	return newPoint
 }
