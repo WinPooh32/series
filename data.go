@@ -8,12 +8,12 @@ import (
 type Data struct {
 	freq   int64
 	index  []int64
-	values []Dtype
+	values []DType
 }
 
 // MakeData makes series data instance.
 // freq is the size of values sample.
-func MakeData(freq int64, index []int64, values []Dtype) Data {
+func MakeData(freq int64, index []int64, values []DType) Data {
 	if len(index) != len(values) {
 		panic("length of index and values must be equal")
 	}
@@ -30,7 +30,7 @@ func (d Data) IndexAt(i int) int64 {
 }
 
 // At returns values value at i offset.
-func (d Data) At(i int) Dtype {
+func (d Data) At(i int) DType {
 	return d.values[i]
 }
 
@@ -40,7 +40,7 @@ func (d Data) Index() (index []int64) {
 }
 
 // Values returns data  data values.
-func (d Data) Values() (values []Dtype) {
+func (d Data) Values() (values []DType) {
 	return d.values
 }
 
@@ -56,7 +56,7 @@ func (d Data) Freq() int64 {
 
 // Equals tests data searies are equal to each other.
 // NaN values are considered to be equal.
-func (d Data) Equals(r Data, eps Dtype) bool {
+func (d Data) Equals(r Data, eps DType) bool {
 	return d.IndexEquals(r) && d.ValuesEquals(r, eps)
 }
 
@@ -77,7 +77,7 @@ func (d Data) IndexEquals(r Data) bool {
 	return true
 }
 
-func (d Data) ValuesEquals(r Data, eps Dtype) bool {
+func (d Data) ValuesEquals(r Data, eps DType) bool {
 	valuesLeft := d.values
 	valuesRight := r.values
 
@@ -118,7 +118,7 @@ func (d Data) Clone() Data {
 	clone := Data{
 		freq:   d.freq,
 		index:  append([]int64(nil), d.index...),
-		values: append([]Dtype(nil), d.values...),
+		values: append([]DType(nil), d.values...),
 	}
 	return clone
 }
@@ -224,7 +224,7 @@ func (d Data) Div(r Data) Data {
 	return d
 }
 
-func (d Data) AddScalar(s Dtype) Data {
+func (d Data) AddScalar(s DType) Data {
 	values := d.values
 	for i := range values {
 		values[i] += s
@@ -232,7 +232,7 @@ func (d Data) AddScalar(s Dtype) Data {
 	return d
 }
 
-func (d Data) SubScalar(s Dtype) Data {
+func (d Data) SubScalar(s DType) Data {
 	values := d.values
 	for i := range values {
 		values[i] -= s
@@ -240,7 +240,7 @@ func (d Data) SubScalar(s Dtype) Data {
 	return d
 }
 
-func (d Data) MulScalar(s Dtype) Data {
+func (d Data) MulScalar(s DType) Data {
 	values := d.values
 	for i := range values {
 		values[i] *= s
@@ -248,7 +248,7 @@ func (d Data) MulScalar(s Dtype) Data {
 	return d
 }
 
-func (d Data) DivScalar(s Dtype) Data {
+func (d Data) DivScalar(s DType) Data {
 	values := d.values
 	for i := range values {
 		values[i] /= s
@@ -296,7 +296,7 @@ func (d Data) Trunc() Data {
 func (d Data) Round() Data {
 	values := d.values
 	for i, v := range values {
-		values[i] = Dtype(math.Round(v))
+		values[i] = DType(math.Round(v))
 	}
 	return d
 }
@@ -305,7 +305,7 @@ func (d Data) Round() Data {
 func (d Data) RoundToEven() Data {
 	values := d.values
 	for i, v := range values {
-		values[i] = Dtype(math.RoundToEven(v))
+		values[i] = DType(math.RoundToEven(v))
 	}
 	return d
 }
@@ -319,7 +319,7 @@ func (d Data) Ceil() Data {
 }
 
 // Apply applies user's function to every value of values.
-func (d Data) Apply(fn func(Dtype) Dtype) Data {
+func (d Data) Apply(fn func(DType) DType) Data {
 	values := d.values
 	for i, v := range values {
 		values[i] = fn(v)
@@ -389,7 +389,7 @@ func (d Data) DataReverse() Data {
 }
 
 // Fillna fills NaN values.
-func (d Data) Fillna(value Dtype) Data {
+func (d Data) Fillna(value DType) Data {
 	values := d.Values()
 	for i, v := range values {
 		if math.IsNaN(v) {
@@ -423,9 +423,9 @@ func (d Data) Lerp() Data {
 		return d
 	}
 
-	fill := func(y []Dtype, k, b Dtype) {
+	fill := func(y []DType, k, b DType) {
 		for x := range y {
-			y[x] = k*Dtype(x+1) + b
+			y[x] = k*DType(x+1) + b
 		}
 	}
 
@@ -444,7 +444,7 @@ func (d Data) Lerp() Data {
 		}
 	}
 
-	var left, right Dtype
+	var left, right DType
 
 	left = values[beg]
 
@@ -460,7 +460,7 @@ func (d Data) Lerp() Data {
 
 		if dst := end - beg; dst >= 2 {
 			line := values[beg+1 : end]
-			k := (right - left) / Dtype(dst)
+			k := (right - left) / DType(dst)
 			b := left
 			fill(line, k, b)
 		}
@@ -482,7 +482,7 @@ func (d Data) Diff(periods int) Data {
 		return d
 	}
 
-	var naVals []Dtype
+	var naVals []DType
 
 	if len(values) > periods {
 		lv := values[:len(values)-periods]
@@ -513,12 +513,12 @@ func (d Data) Shift(periods int) Data {
 	values := d.Values()
 
 	var (
-		naVals []Dtype
-		dst    []Dtype
-		src    []Dtype
+		naVals []DType
+		dst    []DType
+		src    []DType
 	)
 
-	if shlen := int(math.Abs(Dtype(periods))); shlen < len(values) {
+	if shlen := int(math.Abs(DType(periods))); shlen < len(values) {
 		if periods > 0 {
 			naVals = values[:shlen]
 			dst = values[shlen:]
@@ -550,7 +550,7 @@ func (d Data) Rolling(window int) Window {
 }
 
 // EWM provides exponential weighted calculations.
-func (d Data) EWM(atype AlphaType, param Dtype, adjust bool, ignoreNA bool) ExpWindow {
+func (d Data) EWM(atype AlphaType, param DType, adjust bool, ignoreNA bool) ExpWindow {
 	return ExpWindow{
 		data:     d,
 		atype:    atype,

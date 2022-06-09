@@ -11,7 +11,7 @@ func TestData_Resample_Interpolate(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		freq   int64
@@ -26,17 +26,17 @@ func TestData_Resample_Interpolate(t *testing.T) {
 	}{
 		{
 			"freq=2 to 1 length upsample",
-			fields{2, []int64{2, 4, 6, 8}, []Dtype{2, 4, 6, 8}},
+			fields{2, []int64{2, 4, 6, 8}, []DType{2, 4, 6, 8}},
 			args{
 				freq:   1,
 				origin: OriginStart,
 				method: InterpolationNone,
 			},
-			MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}),
+			MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, NaN, 4, NaN, 6, NaN, 8}),
 		},
 		{
 			"freq=4 to 1 length upsample",
-			fields{4, []int64{0, 4, 8, 12, 16}, []Dtype{0, 4, 8, 12, 16}},
+			fields{4, []int64{0, 4, 8, 12, 16}, []DType{0, 4, 8, 12, 16}},
 			args{
 				freq:   1,
 				origin: OriginStart,
@@ -45,12 +45,12 @@ func TestData_Resample_Interpolate(t *testing.T) {
 			MakeData(
 				1,
 				[]int64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
-				[]Dtype{0, NaN, NaN, NaN, 4, NaN, NaN, NaN, 8, NaN, NaN, NaN, 12, NaN, NaN, NaN, 16},
+				[]DType{0, NaN, NaN, NaN, 4, NaN, NaN, NaN, 8, NaN, NaN, NaN, 12, NaN, NaN, NaN, 16},
 			),
 		},
 		{
 			"freq=4 to 1 length upsample lerp",
-			fields{4, []int64{0, 4, 8, 12, 16}, []Dtype{0, 4, 8, 12, 16}},
+			fields{4, []int64{0, 4, 8, 12, 16}, []DType{0, 4, 8, 12, 16}},
 			args{
 				freq:   1,
 				origin: OriginStart,
@@ -59,7 +59,7 @@ func TestData_Resample_Interpolate(t *testing.T) {
 			MakeData(
 				1,
 				[]int64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
-				[]Dtype{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+				[]DType{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
 			),
 		},
 	}
@@ -92,7 +92,7 @@ func TestData_Resample(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		freq   int64
@@ -106,21 +106,21 @@ func TestData_Resample(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
 				freq:   2,
 				origin: OriginStart,
 			},
-			MakeData(2, []int64{1, 3, 5}, []Dtype{3, 7, 11}),
+			MakeData(2, []int64{1, 3, 5}, []DType{3, 7, 11}),
 		},
 		{
 			"odd length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 2, 3, 4, 5, 6, 7}},
 			args{
 				freq:   2,
 				origin: OriginStart,
 			},
-			MakeData(2, []int64{1, 3, 5, 7}, []Dtype{3, 7, 11, 7}),
+			MakeData(2, []int64{1, 3, 5, 7}, []DType{3, 7, 11, 7}),
 		},
 		{
 			"even length minutes freq",
@@ -134,7 +134,7 @@ func TestData_Resample(t *testing.T) {
 					5 * minute,
 					6 * minute,
 				},
-				[]Dtype{1, 2, 3, 4, 5, 6},
+				[]DType{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   2 * minute,
@@ -147,7 +147,7 @@ func TestData_Resample(t *testing.T) {
 					3 * minute,
 					5 * minute,
 				},
-				[]Dtype{3, 7, 11},
+				[]DType{3, 7, 11},
 			),
 		},
 		{
@@ -163,7 +163,7 @@ func TestData_Resample(t *testing.T) {
 					6 * minute,
 					7 * minute,
 				},
-				[]Dtype{1, 2, 3, 4, 5, 6, 7},
+				[]DType{1, 2, 3, 4, 5, 6, 7},
 			},
 			args{
 				freq:   2 * minute,
@@ -177,7 +177,7 @@ func TestData_Resample(t *testing.T) {
 					5 * minute,
 					7 * minute,
 				},
-				[]Dtype{3, 7, 11, 7},
+				[]DType{3, 7, 11, 7},
 			),
 		},
 		{
@@ -192,7 +192,7 @@ func TestData_Resample(t *testing.T) {
 					5 * minute,
 					6 * minute,
 				},
-				[]Dtype{1, 2, 3, 4, 5, 6},
+				[]DType{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   1*minute + 30*second,
@@ -205,7 +205,7 @@ func TestData_Resample(t *testing.T) {
 					150 * second,
 					240 * second,
 				},
-				[]Dtype{3, 7, 11},
+				[]DType{3, 7, 11},
 			),
 		},
 		{
@@ -221,7 +221,7 @@ func TestData_Resample(t *testing.T) {
 					6 * minute,
 					7 * minute,
 				},
-				[]Dtype{1, 2, 3, 4, 5, 6, 7},
+				[]DType{1, 2, 3, 4, 5, 6, 7},
 			},
 			args{
 				freq:   1*minute + 30*second,
@@ -235,7 +235,7 @@ func TestData_Resample(t *testing.T) {
 					240 * second,
 					330 * second,
 				},
-				[]Dtype{3, 7, 11, 7},
+				[]DType{3, 7, 11, 7},
 			),
 		},
 		{
@@ -250,7 +250,7 @@ func TestData_Resample(t *testing.T) {
 					dayStart + 5*minute,
 					dayStart + 6*minute,
 				},
-				[]Dtype{1, 2, 3, 4, 5, 6},
+				[]DType{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   2 * minute,
@@ -263,7 +263,7 @@ func TestData_Resample(t *testing.T) {
 					nearestFrameBegin + 2*minute,
 					nearestFrameBegin + 4*minute,
 				},
-				[]Dtype{3, 7, 11},
+				[]DType{3, 7, 11},
 			),
 		},
 		{
@@ -278,7 +278,7 @@ func TestData_Resample(t *testing.T) {
 					dayStart + 5*minute,
 					dayStart + 6*minute,
 				},
-				[]Dtype{1, 2, 3, 4, 5, 6},
+				[]DType{1, 2, 3, 4, 5, 6},
 			},
 			args{
 				freq:   2 * minute,
@@ -291,7 +291,7 @@ func TestData_Resample(t *testing.T) {
 					dayStart + 2*minute,
 					dayStart + 4*minute,
 				},
-				[]Dtype{3, 7, 11},
+				[]DType{3, 7, 11},
 			),
 		},
 	}
@@ -313,7 +313,7 @@ func TestData_Add(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		r Data
@@ -326,11 +326,11 @@ func TestData_Add(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{2, 4, 6, 8, 10, 12}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{2, 4, 6, 8, 10, 12}),
 		},
 	}
 	for _, tt := range tests {
@@ -351,7 +351,7 @@ func TestData_Sub(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		r Data
@@ -364,11 +364,11 @@ func TestData_Sub(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{0, 0, 0, 0, 0, 0}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{0, 0, 0, 0, 0, 0}),
 		},
 	}
 	for _, tt := range tests {
@@ -389,7 +389,7 @@ func TestData_Mul(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		r Data
@@ -402,11 +402,11 @@ func TestData_Mul(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 4, 9, 16, 25, 36}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 4, 9, 16, 25, 36}),
 		},
 	}
 	for _, tt := range tests {
@@ -427,7 +427,7 @@ func TestData_Div(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		r Data
@@ -440,11 +440,11 @@ func TestData_Div(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
-				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}),
+				MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}),
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 1, 1, 1, 1}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 1, 1, 1, 1, 1}),
 		},
 	}
 	for _, tt := range tests {
@@ -465,10 +465,10 @@ func TestData_AddScalar(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
-		s Dtype
+		s DType
 	}
 	tests := []struct {
 		name   string
@@ -478,11 +478,11 @@ func TestData_AddScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
 				4,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{5, 6, 7, 8, 9, 10}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{5, 6, 7, 8, 9, 10}),
 		},
 	}
 	for _, tt := range tests {
@@ -503,10 +503,10 @@ func TestData_SubScalar(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
-		s Dtype
+		s DType
 	}
 	tests := []struct {
 		name   string
@@ -516,11 +516,11 @@ func TestData_SubScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
 				4,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{-3, -2, -1, 0, 1, 2}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{-3, -2, -1, 0, 1, 2}),
 		},
 	}
 	for _, tt := range tests {
@@ -541,10 +541,10 @@ func TestData_MulScalar(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
-		s Dtype
+		s DType
 	}
 	tests := []struct {
 		name   string
@@ -554,11 +554,11 @@ func TestData_MulScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
 			args{
 				4,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{4, 8, 12, 16, 20, 24}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{4, 8, 12, 16, 20, 24}),
 		},
 	}
 	for _, tt := range tests {
@@ -579,10 +579,10 @@ func TestData_DivScalar(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
-		s Dtype
+		s DType
 	}
 	tests := []struct {
 		name   string
@@ -592,11 +592,11 @@ func TestData_DivScalar(t *testing.T) {
 	}{
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{2, 4, 8, 12, 14, 16}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{2, 4, 8, 12, 14, 16}},
 			args{
 				2,
 			},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 4, 6, 7, 8}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 4, 6, 7, 8}),
 		},
 	}
 	for _, tt := range tests {
@@ -617,10 +617,10 @@ func TestData_Fillna(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
-		value   Dtype
+		value   DType
 		inplace bool
 	}
 	tests := []struct {
@@ -634,12 +634,12 @@ func TestData_Fillna(t *testing.T) {
 			fields: fields{
 				freq:   1,
 				index:  []int64{1, 2, 3, 4, 5},
-				values: []Dtype{NaN, NaN, 5, 2, NaN},
+				values: []DType{NaN, NaN, 5, 2, NaN},
 			},
 			args: args{
 				value: 0,
 			},
-			want: MakeData(1, []int64{1, 2, 3, 4, 5}, []Dtype{0, 0, 5, 2, 0}),
+			want: MakeData(1, []int64{1, 2, 3, 4, 5}, []DType{0, 0, 5, 2, 0}),
 		},
 	}
 	for _, tt := range tests {
@@ -660,7 +660,7 @@ func TestData_Pad(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -672,9 +672,9 @@ func TestData_Pad(t *testing.T) {
 			fields: fields{
 				freq:   1,
 				index:  []int64{-1, 0, 1, 2, 3, 4, 5},
-				values: []Dtype{NaN, 0, NaN, NaN, 5, 2, NaN},
+				values: []DType{NaN, 0, NaN, NaN, 5, 2, NaN},
 			},
-			want: MakeData(1, []int64{-1, 0, 1, 2, 3, 4, 5}, []Dtype{NaN, 0, 0, 0, 5, 2, 2}),
+			want: MakeData(1, []int64{-1, 0, 1, 2, 3, 4, 5}, []DType{NaN, 0, 0, 0, 5, 2, 2}),
 		},
 	}
 	for _, tt := range tests {
@@ -704,7 +704,7 @@ func TestData_Sort(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -716,9 +716,9 @@ func TestData_Sort(t *testing.T) {
 			fields: fields{
 				freq:   1,
 				index:  []int64{1, 2, 3, 4, 5},
-				values: []Dtype{NaN, NaN, 5, 2, NaN},
+				values: []DType{NaN, NaN, 5, 2, NaN},
 			},
-			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []Dtype{NaN, NaN, NaN, 2, 5}),
+			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []DType{NaN, NaN, NaN, 2, 5}),
 		},
 	}
 	for _, tt := range tests {
@@ -748,7 +748,7 @@ func TestData_SortStable(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -760,9 +760,9 @@ func TestData_SortStable(t *testing.T) {
 			fields: fields{
 				freq:   1,
 				index:  []int64{1, 2, 3, 4, 5},
-				values: []Dtype{NaN, NaN, 5, 2, NaN},
+				values: []DType{NaN, NaN, 5, 2, NaN},
 			},
-			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []Dtype{NaN, NaN, NaN, 2, 5}),
+			want: MakeData(1, []int64{1, 2, 5, 4, 3}, []DType{NaN, NaN, NaN, 2, 5}),
 		},
 	}
 	for _, tt := range tests {
@@ -792,7 +792,7 @@ func TestData_IndexSort(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -804,12 +804,12 @@ func TestData_IndexSort(t *testing.T) {
 			fields: fields{
 				freq:   1,
 				index:  []int64{4, 1, 3, 2, 5},
-				values: []Dtype{2, NaN, 5, NaN, NaN},
+				values: []DType{2, NaN, 5, NaN, NaN},
 			},
 			want: MakeData(
 				1,
 				[]int64{1, 2, 3, 4, 5},
-				[]Dtype{NaN, NaN, 5, 2, NaN}),
+				[]DType{NaN, NaN, 5, 2, NaN}),
 		},
 	}
 	for _, tt := range tests {
@@ -833,7 +833,7 @@ func TestData_IndexSortStable(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -845,12 +845,12 @@ func TestData_IndexSortStable(t *testing.T) {
 			fields: fields{
 				freq:   1,
 				index:  []int64{4, 1, 3, 2, 5},
-				values: []Dtype{2, NaN, 5, NaN, NaN},
+				values: []DType{2, NaN, 5, NaN, NaN},
 			},
 			want: MakeData(
 				1,
 				[]int64{1, 2, 3, 4, 5},
-				[]Dtype{NaN, NaN, 5, 2, NaN}),
+				[]DType{NaN, NaN, 5, 2, NaN}),
 		},
 	}
 	for _, tt := range tests {
@@ -874,7 +874,7 @@ func TestData_Reverse(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -883,28 +883,28 @@ func TestData_Reverse(t *testing.T) {
 	}{
 		{
 			"len == 1",
-			fields{1, []int64{1}, []Dtype{1}},
-			MakeData(1, []int64{1}, []Dtype{1}),
+			fields{1, []int64{1}, []DType{1}},
+			MakeData(1, []int64{1}, []DType{1}),
 		},
 		{
 			"len == 2",
-			fields{1, []int64{1, 2}, []Dtype{1, 2}},
-			MakeData(1, []int64{2, 1}, []Dtype{2, 1}),
+			fields{1, []int64{1, 2}, []DType{1, 2}},
+			MakeData(1, []int64{2, 1}, []DType{2, 1}),
 		},
 		{
 			"len == 3",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
-			MakeData(1, []int64{3, 2, 1}, []Dtype{3, 2, 1}),
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
+			MakeData(1, []int64{3, 2, 1}, []DType{3, 2, 1}),
 		},
 		{
 			"even",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
-			MakeData(1, []int64{6, 5, 4, 3, 2, 1}, []Dtype{6, 5, 4, 3, 2, 1}),
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
+			MakeData(1, []int64{6, 5, 4, 3, 2, 1}, []DType{6, 5, 4, 3, 2, 1}),
 		},
 		{
 			"odd",
-			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
-			MakeData(1, []int64{7, 6, 5, 4, 3, 2, 1}, []Dtype{7, 6, 5, 4, 3, 2, 1}),
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 2, 3, 4, 5, 6, 7}},
+			MakeData(1, []int64{7, 6, 5, 4, 3, 2, 1}, []DType{7, 6, 5, 4, 3, 2, 1}),
 		},
 	}
 	for _, tt := range tests {
@@ -925,7 +925,7 @@ func TestData_IndexReverse(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -934,28 +934,28 @@ func TestData_IndexReverse(t *testing.T) {
 	}{
 		{
 			"len == 1",
-			fields{1, []int64{1}, []Dtype{1}},
-			MakeData(1, []int64{1}, []Dtype{1}),
+			fields{1, []int64{1}, []DType{1}},
+			MakeData(1, []int64{1}, []DType{1}),
 		},
 		{
 			"len == 2",
-			fields{1, []int64{1, 2}, []Dtype{1, 2}},
-			MakeData(1, []int64{2, 1}, []Dtype{1, 2}),
+			fields{1, []int64{1, 2}, []DType{1, 2}},
+			MakeData(1, []int64{2, 1}, []DType{1, 2}),
 		},
 		{
 			"len == 3",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
-			MakeData(1, []int64{3, 2, 1}, []Dtype{1, 2, 3}),
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
+			MakeData(1, []int64{3, 2, 1}, []DType{1, 2, 3}),
 		},
 		{
 			"even",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
-			MakeData(1, []int64{6, 5, 4, 3, 2, 1}, []Dtype{1, 2, 3, 4, 5, 6}),
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
+			MakeData(1, []int64{6, 5, 4, 3, 2, 1}, []DType{1, 2, 3, 4, 5, 6}),
 		},
 		{
 			"odd",
-			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
-			MakeData(1, []int64{7, 6, 5, 4, 3, 2, 1}, []Dtype{1, 2, 3, 4, 5, 6, 7}),
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 2, 3, 4, 5, 6, 7}},
+			MakeData(1, []int64{7, 6, 5, 4, 3, 2, 1}, []DType{1, 2, 3, 4, 5, 6, 7}),
 		},
 	}
 	for _, tt := range tests {
@@ -976,7 +976,7 @@ func TestData_DataReverse(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -985,28 +985,28 @@ func TestData_DataReverse(t *testing.T) {
 	}{
 		{
 			"len == 1",
-			fields{1, []int64{1}, []Dtype{1}},
-			MakeData(1, []int64{1}, []Dtype{1}),
+			fields{1, []int64{1}, []DType{1}},
+			MakeData(1, []int64{1}, []DType{1}),
 		},
 		{
 			"len == 2",
-			fields{1, []int64{1, 2}, []Dtype{1, 2}},
-			MakeData(1, []int64{1, 2}, []Dtype{2, 1}),
+			fields{1, []int64{1, 2}, []DType{1, 2}},
+			MakeData(1, []int64{1, 2}, []DType{2, 1}),
 		},
 		{
 			"len == 3",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{3, 2, 1}),
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
+			MakeData(1, []int64{1, 2, 3}, []DType{3, 2, 1}),
 		},
 		{
 			"even",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 2, 3, 4, 5, 6}},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{6, 5, 4, 3, 2, 1}),
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{6, 5, 4, 3, 2, 1}),
 		},
 		{
 			"odd",
-			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{1, 2, 3, 4, 5, 6, 7}},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []Dtype{7, 6, 5, 4, 3, 2, 1}),
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 2, 3, 4, 5, 6, 7}},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{7, 6, 5, 4, 3, 2, 1}),
 		},
 	}
 	for _, tt := range tests {
@@ -1027,7 +1027,7 @@ func TestData_Diff(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		period int
@@ -1040,27 +1040,27 @@ func TestData_Diff(t *testing.T) {
 	}{
 		{
 			"data length is less then period length",
-			fields{1, []int64{1, 2}, []Dtype{1, 1}},
+			fields{1, []int64{1, 2}, []DType{1, 1}},
 			args{3},
-			MakeData(1, []int64{1, 2}, []Dtype{NaN, NaN}),
+			MakeData(1, []int64{1, 2}, []DType{NaN, NaN}),
 		},
 		{
 			"data length is equal to period length",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 1, 2}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 1, 2}},
 			args{3},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
 		},
 		{
 			"even length",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 1, 2, 3, 5, 8}},
 			args{3},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, NaN, NaN, 2, 4, 6}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{NaN, NaN, NaN, 2, 4, 6}),
 		},
 		{
 			"diff 1",
-			fields{1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{1, 1, 2, 3, 5, 8}},
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 1, 2, 3, 5, 8}},
 			args{1},
-			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []Dtype{NaN, 0, 1, 1, 2, 3}),
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{NaN, 0, 1, 1, 2, 3}),
 		},
 	}
 	for _, tt := range tests {
@@ -1081,7 +1081,7 @@ func TestData_Shift(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		periods int
@@ -1094,45 +1094,45 @@ func TestData_Shift(t *testing.T) {
 	}{
 		{
 			"right shift",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{1},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, 1, 2}),
+			MakeData(1, []int64{1, 2, 3}, []DType{NaN, 1, 2}),
 		},
 		{
 			"right shift overflow",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{4},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
 		},
 		{
 			"right shift equal to data length",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{3},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
 		},
 		{
 			"left shift",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{-1},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{2, 3, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{2, 3, NaN}),
 		},
 		{
 			"left shift -2",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{-2},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{3, NaN, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{3, NaN, NaN}),
 		},
 		{
 			"left shift equal to data length",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{-3},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
 		},
 		{
 			"left shift overflow",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{-4},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{NaN, NaN, NaN}),
+			MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
 		},
 	}
 	for _, tt := range tests {
@@ -1153,7 +1153,7 @@ func TestData_Resize(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		newLen int
@@ -1166,33 +1166,33 @@ func TestData_Resize(t *testing.T) {
 	}{
 		{
 			"len + 0",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{3},
-			MakeData(1, []int64{1, 2, 3}, []Dtype{1, 2, 3}),
+			MakeData(1, []int64{1, 2, 3}, []DType{1, 2, 3}),
 		},
 		{
 			"len + 1",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{4},
-			MakeData(1, []int64{1, 2, 3, math.MaxInt64}, []Dtype{1, 2, 3, NaN}),
+			MakeData(1, []int64{1, 2, 3, math.MaxInt64}, []DType{1, 2, 3, NaN}),
 		},
 		{
 			"len - 1",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{2},
-			MakeData(1, []int64{1, 2}, []Dtype{1, 2}),
+			MakeData(1, []int64{1, 2}, []DType{1, 2}),
 		},
 		{
 			"newLen == 0",
-			fields{1, []int64{1, 2, 3}, []Dtype{1, 2, 3}},
+			fields{1, []int64{1, 2, 3}, []DType{1, 2, 3}},
 			args{0},
-			MakeData(1, []int64{}, []Dtype{}),
+			MakeData(1, []int64{}, []DType{}),
 		},
 		{
 			"oldLen == 0, newLen == 3",
-			fields{1, []int64{}, []Dtype{}},
+			fields{1, []int64{}, []DType{}},
 			args{3},
-			MakeData(1, []int64{math.MaxInt64, math.MaxInt64, math.MaxInt64}, []Dtype{NaN, NaN, NaN}),
+			MakeData(1, []int64{math.MaxInt64, math.MaxInt64, math.MaxInt64}, []DType{NaN, NaN, NaN}),
 		},
 	}
 	for _, tt := range tests {
@@ -1213,11 +1213,11 @@ func TestData_Equal(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	type args struct {
 		r   Data
-		eps Dtype
+		eps DType
 	}
 	tests := []struct {
 		name   string
@@ -1227,27 +1227,27 @@ func TestData_Equal(t *testing.T) {
 	}{
 		{
 			"NaNs vs NaNs",
-			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}},
+			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, NaN, 4, NaN, 6, NaN, 8}},
 			args{
-				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}),
+				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, NaN, 4, NaN, 6, NaN, 8}),
 				eps: Eps,
 			},
 			true,
 		},
 		{
 			"zeros vs NaNs",
-			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, 0, 4, 0, 6, 0, 8}},
+			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, 0, 4, 0, 6, 0, 8}},
 			args{
-				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}),
+				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, NaN, 4, NaN, 6, NaN, 8}),
 				eps: Eps,
 			},
 			false,
 		},
 		{
 			"NaNs vs zeros",
-			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, NaN, 4, NaN, 6, NaN, 8}},
+			fields{1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, NaN, 4, NaN, 6, NaN, 8}},
 			args{
-				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []Dtype{2, 0, 4, 0, 6, 0, 8}),
+				r:   MakeData(1, []int64{2, 3, 4, 5, 6, 7, 8}, []DType{2, 0, 4, 0, 6, 0, 8}),
 				eps: Eps,
 			},
 			false,
@@ -1271,7 +1271,7 @@ func TestData_Lerp(t *testing.T) {
 	type fields struct {
 		freq   int64
 		index  []int64
-		values []Dtype
+		values []DType
 	}
 	tests := []struct {
 		name   string
@@ -1280,56 +1280,56 @@ func TestData_Lerp(t *testing.T) {
 	}{
 		{
 			"simple 1 gap - 1",
-			fields{1, []int64{0, 1, 2, 3}, []Dtype{0, 1, NaN, 3}},
+			fields{1, []int64{0, 1, 2, 3}, []DType{0, 1, NaN, 3}},
 			MakeData(
 				1,
 				[]int64{0, 1, 2, 3},
-				[]Dtype{0, 1, 2, 3},
+				[]DType{0, 1, 2, 3},
 			),
 		},
 		{
 			"simple 1 gap - 2",
-			fields{3, []int64{0, 1, 2, 3}, []Dtype{2, 5, NaN, 11}},
+			fields{3, []int64{0, 1, 2, 3}, []DType{2, 5, NaN, 11}},
 			MakeData(
 				3,
 				[]int64{0, 1, 2, 3},
-				[]Dtype{2, 5, 8, 11},
+				[]DType{2, 5, 8, 11},
 			),
 		},
 		{
 			"simple 2 gaps row",
-			fields{3, []int64{0, 1, 2, 3, 4}, []Dtype{2, 5, NaN, NaN, 11}},
+			fields{3, []int64{0, 1, 2, 3, 4}, []DType{2, 5, NaN, NaN, 11}},
 			MakeData(
 				3,
 				[]int64{0, 1, 2, 3, 4},
-				[]Dtype{2, 5, 7, 9, 11},
+				[]DType{2, 5, 7, 9, 11},
 			),
 		},
 		{
 			"simple 2 gaps at end",
-			fields{3, []int64{0, 1, 2, 3}, []Dtype{2, 5, NaN, NaN}},
+			fields{3, []int64{0, 1, 2, 3}, []DType{2, 5, NaN, NaN}},
 			MakeData(
 				3,
 				[]int64{0, 1, 2, 3},
-				[]Dtype{2, 5, NaN, NaN},
+				[]DType{2, 5, NaN, NaN},
 			),
 		},
 		{
 			"simple 2 gaps at begin",
-			fields{3, []int64{0, 1, 2, 3}, []Dtype{NaN, NaN, 2, 5}},
+			fields{3, []int64{0, 1, 2, 3}, []DType{NaN, NaN, 2, 5}},
 			MakeData(
 				3,
 				[]int64{0, 1, 2, 3},
-				[]Dtype{NaN, NaN, 2, 5},
+				[]DType{NaN, NaN, 2, 5},
 			),
 		},
 		{
 			"complex - 1",
-			fields{3, []int64{-1, 0, 1, 2, 3, 4, 5}, []Dtype{NaN, 2, 5, NaN, NaN, 11, NaN}},
+			fields{3, []int64{-1, 0, 1, 2, 3, 4, 5}, []DType{NaN, 2, 5, NaN, NaN, 11, NaN}},
 			MakeData(
 				3,
 				[]int64{-1, 0, 1, 2, 3, 4, 5},
-				[]Dtype{NaN, 2, 5, 7, 9, 11, NaN},
+				[]DType{NaN, 2, 5, 7, 9, 11, NaN},
 			),
 		},
 		{
@@ -1337,12 +1337,12 @@ func TestData_Lerp(t *testing.T) {
 			fields{
 				3,
 				[]int64{-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-				[]Dtype{NaN, 2, 5, NaN, NaN, 11, NaN, 16, NaN, NaN, NaN},
+				[]DType{NaN, 2, 5, NaN, NaN, 11, NaN, 16, NaN, NaN, NaN},
 			},
 			MakeData(
 				3,
 				[]int64{-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
-				[]Dtype{NaN, 2, 5, 7, 9, 11, 13.5, 16, NaN, NaN, NaN},
+				[]DType{NaN, 2, 5, 7, 9, 11, 13.5, 16, NaN, NaN, NaN},
 			),
 		},
 	}

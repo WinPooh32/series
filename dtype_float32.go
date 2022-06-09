@@ -10,4 +10,4 @@ const Eps = 10e-4
 
 const maxReal = math.MaxFloat32
 
-type Dtype = float32
+type DType = float32

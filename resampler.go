@@ -97,8 +97,8 @@ func (res Resampler) upsample() Data {
 	firstIdx := index[0]
 	lastIdx := index[len(index)-1]
 
-	oldFreq := Dtype(res.data.freq)
-	newFreq := Dtype(res.freq)
+	oldFreq := DType(res.data.freq)
+	newFreq := DType(res.freq)
 
 	freq := math.Ceil(oldFreq / newFreq)
 
@@ -106,7 +106,7 @@ func (res Resampler) upsample() Data {
 
 	var (
 		newIndex []int64
-		newData  []Dtype
+		newData  []DType
 	)
 
 	if cap(index) >= newCap {
@@ -120,7 +120,7 @@ func (res Resampler) upsample() Data {
 	if cap(values) >= newCap {
 		newData = values[:0]
 	} else {
-		newData = make([]Dtype, 0, newCap)
+		newData = make([]DType, 0, newCap)
 	}
 
 	newData = res.fillData(newData[:newCap], values, int(freq))
@@ -135,7 +135,7 @@ func (Resampler) reindex(dst []int64, startValue, endValue int64, freq int) []in
 	return dst
 }
 
-func (Resampler) fillData(dst, src []Dtype, step int) []Dtype {
+func (Resampler) fillData(dst, src []DType, step int) []DType {
 	// under the hood src and dst can be same array,
 	// then fill dst at backward direction.
 	i := len(dst) - 1
@@ -180,15 +180,15 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		data = res.data
 
 		// bucket is samples count of resampling group.
-		bucket       = int(math.Ceil(Dtype(res.freq) / Dtype(res.data.freq)))
-		bucketsTotal = int(math.Ceil(Dtype(res.data.Len()) / Dtype(bucket)))
+		bucket       = int(math.Ceil(DType(res.freq) / DType(res.data.freq)))
+		bucketsTotal = int(math.Ceil(DType(res.data.Len()) / DType(bucket)))
 
 		srcIndex = data.Index()
 
-		aggValue = make([]Dtype, 0, bucketsTotal)
+		aggValue = make([]DType, 0, bucketsTotal)
 		aggIndex = make([]int64, 0, bucketsTotal)
 
-		value Dtype
+		value DType
 		beg   = 0
 		end   = bucket
 		idx   = res.align(srcIndex[0])
