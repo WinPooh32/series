@@ -238,7 +238,7 @@ func (res Resampler) align(point int64) int64 {
 		t := time.Unix(0, point)
 		dayStart := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
 		point = int64(dayStart.Sub(t))
-		newPoint = freq * (point / freq)
+		newPoint = dayStart.UnixNano() + (freq * (point / freq))
 	}
 
 	return newPoint

@@ -266,6 +266,34 @@ func TestData_Resample(t *testing.T) {
 				[]Dtype{3, 7, 11},
 			),
 		},
+		{
+			"even length minutes freq origin start of the day",
+			fields{
+				1 * minute,
+				[]int64{
+					dayStart + 1*minute + 1*second,
+					dayStart + 2*minute,
+					dayStart + 3*minute,
+					dayStart + 4*minute,
+					dayStart + 5*minute,
+					dayStart + 6*minute,
+				},
+				[]Dtype{1, 2, 3, 4, 5, 6},
+			},
+			args{
+				freq:   2 * minute,
+				origin: OriginStartDay,
+			},
+			MakeData(
+				2*minute,
+				[]int64{
+					dayStart,
+					dayStart + 2*minute,
+					dayStart + 4*minute,
+				},
+				[]Dtype{3, 7, 11},
+			),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
