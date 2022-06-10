@@ -170,3 +170,35 @@ func TestWindow_Std(t *testing.T) {
 		})
 	}
 }
+
+func TestWindow_Median(t *testing.T) {
+	type fields struct {
+		len  int
+		data Data
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"period = 3",
+			fields{
+				len:  3,
+				data: MakeData(1, []int64{0, 1, 2, 3, 4}, []DType{0, 1, 2, 3, 4}),
+			},
+			MakeData(1, []int64{0, 1, 2, 3, 4}, []DType{NaN, NaN, 1, 2, 3}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := Window{
+				len:  tt.fields.len,
+				data: tt.fields.data,
+			}
+			if got := w.Median(); !got.Equals(tt.want, Eps) {
+				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

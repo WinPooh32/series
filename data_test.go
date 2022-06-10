@@ -309,6 +309,64 @@ func TestData_Resample(t *testing.T) {
 	}
 }
 
+func TestData_ResampleMedian(t *testing.T) {
+	type fields struct {
+		freq   int64
+		index  []int64
+		values []DType
+	}
+	type args struct {
+		freq   int64
+		origin ResampleOrigin
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   Data
+	}{
+		{
+			"even length reversed",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{6, 5, 4, 3, 2, 1}},
+			args{
+				freq:   3,
+				origin: OriginStart,
+			},
+			MakeData(3, []int64{1, 4}, []DType{5, 2}),
+		},
+		{
+			"even length",
+			fields{1, []int64{1, 2, 3, 4, 5, 6}, []DType{1, 2, 3, 4, 5, 6}},
+			args{
+				freq:   3,
+				origin: OriginStart,
+			},
+			MakeData(3, []int64{1, 4}, []DType{2, 5}),
+		},
+		{
+			"odd length",
+			fields{1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 2, 3, 4, 5, 6, 7}},
+			args{
+				freq:   3,
+				origin: OriginStart,
+			},
+			MakeData(3, []int64{1, 4, 7}, []DType{2, 5, 7}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
+			}
+			if got := d.Resample(tt.args.freq, tt.args.origin).Median(); !got.Equals(tt.want, Eps) {
+				t.Errorf("Data.Resample() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestData_Add(t *testing.T) {
 	type fields struct {
 		freq   int64

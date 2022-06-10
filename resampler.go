@@ -1,6 +1,7 @@
 package series
 
 import (
+	"sort"
 	"time"
 
 	"github.com/WinPooh32/series/math"
@@ -57,6 +58,19 @@ func (res Resampler) Min() Data {
 // Max applies max function to sample group.
 func (res Resampler) Max() Data {
 	return res.downsample(Max)
+}
+
+// Median applies median function to sample group.
+func (res Resampler) Median() Data {
+	var tmp []DType
+
+	fn := func(data Data) DType {
+		tmp = append(tmp[:0], data.values...)
+		sort.Sort(DTypeSlice(tmp))
+		return Median(data)
+	}
+
+	return res.downsample(fn)
 }
 
 // First applies first function to sample group.

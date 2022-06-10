@@ -92,6 +92,27 @@ func Max(data Data) DType {
 	return max
 }
 
+// Median returns median value of series.
+// Linear interpolation is used for odd length.
+func Median(data Data) DType {
+	values := data.Values()
+
+	if len(values) == 0 {
+		return math.NaN()
+	}
+
+	if len(values) == 1 {
+		return values[0]
+	}
+
+	if len(values)%2 == 0 {
+		i := len(values) / 2
+		return (values[i-1] + values[i]) / 2
+	}
+
+	return values[len(values)/2]
+}
+
 // Argmin returns offset of the smallest value of series data.
 // If the minimum is achieved in multiple locations, the first row position is returned.
 func Argmin(data Data) int {

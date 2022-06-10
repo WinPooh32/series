@@ -1,6 +1,10 @@
 package series
 
-import "github.com/WinPooh32/series/math"
+import (
+	"sort"
+
+	"github.com/WinPooh32/series/math"
+)
 
 type Window struct {
 	len  int
@@ -21,6 +25,10 @@ func (w Window) Min() Data {
 
 func (w Window) Max() Data {
 	return w.Apply(Max)
+}
+
+func (w Window) Median() Data {
+	return w.applyMedian()
 }
 
 func (w Window) Std(ma Data) Data {
@@ -64,6 +72,30 @@ func (w Window) applyStd(ma Data) Data {
 	for i := 0; i < total; i++ {
 		values[i] = math.NaN()
 	}
+
+	return clone
+}
+
+func (w Window) applyMedian() Data {
+	var (
+		clone  = w.data.Clone()
+		values = clone.Values()
+		tmp    = make([]DType, 0, w.len)
+		period = w.len
+	)
+
+	for i := 0; i < w.len-1; i++ {
+		values[i] = math.NaN()
+	}
+
+	w.data.RollData(period, func(l int, r int) {
+		slice := w.data.Slice(l, r)
+
+		tmp = append(tmp[:0], slice.values...)
+		sort.Sort(DTypeSlice(tmp))
+
+		values[r-1] = Median(Data{values: tmp})
+	})
 
 	return clone
 }

@@ -6,6 +6,14 @@ import (
 	"github.com/WinPooh32/series/math"
 )
 
+type DTypeSlice []DType
+
+func (x DTypeSlice) Len() int { return len(x) }
+func (x DTypeSlice) Less(i, j int) bool {
+	return x[i] < x[j] || (math.IsNaN(x[i]) && !math.IsNaN(x[j]))
+}
+func (x DTypeSlice) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
+
 type sortable Data
 
 func (x sortable) Len() int { return len(x.values) }
