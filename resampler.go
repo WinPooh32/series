@@ -190,49 +190,60 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		return res.data.Clone()
 	}
 
-	var (
-		data = res.data
+	data := res.data
 
-		// bucket is samples count of resampling group.
-		bucket       = int(math.Ceil(DType(res.freq) / DType(res.data.freq)))
-		bucketsTotal = int(math.Ceil(DType(res.data.Len()) / DType(bucket)))
+	// frame is samples count of resampling group.
+	frame := int(math.Ceil(DType(res.freq) / DType(res.data.freq)))
+	framesTotal := int(math.Ceil(DType(res.data.Len()) / DType(frame)))
 
-		srcIndex = data.Index()
+	srcIndex := data.Index()
 
-		aggValue = make([]DType, 0, bucketsTotal)
-		aggIndex = make([]int64, 0, bucketsTotal)
+	aggValue := make([]DType, 0, framesTotal)
+	aggIndex := make([]int64, 0, framesTotal)
 
-		value DType
-		beg   = 0
-		end   = bucket
-		idx   = res.align(srcIndex[0])
-	)
+	idx := res.align(srcIndex[0])
+	beg := 0
+	end := 0
 
-	for i := 0; ; i++ {
-		if end >= len(srcIndex) {
-			end = len(srcIndex)
+	if idx < srcIndex[0] {
+		dt := srcIndex[0] - idx
 
-			if beg >= end {
-				break
-			}
+		delta := DType(dt)
+		freq := DType(res.data.freq)
+		absent := int(delta / freq)
 
-			value = agg(data.Slice(beg, len(srcIndex)))
+		end = frame - absent
 
-			aggValue = append(aggValue, value)
-			aggIndex = append(aggIndex, idx)
-
-			break
-		}
-
-		view := data.Slice(beg, end)
-		value = agg(view)
+		view := data.Slice(0, end)
+		value := agg(view)
 
 		aggValue = append(aggValue, value)
 		aggIndex = append(aggIndex, idx)
 
 		idx += res.freq
-		beg += bucket
-		end += bucket
+		beg = end
+	}
+
+	for {
+		var view Data
+
+		untilTS := idx + res.freq
+
+		end = beg
+		for ; end < len(srcIndex) && srcIndex[end] < untilTS; end++ {
+		}
+		if end == beg {
+			break
+		}
+		view = data.Slice(beg, end)
+		beg = end
+
+		value := agg(view)
+
+		aggValue = append(aggValue, value)
+		aggIndex = append(aggIndex, idx)
+
+		idx = untilTS
 	}
 
 	return MakeData(res.freq, aggIndex, aggValue)

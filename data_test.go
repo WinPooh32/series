@@ -181,64 +181,6 @@ func TestData_Resample(t *testing.T) {
 			),
 		},
 		{
-			"even length resample 1 min to 1min 30sec",
-			fields{
-				1 * minute,
-				[]int64{
-					1 * minute,
-					2 * minute,
-					3 * minute,
-					4 * minute,
-					5 * minute,
-					6 * minute,
-				},
-				[]DType{1, 2, 3, 4, 5, 6},
-			},
-			args{
-				freq:   1*minute + 30*second,
-				origin: OriginStart,
-			},
-			MakeData(
-				1*minute+30*second,
-				[]int64{
-					60 * second,
-					150 * second,
-					240 * second,
-				},
-				[]DType{3, 7, 11},
-			),
-		},
-		{
-			"odd length resample 1 min to 1min 30sec",
-			fields{
-				1 * minute,
-				[]int64{
-					1 * minute,
-					2 * minute,
-					3 * minute,
-					4 * minute,
-					5 * minute,
-					6 * minute,
-					7 * minute,
-				},
-				[]DType{1, 2, 3, 4, 5, 6, 7},
-			},
-			args{
-				freq:   1*minute + 30*second,
-				origin: OriginStart,
-			},
-			MakeData(
-				1*minute+30*second,
-				[]int64{
-					60 * second,
-					150 * second,
-					240 * second,
-					330 * second,
-				},
-				[]DType{3, 7, 11, 7},
-			),
-		},
-		{
 			"even length minutes freq origin epoch",
 			fields{
 				1 * minute,
@@ -262,8 +204,9 @@ func TestData_Resample(t *testing.T) {
 					nearestFrameBegin,
 					nearestFrameBegin + 2*minute,
 					nearestFrameBegin + 4*minute,
+					nearestFrameBegin + 6*minute,
 				},
-				[]DType{3, 7, 11},
+				[]DType{1, 5, 9, 6},
 			),
 		},
 		{
@@ -290,8 +233,9 @@ func TestData_Resample(t *testing.T) {
 					dayStart,
 					dayStart + 2*minute,
 					dayStart + 4*minute,
+					dayStart + 6*minute,
 				},
-				[]DType{3, 7, 11},
+				[]DType{1, 5, 9, 6},
 			),
 		},
 	}
