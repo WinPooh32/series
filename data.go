@@ -24,6 +24,16 @@ func MakeData(freq int64, index []int64, values []DType) Data {
 	}
 }
 
+// MakeValues makes vector of values without indices.
+// Any manipulations with index will cause panic or incorrect results!
+func MakeValues(values []DType) Data {
+	return Data{
+		freq:   0,
+		index:  nil,
+		values: values,
+	}
+}
+
 // IndexAt returns index value at i offset.
 func (d Data) IndexAt(i int) int64 {
 	return d.index[i]
