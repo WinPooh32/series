@@ -31,8 +31,12 @@ func (w Window) Median() Data {
 	return w.applyMedian()
 }
 
-func (w Window) Std(ma Data) Data {
-	return w.applyStd(ma)
+func (w Window) Variance(ma Data, ddof int) Data {
+	return w.applyVar(Variance, ma, ddof)
+}
+
+func (w Window) Std(ma Data, ddof int) Data {
+	return w.applyVar(Std, ma, ddof)
 }
 
 func (w Window) Apply(agg AggregateFunc) Data {
@@ -54,7 +58,7 @@ func (w Window) Apply(agg AggregateFunc) Data {
 	return clone
 }
 
-func (w Window) applyStd(ma Data) Data {
+func (w Window) applyVar(varfn func(data Data, mean DType, ddof int) DType, ma Data, ddof int) Data {
 	var (
 		clone  = w.data.Clone()
 		values = clone.Values()
@@ -66,7 +70,7 @@ func (w Window) applyStd(ma Data) Data {
 	for i := total; i < len(values); i++ {
 		p := i + 1
 		v := w.data.Slice(p-period, p)
-		values[i] = Std(v, ma.values[p-1])
+		values[i] = varfn(v, ma.values[p-1], ddof)
 	}
 
 	for i := 0; i < total; i++ {

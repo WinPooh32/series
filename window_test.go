@@ -164,7 +164,7 @@ func TestWindow_Std(t *testing.T) {
 
 			ma := tt.fields.data.Rolling(3).Mean()
 
-			if got := w.Std(ma); !got.Equals(tt.want, Eps) {
+			if got := w.Std(ma, 1); !got.Equals(tt.want, Eps) {
 				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
 			}
 		})
@@ -197,6 +197,41 @@ func TestWindow_Median(t *testing.T) {
 				data: tt.fields.data,
 			}
 			if got := w.Median(); !got.Equals(tt.want, Eps) {
+				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestWindow_Variance(t *testing.T) {
+	type fields struct {
+		len  int
+		data Data
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"period = 3",
+			fields{
+				len:  3,
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{5, 5, 6, 7, 5, 5, 5}),
+			},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{NaN, NaN, 3.333333e-01, 1.000000e+00, 1.000000e+00, 1.333333e+00, 0}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := Window{
+				len:  tt.fields.len,
+				data: tt.fields.data,
+			}
+
+			ma := tt.fields.data.Rolling(3).Mean()
+
+			if got := w.Variance(ma, 1); !got.Equals(tt.want, 1e-4) {
 				t.Errorf("Window.Std() = %v, want %v", got, tt.want)
 			}
 		})

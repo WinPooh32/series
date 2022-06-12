@@ -153,27 +153,35 @@ func Argmax(data Data) int {
 	return pos
 }
 
-// Std returns standard deviation.
-// Normalized by n-1.
-func Std(data Data, mean DType) DType {
+// Variance returns variance of values.
+// Ddof - Delta Degrees of Freedom. The divisor used in calculations is N - ddof,
+// where N represents the number of elements.
+func Variance(data Data, mean DType, ddof int) DType {
 	var (
-		count  int
-		items  = data.Values()
-		inv    = 1.0 / DType(len(items)-1)
-		stdDev DType
+		dev   DType
+		count int
+
+		values = data.Values()
 	)
-	for _, v := range items {
+	for _, v := range values {
 		if math.IsNaN(v) {
 			continue
 		}
 		d := v - mean
-		stdDev += (d * d) * inv
+		dev += (d * d)
 		count++
 	}
 	if count == 0 {
 		return math.NaN()
 	}
-	return math.Sqrt(stdDev)
+	return dev / DType(len(values)-ddof)
+}
+
+// Std returns standard deviation.
+// Ddof - Delta Degrees of Freedom. The divisor used in calculations is N - ddof,
+// where N represents the number of elements.
+func Std(data Data, mean DType, ddof int) DType {
+	return math.Sqrt(Variance(data, mean, ddof))
 }
 
 func First(data Data) DType {

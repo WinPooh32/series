@@ -194,7 +194,7 @@ func TestStd(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Std(tt.args.data, tt.args.mean); !reflect.DeepEqual(got, tt.want) {
+			if got := Std(tt.args.data, tt.args.mean, 1); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Std() = %v, want %v", got, tt.want)
 			}
 		})
