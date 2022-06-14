@@ -234,6 +234,54 @@ func (d Data) Div(r Data) Data {
 	return d
 }
 
+func (d Data) Mod(r Data) Data {
+	// Slices prevent implicit bounds checks.
+	values := d.values
+	sr := r.values
+
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
+	}
+
+	for i, v := range values {
+		values[i] = math.Mod(v, sr[i])
+	}
+
+	return d
+}
+
+func (d Data) Max(r Data) Data {
+	// Slices prevent implicit bounds checks.
+	values := d.values
+	sr := r.values
+
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
+	}
+
+	for i, v := range values {
+		values[i] = math.Max(v, sr[i])
+	}
+
+	return d
+}
+
+func (d Data) Min(r Data) Data {
+	// Slices prevent implicit bounds checks.
+	values := d.values
+	sr := r.values
+
+	if len(values) != len(sr) {
+		panic("sizes of values series must be equal")
+	}
+
+	for i, v := range values {
+		values[i] = math.Min(v, sr[i])
+	}
+
+	return d
+}
+
 func (d Data) AddScalar(s DType) Data {
 	values := d.values
 	for i := range values {
@@ -266,11 +314,121 @@ func (d Data) DivScalar(s DType) Data {
 	return d
 }
 
+func (d Data) Sign() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Copysign(1, v)
+	}
+	return d
+}
+
+func (d Data) Sin() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Sin(v)
+	}
+	return d
+}
+
+func (d Data) Asin() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Asin(v)
+	}
+	return d
+}
+
+func (d Data) Cos() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Cos(v)
+	}
+	return d
+}
+
+func (d Data) Acos() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Acos(v)
+	}
+	return d
+}
+
+func (d Data) Tan() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Tan(v)
+	}
+	return d
+}
+
+func (d Data) Atan() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Atan(v)
+	}
+	return d
+}
+
+// Pow applies x**y, the base-x exponential of y.
+func (d Data) Pow(exp DType) Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Pow(v, exp)
+	}
+	return d
+}
+
+// Pow10 applies 10**e, the base-10 exponential of e.
+func (d Data) Pow10() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Pow10(int(v))
+	}
+	return d
+}
+
+// Sqr applies x**2, the base-x exponential of 2.
+func (d Data) Sqr() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] *= v
+	}
+	return d
+}
+
+// Exp applies e**x, the base-e exponential of x.
+func (d Data) Exp() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Exp(v)
+	}
+	return d
+}
+
+// Exp2 applies 2**x, the base-2 exponential of x.
+func (d Data) Exp2() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Exp2(v)
+	}
+	return d
+}
+
 // Log applies natural logarithm function to values of values.
 func (d Data) Log() Data {
 	values := d.values
 	for i, v := range values {
 		values[i] = math.Log(v)
+	}
+	return d
+}
+
+// Log2 applies Log2(x).
+func (d Data) Log2() Data {
+	values := d.values
+	for i, v := range values {
+		values[i] = math.Log2(v)
 	}
 	return d
 }
