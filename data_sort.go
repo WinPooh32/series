@@ -39,21 +39,25 @@ func (x argSortable) Swap(i, j int) {
 }
 
 // IndexSort sorts data's index.
-func (d Data) IndexSort() {
+func (d Data) IndexSort() Data {
 	sort.Sort(argSortable(d))
+	return d
 }
 
 // Sort sorts data.
-func (d Data) Sort() {
+func (d Data) Sort() Data {
 	sort.Sort(sortable(d))
+	return d
 }
 
 // IndexSortStable sorts data's index using stable sort algorithm.
-func (d Data) IndexSortStable() {
+func (d Data) IndexSortStable() Data {
 	sort.Stable(argSortable(d))
+	return d
 }
 
 // SortStable sorts data's index using stable sort algorithm.
-func (d Data) SortStable() {
+func (d Data) SortStable() Data {
 	sort.Stable(sortable(d))
+	return d
 }
