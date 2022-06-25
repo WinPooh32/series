@@ -237,3 +237,43 @@ func TestWindow_Variance(t *testing.T) {
 		})
 	}
 }
+
+func TestWindow_Skew(t *testing.T) {
+	type fields struct {
+		len  int
+		data Data
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"period = 4",
+			fields{
+				len:  4,
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 1, 2, 2, 3, 3, 7}),
+			},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{NaN, NaN, NaN, 0, 0, 0, 1.7198680301759643}),
+		},
+		{
+			"period = 3",
+			fields{
+				len:  3,
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{1, 1, 2, 2, 3, 3, 7}),
+			},
+			MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7}, []DType{NaN, NaN, 1.7320508075688787, -1.7320508075688785, 1.732050807568875, -1.732050807568875, 1.7320508075688787}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			w := Window{
+				len:  tt.fields.len,
+				data: tt.fields.data,
+			}
+			if got := w.Skew(tt.fields.data); !got.Equals(tt.want, EpsFp32) {
+				t.Errorf("Window.Skew() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

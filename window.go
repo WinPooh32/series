@@ -27,6 +27,10 @@ func (w Window) Max() Data {
 	return w.Apply(Max)
 }
 
+func (w Window) Skew(ma Data) Data {
+	return w.Apply(Skew)
+}
+
 func (w Window) Median() Data {
 	return w.applyMedian()
 }

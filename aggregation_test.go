@@ -296,11 +296,18 @@ func TestSkew(t *testing.T) {
 			},
 			want: 2.2360679774997902,
 		},
+		{
+			name: "simple_2233",
+			args: args{
+				data: MakeValues([]DType{2, 2, 3, 3}),
+			},
+			want: 0,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Skew(tt.args.data)
-			if math.Abs(got-tt.want) >= EpsFp32 && !(math.IsNaN(got) || math.IsNaN(tt.want)) {
+			if !fpEq(got, tt.want, EpsFp32) {
 				t.Errorf("Skew() = %v, want %v", got, tt.want)
 			}
 		})
