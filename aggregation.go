@@ -11,21 +11,20 @@ type AggregateFunc func(data Data) DType
 func Mean(data Data) DType {
 	var (
 		count int
-		mean  DType
+		sum   DType
 		items = data.Values()
-		inv   = 1.0 / DType(len(items))
 	)
 	for _, v := range items {
 		if math.IsNaN(v) {
 			continue
 		}
-		mean += v * inv
+		sum += v
 		count++
 	}
 	if count == 0 {
 		return math.NaN()
 	}
-	return mean
+	return sum / DType(len(items))
 }
 
 // Sum returns sum of data's values.
@@ -51,7 +50,7 @@ func Sum(data Data) DType {
 // Min returns minimum value.
 func Min(data Data) DType {
 	var (
-		min   DType = maxReal
+		min   DType = maxFloat
 		count int
 		items = data.Values()
 	)
@@ -73,7 +72,7 @@ func Min(data Data) DType {
 // Max returns maximum value.
 func Max(data Data) DType {
 	var (
-		max   DType = -maxReal
+		max   DType = -maxFloat
 		count int
 		items = data.Values()
 	)
@@ -117,7 +116,7 @@ func Median(data Data) DType {
 // If the minimum is achieved in multiple locations, the first row position is returned.
 func Argmin(data Data) int {
 	var (
-		min   DType = maxReal
+		min   DType = maxFloat
 		pos   int
 		items = data.Values()
 	)
@@ -137,7 +136,7 @@ func Argmin(data Data) int {
 // If the maximum is achieved in multiple locations, the first row position is returned.
 func Argmax(data Data) int {
 	var (
-		max   DType = -maxReal
+		max   DType = -maxFloat
 		pos   int   = -1
 		items       = data.Values()
 	)
@@ -198,4 +197,82 @@ func Last(data Data) DType {
 		return math.NaN()
 	}
 	return items[len(items)-1]
+}
+
+func Skew(data Data) DType {
+	count := countNotNA(data)
+
+	mean := Sum(data) / count
+
+	m2 := sumAdjustedPow2(data, mean)
+	m3 := sumAdjustedPow3(data, mean)
+
+	// fix floating point error.
+	m2 = fpZero(m2, Eps)
+	m3 = fpZero(m3, Eps)
+
+	if m2 == 0 || m3 == 0 {
+		return 0
+	}
+
+	if count < 3 {
+		return math.NaN()
+	}
+
+	g1 := m3 / (math.Sqrt(m2) * m2)
+
+	G1 := ((count * math.Sqrt(count-1)) * g1) / (count - 2)
+
+	return G1
+}
+
+func countNotNA(data Data) DType {
+	count := 0
+	items := data.values
+	for _, v := range items {
+		if !math.IsNaN(v) {
+			count++
+		}
+	}
+	return DType(count)
+}
+
+func sumAdjustedPow2(data Data, mean DType) DType {
+	var (
+		sum   DType
+		count int
+		items = data.Values()
+	)
+	for _, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		v -= mean
+		sum += v * v
+		count++
+	}
+	if count == 0 {
+		return math.NaN()
+	}
+	return sum
+}
+
+func sumAdjustedPow3(data Data, mean DType) DType {
+	var (
+		sum   DType
+		count int
+		items = data.Values()
+	)
+	for _, v := range items {
+		if math.IsNaN(v) {
+			continue
+		}
+		v -= mean
+		sum += v * v * v
+		count++
+	}
+	if count == 0 {
+		return math.NaN()
+	}
+	return sum
 }

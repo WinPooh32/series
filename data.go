@@ -56,7 +56,7 @@ func (d Data) Values() (values []DType) {
 
 // Len returns size of series values.
 func (d Data) Len() int {
-	return len(d.index)
+	return len(d.values)
 }
 
 // Freq returns period length of one sample.
@@ -104,9 +104,13 @@ func (d Data) ValuesEquals(r Data, eps DType) bool {
 
 		nanEq := nanL && nanR
 
-		if (nanL || nanR) && !nanEq {
+		if nanEq {
+			continue
+		}
+
+		if nanL || nanR {
 			return false
-		} else if dst := math.Abs(left - right); dst >= eps {
+		} else if !fpEq(left, right, eps) {
 			return false
 		}
 	}
