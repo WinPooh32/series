@@ -490,6 +490,24 @@ func (d Data) Ceil() Data {
 	return d
 }
 
+// Cumsum returns cumulative sum over values.
+// NaN values are ignored.
+func (d Data) Cumsum() Data {
+	var sum DType
+
+	values := d.values
+
+	for i, v := range values {
+		if math.IsNaN(v) {
+			continue
+		}
+		sum += v
+		values[i] = sum
+	}
+
+	return d
+}
+
 // Apply applies user's function to every value of values.
 func (d Data) Apply(fn func(DType) DType) Data {
 	values := d.values

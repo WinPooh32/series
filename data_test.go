@@ -1361,3 +1361,56 @@ func TestData_Lerp(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Cumsum(t *testing.T) {
+	type fields struct {
+		freq   int64
+		index  []int64
+		values []DType
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			"one",
+			fields{1, []int64{0}, []DType{5}},
+			MakeData(
+				1,
+				[]int64{0},
+				[]DType{5},
+			),
+		},
+		{
+			"simple",
+			fields{1, []int64{0, 1, 2, 3}, []DType{5, 10, 15, 20}},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3},
+				[]DType{5, 15, 30, 50},
+			),
+		},
+		{
+			"simple 1 gap - 1",
+			fields{1, []int64{0, 1, 2, 3}, []DType{0, 1, NaN, 3}},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3},
+				[]DType{0, 1, NaN, 4},
+			),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
+			}
+			if got := d.Cumsum(); !got.Equals(tt.want, EpsFp32) {
+				t.Errorf("Data.Lerp() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
