@@ -59,6 +59,12 @@ func (d Data) Len() int {
 	return len(d.values)
 }
 
+// XY returns index and value as x, y tuple.
+// Required for gonum's plotter.XYer interface.
+func (d Data) XY(i int) (x, y float64) {
+	return float64(d.index[i]), float64(d.values[i])
+}
+
 // Freq returns period length of one sample.
 func (d Data) Freq() int64 {
 	return d.freq
