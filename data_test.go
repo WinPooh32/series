@@ -670,13 +670,76 @@ func TestData_Pad(t *testing.T) {
 		want   Data
 	}{
 		{
-			name: "simple pad",
+			name: "complex pad",
 			fields: fields{
 				freq:   1,
-				index:  []int64{-1, 0, 1, 2, 3, 4, 5},
-				values: []DType{NaN, 0, NaN, NaN, 5, 2, NaN},
+				index:  []int64{-2, -1, 0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, 0, NaN, NaN, 5, 2, NaN},
 			},
-			want: MakeData(1, []int64{-1, 0, 1, 2, 3, 4, 5}, []DType{NaN, 0, 0, 0, 5, 2, 2}),
+			want: MakeData(1, []int64{-2, -1, 0, 1, 2, 3, 4, 5}, []DType{0, 0, 0, 0, 0, 5, 2, 2}),
+		},
+		{
+			name: "all NaN",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, NaN, NaN, NaN, NaN},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{NaN, NaN, NaN, NaN, NaN, NaN}),
+		},
+		{
+			name: "between NaNs",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, 1, 9, NaN, NaN},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{1, 1, 1, 9, 9, 9}),
+		},
+		{
+			name: "NaN at mid",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, NaN, 4, 5},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{0, 1, 2, 2, 4, 5}),
+		},
+		{
+			name: "NaN at begin",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, 2, 3, 4, 5},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{2, 2, 2, 3, 4, 5}),
+		},
+		{
+			name: "NaN at begin",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, 3, NaN, NaN},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{0, 1, 2, 3, 3, 3}),
+		},
+		{
+			name: "NaN last",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, 3, 4, NaN},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{0, 1, 2, 3, 4, 4}),
+		},
+		{
+			name: "without NaN",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, 3, 4, 5},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{0, 1, 2, 3, 4, 5}),
 		},
 	}
 	for _, tt := range tests {
@@ -689,14 +752,8 @@ func TestData_Pad(t *testing.T) {
 
 			d.Pad()
 
-			if len(d.values) != len(tt.want.values) {
+			if !tt.want.Equals(d, EpsFp32) {
 				t.Fatalf("Data.Pad() = %v, want %v", d.values, tt.want.values)
-			}
-
-			for i, v := range tt.want.values {
-				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
-					t.Fatalf("Data.IndexSort() = %v, want %v", d.values, tt.want.values)
-				}
 			}
 		})
 	}

@@ -589,19 +589,44 @@ func (d Data) Fillna(value DType) Data {
 	return d
 }
 
-// Pad fills NaNs by known previous values.
+// Pad fills NaNs by previous values.
+//
+// If series starts with NaN, it will be
+// filled by the first non-NaN value.
 func (d Data) Pad() Data {
-	values := d.Values()
-	gg := math.NaN()
-	for i, v := range values {
-		if math.IsNaN(v) {
-			if !math.IsNaN(gg) {
-				values[i] = gg
-			}
-		} else {
-			gg = v
+	fill := func(dst []DType, v DType) {
+		for i := range dst {
+			dst[i] = v
 		}
 	}
+
+	values := d.Values()
+	item := math.NaN()
+
+	begin := -1
+	end := -1
+
+	for i, v := range values {
+		if math.IsNaN(v) {
+			if begin == end {
+				begin = i
+			}
+			continue
+		}
+
+		if begin >= 0 && begin < i && !math.IsNaN(item) {
+			end = i
+			fill(values[begin:end], item)
+			begin = end
+		}
+
+		item = v
+	}
+
+	if begin >= 0 && !math.IsNaN(item) {
+		fill(values[begin:], item)
+	}
+
 	return d
 }
 
