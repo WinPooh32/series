@@ -1,6 +1,10 @@
 package series
 
 import (
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/WinPooh32/series/math"
 )
 
@@ -32,6 +36,29 @@ func MakeValues(values []DType) Data {
 		index:  nil,
 		values: values,
 	}
+}
+
+// String converts time series columns to string.
+// Index values are rendered as time.Duration.
+func (d Data) String() string {
+	var sb strings.Builder
+
+	sb.WriteString("[\n")
+
+	for i, x := range d.index {
+		y := d.values[i]
+		t := time.Duration(x)
+
+		sb.WriteString("    ")
+		sb.WriteString(t.String())
+		sb.WriteString(": ")
+		sb.WriteString(strconv.FormatFloat(y, 'f', -1, 64))
+		sb.WriteString("\n")
+	}
+
+	sb.WriteString("]\n")
+
+	return sb.String()
 }
 
 // IndexAt returns index value at i offset.
