@@ -232,9 +232,11 @@ func (res Resampler) downsample(agg AggregateFunc) Data {
 		end = beg
 		for ; end < len(srcIndex) && srcIndex[end] < untilTS; end++ {
 		}
-		if end == beg {
+
+		if end == beg && end >= len(srcIndex) {
 			break
 		}
+
 		view = data.Slice(beg, end)
 		beg = end
 

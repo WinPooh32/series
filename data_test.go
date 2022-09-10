@@ -210,6 +210,34 @@ func TestData_Resample(t *testing.T) {
 			),
 		},
 		{
+			"not aligned values",
+			fields{
+				1 * minute,
+				[]int64{
+					dayStart + 1*minute + 1*second,
+					dayStart + 2*minute,
+					dayStart + 3*minute,
+					dayStart + 5*minute,
+					dayStart + 6*minute,
+				},
+				[]DType{1, 2, 3, 5, 6},
+			},
+			args{
+				freq:   2 * minute,
+				origin: OriginEpoch,
+			},
+			MakeData(
+				2*minute,
+				[]int64{
+					nearestFrameBegin,
+					nearestFrameBegin + 2*minute,
+					nearestFrameBegin + 4*minute,
+					nearestFrameBegin + 6*minute,
+				},
+				[]DType{1, 5, 5, 6},
+			),
+		},
+		{
 			"even length minutes freq origin start of the day",
 			fields{
 				1 * minute,
