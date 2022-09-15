@@ -116,7 +116,12 @@ func (d Data) Len() int {
 //
 // index values must be nanoseconds since 1970 1st Jan.
 // x will be converted to seconds.
+//
+// i can be negative.
 func (d Data) XY(i int) (x, y float64) {
+	if i < 0 {
+		i = len(d.values) + i
+	}
 	return float64(d.index[i] / int64(time.Second)), float64(d.values[i])
 }
 
