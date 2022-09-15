@@ -223,6 +223,13 @@ func (d Data) Append(r Data) Data {
 	return d
 }
 
+// AppendXY appends x to indices, y to values.
+func (d Data) AppendXY(x int64, y DType) Data {
+	d.index = append(d.index, x)
+	d.values = append(d.values, y)
+	return d
+}
+
 func (d Data) Add(r Data) Data {
 	// Slices prevent implicit bounds checks.
 	values := d.values
