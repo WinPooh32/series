@@ -63,11 +63,17 @@ func (d Data) String() string {
 
 // IndexAt returns index value at i offset.
 func (d Data) IndexAt(i int) int64 {
+	if i < 0 {
+		i = len(d.index) + i
+	}
 	return d.index[i]
 }
 
 // At returns values value at i offset.
 func (d Data) At(i int) DType {
+	if i < 0 {
+		i = len(d.values) + i
+	}
 	return d.values[i]
 }
 
@@ -155,7 +161,14 @@ func (d Data) ValuesEquals(r Data, eps DType) bool {
 }
 
 // Slice makes valuesice of values.
+// l and r can be negatvie values.
 func (d Data) Slice(l, r int) Data {
+	if l < 0 {
+		l = len(d.values) + l
+	}
+	if r < 0 {
+		r = (len(d.values) + r) + 1
+	}
 	return Data{
 		d.freq,
 		d.index[l:r],
