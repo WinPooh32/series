@@ -62,6 +62,7 @@ func (d Data) String() string {
 }
 
 // IndexAt returns index value at i offset.
+// i can be negative.
 func (d Data) IndexAt(i int) int64 {
 	if i < 0 {
 		i = len(d.index) + i
@@ -70,6 +71,7 @@ func (d Data) IndexAt(i int) int64 {
 }
 
 // At returns values value at i offset.
+// i can be negative.
 func (d Data) At(i int) DType {
 	if i < 0 {
 		i = len(d.values) + i
