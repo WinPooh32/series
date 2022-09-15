@@ -77,6 +77,25 @@ func (d Data) At(i int) DType {
 	return d.values[i]
 }
 
+// Set sets new value at i position.
+// i can be negative.
+func (d Data) Set(i int, v DType) {
+	if i < 0 {
+		i = len(d.values) + i
+	}
+	d.values[i] = v
+}
+
+// SetXY x to index, y to values at position i.
+// i can be negative.
+func (d Data) SetXY(i int, x int64, y DType) {
+	if i < 0 {
+		i = len(d.values) + i
+	}
+	d.index[i] = x
+	d.values[i] = y
+}
+
 // Index returns underlying index values.
 func (d Data) Index() (index []int64) {
 	return d.index
