@@ -60,7 +60,7 @@ Mostly designed for ordered **time** series data.
 
 ## Drawing plots
 
-`series.Data` implements `gonum.XYer` interface. You can check these plotters:
+`series.Data` implements `gonum/plot/plotter.XYer` interface. You can check these plotters:
 
 - [gonum/plot](https://github.com/gonum/plot)
 - [go-hep/hep](https://github.com/go-hep/hep/tree/main/hplot)
