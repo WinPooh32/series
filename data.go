@@ -88,8 +88,11 @@ func (d Data) Len() int {
 
 // XY returns index and value as x, y tuple.
 // Required for gonum's plotter.XYer interface.
+//
+// index values must be nanoseconds since 1970 1st Jan.
+// x will be converted to seconds.
 func (d Data) XY(i int) (x, y float64) {
-	return float64(d.index[i]), float64(d.values[i])
+	return float64(d.index[i] / int64(time.Second)), float64(d.values[i])
 }
 
 // Freq returns period length of one sample.
