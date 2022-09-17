@@ -16,7 +16,7 @@ Mostly designed for ordered **time** series data.
   - Mul *
   - Div /
   - Mod %
-  
+
 - Column math functions:
   - Cos, Sin, Tan
   - Pow, Log, Log2, Exp
@@ -27,6 +27,7 @@ Mostly designed for ordered **time** series data.
   - Apply custom function
 
 - Rolling aggregation by functions:
+  - Sum
   - Mean
   - Median (only for sorted values)
   - Min
