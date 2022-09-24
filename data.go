@@ -167,8 +167,8 @@ func (d Data) ValuesEquals(r Data, eps DType) bool {
 		left := valuesLeft[i]
 		right := valuesRight[i]
 
-		nanL := math.IsNaN(left)
-		nanR := math.IsNaN(right)
+		nanL := IsNA(left)
+		nanR := IsNA(right)
 
 		nanEq := nanL && nanR
 
@@ -580,7 +580,7 @@ func (d Data) Cumsum() Data {
 	values := d.values
 
 	for i, v := range values {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		sum += v
@@ -664,7 +664,7 @@ func (d Data) DataReverse() Data {
 func (d Data) Fillna(value DType) Data {
 	values := d.Values()
 	for i, v := range values {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			values[i] = value
 		}
 	}
@@ -689,14 +689,14 @@ func (d Data) Pad() Data {
 	end := -1
 
 	for i, v := range values {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			if begin == end {
 				begin = i
 			}
 			continue
 		}
 
-		if begin >= 0 && begin < i && !math.IsNaN(item) {
+		if begin >= 0 && begin < i && !IsNA(item) {
 			end = i
 			fill(values[begin:end], item)
 			begin = end
@@ -705,7 +705,7 @@ func (d Data) Pad() Data {
 		item = v
 	}
 
-	if begin >= 0 && !math.IsNaN(item) {
+	if begin >= 0 && !IsNA(item) {
 		fill(values[begin:], item)
 	}
 
@@ -730,7 +730,7 @@ func (d Data) Lerp() Data {
 
 	// Find first non-NaN value.
 	for i := 0; ; i++ {
-		if v := values[i]; !math.IsNaN(v) {
+		if v := values[i]; !IsNA(v) {
 			beg = i
 			break
 		}
@@ -748,7 +748,7 @@ func (d Data) Lerp() Data {
 	for i := beg + 1; i < len(values); i++ {
 		val := values[i]
 
-		if math.IsNaN(val) {
+		if IsNA(val) {
 			continue
 		}
 

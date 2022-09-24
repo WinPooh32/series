@@ -76,7 +76,7 @@ func (ExpWindow) adjustedMean(data Data, alpha DType, ignoreNA bool) {
 
 		w := alpha*weight + 1
 
-		if math.IsNaN(x) {
+		if IsNA(x) {
 			if ignoreNA {
 				weight = w
 			}
@@ -99,14 +99,14 @@ func (ExpWindow) notadjustedMean(data Data, alpha DType, ignoreNA bool) {
 		beta   DType   = 1 - alpha
 		last   DType   = values[0]
 	)
-	if math.IsNaN(last) {
+	if IsNA(last) {
 		last = 0
 		values[0] = last
 	}
 	for t := 1; t < len(values); t++ {
 		x := values[t]
 
-		if math.IsNaN(x) {
+		if IsNA(x) {
 			values[t] = last
 			continue
 		}

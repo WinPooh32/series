@@ -15,7 +15,7 @@ func Mean(data Data) DType {
 		items = data.Values()
 	)
 	for _, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		sum += v
@@ -35,7 +35,7 @@ func Sum(data Data) DType {
 		items = data.Values()
 	)
 	for _, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		sum += v
@@ -55,7 +55,7 @@ func Min(data Data) DType {
 		items = data.Values()
 	)
 	for _, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		if v < min {
@@ -77,7 +77,7 @@ func Max(data Data) DType {
 		items = data.Values()
 	)
 	for _, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		if v > max {
@@ -121,7 +121,7 @@ func Argmin(data Data) int {
 		items = data.Values()
 	)
 	for i, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		if v < min {
@@ -141,7 +141,7 @@ func Argmax(data Data) int {
 		items       = data.Values()
 	)
 	for i, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		if v > max {
@@ -163,7 +163,7 @@ func Variance(data Data, mean DType, ddof int) DType {
 		values = data.Values()
 	)
 	for _, v := range values {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		d := v - mean
@@ -230,7 +230,7 @@ func countNotNA(data Data) DType {
 	count := 0
 	items := data.values
 	for _, v := range items {
-		if !math.IsNaN(v) {
+		if !IsNA(v) {
 			count++
 		}
 	}
@@ -244,7 +244,7 @@ func sumAdjustedPow2(data Data, mean DType) DType {
 		items = data.Values()
 	)
 	for _, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		v -= mean
@@ -264,7 +264,7 @@ func sumAdjustedPow3(data Data, mean DType) DType {
 		items = data.Values()
 	)
 	for _, v := range items {
-		if math.IsNaN(v) {
+		if IsNA(v) {
 			continue
 		}
 		v -= mean

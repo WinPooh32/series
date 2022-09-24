@@ -823,7 +823,7 @@ func TestData_Sort(t *testing.T) {
 			}
 
 			for i, v := range tt.want.values {
-				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
+				if v != d.values[i] && (!IsNA(v) || !IsNA(d.values[i])) {
 					t.Fatalf("Data.Sort() = %v, want %v", d.values, tt.want.values)
 				}
 			}
@@ -867,7 +867,7 @@ func TestData_SortStable(t *testing.T) {
 			}
 
 			for i, v := range tt.want.values {
-				if v != d.values[i] && (!math.IsNaN(v) || !math.IsNaN(d.values[i])) {
+				if v != d.values[i] && (!IsNA(v) || !IsNA(d.values[i])) {
 					t.Fatalf("Data.SortStable() = %v, want %v", d.values, tt.want.values)
 				}
 			}

@@ -2,15 +2,13 @@ package series
 
 import (
 	"sort"
-
-	"github.com/WinPooh32/series/math"
 )
 
 type DTypeSlice []DType
 
 func (x DTypeSlice) Len() int { return len(x) }
 func (x DTypeSlice) Less(i, j int) bool {
-	return x[i] < x[j] || (math.IsNaN(x[i]) && !math.IsNaN(x[j]))
+	return x[i] < x[j] || (IsNA(x[i]) && !IsNA(x[j]))
 }
 func (x DTypeSlice) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
 
@@ -19,7 +17,7 @@ type sortable Data
 func (x sortable) Len() int { return len(x.values) }
 
 func (x sortable) Less(i, j int) bool {
-	return x.values[i] < x.values[j] || (math.IsNaN(x.values[i]) && !math.IsNaN(x.values[j]))
+	return x.values[i] < x.values[j] || (IsNA(x.values[i]) && !IsNA(x.values[j]))
 }
 
 func (x sortable) Swap(i, j int) {
