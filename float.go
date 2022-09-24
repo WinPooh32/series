@@ -14,3 +14,7 @@ func fpZero(v DType, eps DType) DType {
 		return v
 	}
 }
+
+func IsNA(v DType) bool {
+	return math.IsNaN(v) || math.IsInf(v, 0)
+}
