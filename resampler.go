@@ -116,7 +116,7 @@ func (res Resampler) upsample() Data {
 
 	freq := math.Ceil(oldFreq / newFreq)
 
-	newCap := int(lastIdx-firstIdx) + 1
+	newCap := int((lastIdx-firstIdx)/int64(newFreq) + 1)
 
 	var (
 		newIndex []int64
