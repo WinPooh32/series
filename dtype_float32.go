@@ -14,4 +14,4 @@ const (
 	Eps     = EpsFp32
 )
 
-const maxReal = math.MaxFloat32
+const maxFloat = math.MaxFloat32
