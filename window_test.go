@@ -271,7 +271,7 @@ func TestWindow_Skew(t *testing.T) {
 				len:  tt.fields.len,
 				data: tt.fields.data,
 			}
-			if got := w.Skew(tt.fields.data); !got.Equals(tt.want, EpsFp32) {
+			if got := w.Skew(tt.fields.data); !got.Equals(tt.want, 1e-4) {
 				t.Errorf("Window.Skew() = %v, want %v", got, tt.want)
 			}
 		})

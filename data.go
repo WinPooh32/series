@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/WinPooh32/series/math"
+	"github.com/WinPooh32/series/vek"
 )
 
 // Data is the series values container.
@@ -52,7 +53,7 @@ func (d Data) String() string {
 		sb.WriteString("    ")
 		sb.WriteString(t.String())
 		sb.WriteString(": ")
-		sb.WriteString(strconv.FormatFloat(y, 'f', -1, 64))
+		sb.WriteString(strconv.FormatFloat(float64(y), 'f', -1, 64))
 		sb.WriteString("\n")
 	}
 
@@ -261,6 +262,11 @@ func (d Data) Add(r Data) Data {
 	values := d.values
 	sr := r.values
 
+	if EnabledAVX2 {
+		vek.Add(values, sr)
+		return d
+	}
+
 	if len(values) != len(sr) {
 		panic("sizes of values series must be equal")
 	}
@@ -276,6 +282,11 @@ func (d Data) Sub(r Data) Data {
 	// Slices prevent implicit bounds checks.
 	values := d.values
 	sr := r.values
+
+	if EnabledAVX2 {
+		vek.Sub(values, sr)
+		return d
+	}
 
 	if len(values) != len(sr) {
 		panic("sizes of values series must be equal")
@@ -293,6 +304,11 @@ func (d Data) Mul(r Data) Data {
 	values := d.values
 	sr := r.values
 
+	if EnabledAVX2 {
+		vek.Mul(values, sr)
+		return d
+	}
+
 	if len(values) != len(sr) {
 		panic("sizes of values series must be equal")
 	}
@@ -308,6 +324,11 @@ func (d Data) Div(r Data) Data {
 	// Slices prevent implicit bounds checks.
 	values := d.values
 	sr := r.values
+
+	if EnabledAVX2 {
+		vek.Div(values, sr)
+		return d
+	}
 
 	if len(values) != len(sr) {
 		panic("sizes of values series must be equal")
@@ -341,6 +362,11 @@ func (d Data) Max(r Data) Data {
 	values := d.values
 	sr := r.values
 
+	if EnabledAVX2 {
+		vek.Maximum(values, sr)
+		return d
+	}
+
 	if len(values) != len(sr) {
 		panic("sizes of values series must be equal")
 	}
@@ -357,6 +383,11 @@ func (d Data) Min(r Data) Data {
 	values := d.values
 	sr := r.values
 
+	if EnabledAVX2 {
+		vek.Minimum(values, sr)
+		return d
+	}
+
 	if len(values) != len(sr) {
 		panic("sizes of values series must be equal")
 	}
@@ -370,6 +401,12 @@ func (d Data) Min(r Data) Data {
 
 func (d Data) AddScalar(s DType) Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.AddScalar(values, s)
+		return d
+	}
+
 	for i := range values {
 		values[i] += s
 	}
@@ -378,6 +415,12 @@ func (d Data) AddScalar(s DType) Data {
 
 func (d Data) SubScalar(s DType) Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.SubScalar(values, s)
+		return d
+	}
+
 	for i := range values {
 		values[i] -= s
 	}
@@ -386,6 +429,12 @@ func (d Data) SubScalar(s DType) Data {
 
 func (d Data) MulScalar(s DType) Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.MulScalar(values, s)
+		return d
+	}
+
 	for i := range values {
 		values[i] *= s
 	}
@@ -394,6 +443,12 @@ func (d Data) MulScalar(s DType) Data {
 
 func (d Data) DivScalar(s DType) Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.DivScalar(values, s)
+		return d
+	}
+
 	for i := range values {
 		values[i] /= s
 	}
@@ -410,6 +465,12 @@ func (d Data) Sign() Data {
 
 func (d Data) Sin() Data {
 	values := d.values
+
+	if EnabledAVX2 && EnabledFloat32 {
+		vek.Sin(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Sin(v)
 	}
@@ -426,6 +487,12 @@ func (d Data) Asin() Data {
 
 func (d Data) Cos() Data {
 	values := d.values
+
+	if EnabledAVX2 && EnabledFloat32 {
+		vek.Cos(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Cos(v)
 	}
@@ -486,6 +553,12 @@ func (d Data) Sqr() Data {
 // Exp applies e**x, the base-e exponential of x.
 func (d Data) Exp() Data {
 	values := d.values
+
+	if EnabledAVX2 && EnabledFloat32 {
+		vek.Exp(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Exp(v)
 	}
@@ -504,6 +577,12 @@ func (d Data) Exp2() Data {
 // Log applies natural logarithm function to values of values.
 func (d Data) Log() Data {
 	values := d.values
+
+	if EnabledAVX2 && EnabledFloat32 {
+		vek.Log(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Log(v)
 	}
@@ -513,8 +592,29 @@ func (d Data) Log() Data {
 // Log2 applies Log2(x).
 func (d Data) Log2() Data {
 	values := d.values
+
+	if EnabledAVX2 && EnabledFloat32 {
+		vek.Log2(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Log2(v)
+	}
+	return d
+}
+
+// Log10 applies Log10(x).
+func (d Data) Log10() Data {
+	values := d.values
+
+	if EnabledAVX2 && EnabledFloat32 {
+		vek.Log10(values)
+		return d
+	}
+
+	for i, v := range values {
+		values[i] = math.Log10(v)
 	}
 	return d
 }
@@ -522,6 +622,12 @@ func (d Data) Log2() Data {
 // Abs replace each elemnt by their absolute value.
 func (d Data) Abs() Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.Abs(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Abs(v)
 	}
@@ -531,6 +637,12 @@ func (d Data) Abs() Data {
 // Floor returns the greatest integer value less than or equal to x.
 func (d Data) Floor() Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.Floor(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Floor(v)
 	}
@@ -549,6 +661,12 @@ func (d Data) Trunc() Data {
 // Round returns the nearest integer, rounding half away from zero.
 func (d Data) Round() Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.Round(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = DType(math.Round(v))
 	}
@@ -566,6 +684,12 @@ func (d Data) RoundToEven() Data {
 
 func (d Data) Ceil() Data {
 	values := d.values
+
+	if EnabledAVX2 {
+		vek.Ceil(values)
+		return d
+	}
+
 	for i, v := range values {
 		values[i] = math.Ceil(v)
 	}

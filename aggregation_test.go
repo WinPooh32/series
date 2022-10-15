@@ -307,7 +307,7 @@ func TestSkew(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Skew(tt.args.data)
-			if !fpEq(got, tt.want, EpsFp32) {
+			if !fpEq(got, tt.want, 1e-4) {
 				t.Errorf("Skew() = %v, want %v", got, tt.want)
 			}
 		})
