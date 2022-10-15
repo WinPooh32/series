@@ -1,4 +1,4 @@
-//go:build !series_avx2
+//go:build !series_f32 && !series_avx2
 
 package vek
 
