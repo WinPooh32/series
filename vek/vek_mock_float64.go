@@ -2,10 +2,10 @@
 
 package vek
 
-func AddScalar(y1 []float32, v float32) { panic("unreachable!") }
-func SubScalar(y1 []float32, v float32) { panic("unreachable!") }
-func MulScalar(y1 []float32, v float32) { panic("unreachable!") }
-func DivScalar(y1 []float32, v float32) { panic("unreachable!") }
+func AddScalar(y1 []float64, v float64) { panic("unreachable!") }
+func SubScalar(y1 []float64, v float64) { panic("unreachable!") }
+func MulScalar(y1 []float64, v float64) { panic("unreachable!") }
+func DivScalar(y1 []float64, v float64) { panic("unreachable!") }
 
 func Add(y1 []float64, y2 []float64)     { panic("unreachable!") }
 func Sub(y1 []float64, y2 []float64)     { panic("unreachable!") }
@@ -19,7 +19,7 @@ func Sqrt(y1 []float64)  { panic("unreachable!") }
 func Abs(y1 []float64)   { panic("unreachable!") }
 func Round(y1 []float64) { panic("unreachable!") }
 func Ceil(y1 []float64)  { panic("unreachable!") }
-func Floot(y1 []float64) { panic("unreachable!") }
+func Floor(y1 []float64) { panic("unreachable!") }
 
 func Min(y1 []float64) float64 { panic("unreachable!") }
 func Max(y1 []float64) float64 { panic("unreachable!") }
