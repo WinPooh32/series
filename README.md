@@ -8,6 +8,8 @@ Liteweight library of series data processing functions written in pure ideomatic
 
 Mostly designed for ordered **time** series data.
 
+[Optionally accelerated](https://github.com/WinPooh32/series/issues/2) by AVX2 instructions.
+
 ## Functions
 
 - Column/Scalar math operators:
