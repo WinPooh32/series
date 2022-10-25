@@ -31,8 +31,8 @@ func (d Data) IndexAsFloat64() (index []float64) {
 	return index
 }
 
-// DataAsInt32 returns copy of underlying values slice converted to int32 array.
-func (d Data) DataAsInt32() (values []int32) {
+// ValuesAsInt32 returns copy of underlying values slice converted to int32 array.
+func (d Data) ValuesAsInt32() (values []int32) {
 	values = make([]int32, len(d.values))
 
 	switch {
@@ -49,8 +49,8 @@ func (d Data) DataAsInt32() (values []int32) {
 	}
 }
 
-// DataAsInt64 returns copy of underlying values slice converted to float32 array.
-func (d Data) DataAsInt64() (values []int64) {
+// ValuesAsInt64 returns copy of underlying values slice converted to float32 array.
+func (d Data) ValuesAsInt64() (values []int64) {
 	values = make([]int64, len(d.values))
 
 	switch {
@@ -66,8 +66,8 @@ func (d Data) DataAsInt64() (values []int64) {
 	}
 }
 
-// DataAsFloat32 returns copy of underlying values slice converted to float32 array.
-func (d Data) DataAsFloat32() (values []float32) {
+// ValuesAsFloat32 returns copy of underlying values slice converted to float32 array.
+func (d Data) ValuesAsFloat32() (values []float32) {
 	values = make([]float32, len(d.values))
 
 	switch {
@@ -84,6 +84,6 @@ func (d Data) DataAsFloat32() (values []float32) {
 }
 
 // DataAsFloat64 returns copy of underlying values slice converted to float64 array.
-func (d Data) DataAsFloat64() (values []float64) {
+func (d Data) ValuesAsFloat64() (values []float64) {
 	return d.values
 }
