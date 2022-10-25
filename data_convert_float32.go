@@ -1,4 +1,4 @@
-//go:build !series_f32
+//go:build series_f32
 
 package series
 
@@ -68,22 +68,30 @@ func (d Data) DataAsInt64() (values []int64) {
 
 // DataAsFloat32 returns copy of underlying values slice converted to float32 array.
 func (d Data) DataAsFloat32() (values []float32) {
-	values = make([]float32, len(d.values))
-
 	switch {
 	case EnabledAVX2:
+		values = make([]float32, len(d.values))
 		vek.ToFloat32(values, d.values)
 		return values
 
 	default:
-		for i, v := range d.values {
-			values[i] = float32(v)
-		}
-		return values
+		return d.values
 	}
 }
 
 // DataAsFloat64 returns copy of underlying values slice converted to float64 array.
 func (d Data) DataAsFloat64() (values []float64) {
-	return d.values
+	switch {
+	case EnabledAVX2:
+		values = make([]float64, len(d.values))
+		vek.ToFloat64(values, d.values)
+		return values
+
+	default:
+		values = make([]float64, len(d.values))
+		for i, v := range d.values {
+			values[i] = float64(v)
+		}
+		return values
+	}
 }
