@@ -893,6 +893,95 @@ func (d Data) Lerp() Data {
 	return d
 }
 
+// Shrink removes na values.
+//
+// New Data instance will be returned.
+// Old and new have the same internal arrays. No additional memory is used.
+//
+// Safe for the empty index.
+func (d Data) Shrink() Data {
+	var (
+		index  []int64
+		values []DType
+	)
+
+	if l := d.Len(); l == 0 {
+		return d
+	} else if l == 1 && IsNA(d.values[0]) {
+		if d.index != nil {
+			index = d.index[:0]
+		}
+		values = d.values[:0]
+
+		return MakeData(d.freq, index, values)
+	}
+
+	if d.index != nil {
+		index = d.index[:0]
+	}
+
+	values = d.values[:0]
+
+	firstNonNa := -1
+	lastNonNa := -1
+
+	firstNa := -1
+	lastNa := -1
+
+	for i, v := range d.values {
+		if !IsNA(v) {
+			if i-1 == lastNa {
+				firstNonNa = i
+			}
+			lastNonNa = i
+			continue
+		}
+
+		if i-1 == lastNonNa {
+			if firstNonNa >= 0 && firstNa >= 0 {
+				if index != nil {
+					word := index[firstNonNa:i]
+					index = append(index[:firstNa], word...)
+				}
+
+				word := values[firstNonNa:i]
+				values = append(values[:firstNa], word...)
+
+				firstNa = firstNonNa - 1
+			} else {
+				firstNa = i
+			}
+		}
+
+		lastNa = i
+	}
+
+	if len(d.values)-1 == lastNonNa {
+		if firstNonNa == 0 {
+			return d
+		}
+
+		if firstNonNa >= 0 && firstNa >= 0 {
+			if index != nil {
+				word := index[firstNonNa:len(d.values)]
+				index = append(index[:firstNa], word...)
+			}
+
+			word := values[firstNonNa:len(d.values)]
+			values = append(values[:firstNa], word...)
+		}
+	}
+
+	if firstNonNa == 0 && firstNa > 0 {
+		if index != nil {
+			index = index[:firstNa]
+		}
+		values = values[:firstNa]
+	}
+
+	return MakeData(d.freq, index, values)
+}
+
 // Diff calculates the difference of a series values elements.
 func (d Data) Diff(periods int) Data {
 	values := d.Values()

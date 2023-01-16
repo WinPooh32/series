@@ -803,6 +803,107 @@ func TestData_Pad(t *testing.T) {
 	}
 }
 
+func TestData_Shrink(t *testing.T) {
+	type fields struct {
+		freq   int64
+		index  []int64
+		values []DType
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   Data
+	}{
+		{
+			name: "complex",
+			fields: fields{
+				freq:   1,
+				index:  []int64{-2, -1, 0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, 0, NaN, NaN, 5, 2, NaN},
+			},
+			want: MakeData(1, []int64{0, 3, 4}, []DType{0, 5, 2}),
+		},
+		{
+			name: "all NaN",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, NaN, NaN, NaN, NaN},
+			},
+			want: MakeData(1, []int64{}, []DType{}),
+		},
+		{
+			name: "between NaNs",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, 1, 9, NaN, NaN},
+			},
+			want: MakeData(1, []int64{2, 3}, []DType{1, 9}),
+		},
+		{
+			name: "NaN at mid",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, NaN, 4, 5},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 4, 5}, []DType{0, 1, 2, 4, 5}),
+		},
+		{
+			name: "NaN at begin",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{NaN, NaN, 2, 3, 4, 5},
+			},
+			want: MakeData(1, []int64{2, 3, 4, 5}, []DType{2, 3, 4, 5}),
+		},
+		{
+			name: "2 NaN at end",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, 3, NaN, NaN},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3}, []DType{0, 1, 2, 3}),
+		},
+		{
+			name: "NaN last",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, 3, 4, NaN},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4}, []DType{0, 1, 2, 3, 4}),
+		},
+		{
+			name: "without NaN",
+			fields: fields{
+				freq:   1,
+				index:  []int64{0, 1, 2, 3, 4, 5},
+				values: []DType{0, 1, 2, 3, 4, 5},
+			},
+			want: MakeData(1, []int64{0, 1, 2, 3, 4, 5}, []DType{0, 1, 2, 3, 4, 5}),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
+			}
+
+			d = d.Shrink()
+
+			if !tt.want.Equals(d, EpsFp32) {
+				t.Errorf("Data.Shrink() = %v, want %v", d, tt.want)
+			}
+		})
+	}
+}
+
 func TestData_Sort(t *testing.T) {
 	type fields struct {
 		freq   int64
