@@ -938,19 +938,22 @@ func (d Data) Shrink() Data {
 		}
 
 		if i-1 == lastNonNa {
-			if firstNonNa >= 0 && firstNa >= 0 {
+			if firstNonNa == 0 {
+				if index != nil {
+					index = index[:i]
+				}
+				values = values[:i]
+
+			} else if firstNonNa > 0 && firstNa >= 0 {
 				if index != nil {
 					word := index[firstNonNa:i]
-					index = append(index[:firstNa], word...)
+					index = append(index, word...)
 				}
 
 				word := values[firstNonNa:i]
-				values = append(values[:firstNa], word...)
-
-				firstNa = firstNonNa - 1
-			} else {
-				firstNa = i
+				values = append(values, word...)
 			}
+			firstNa = i
 		}
 
 		lastNa = i
@@ -963,12 +966,12 @@ func (d Data) Shrink() Data {
 
 		if firstNonNa >= 0 && firstNa >= 0 {
 			if index != nil {
-				word := index[firstNonNa:len(d.values)]
-				index = append(index[:firstNa], word...)
+				word := index[firstNonNa:len(d.index)]
+				index = append(index, word...)
 			}
 
 			word := values[firstNonNa:len(d.values)]
-			values = append(values[:firstNa], word...)
+			values = append(values, word...)
 		}
 	}
 

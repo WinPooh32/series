@@ -824,6 +824,42 @@ func TestData_Shrink(t *testing.T) {
 			want: MakeData(1, []int64{0, 3, 4}, []DType{0, 5, 2}),
 		},
 		{
+			name: "complex 2",
+			fields: fields{
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5, 6},
+				values: []DType{NaN, 2, NaN, 4, NaN, 6, NaN},
+			},
+			want: MakeData(1, []int64{2, 4, 6}, []DType{2, 4, 6}),
+		},
+		{
+			name: "complex 3",
+			fields: fields{
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5, 6, 7},
+				values: []DType{1, NaN, 3, NaN, 5, NaN, 7},
+			},
+			want: MakeData(1, []int64{1, 3, 5, 7}, []DType{1, 3, 5, 7}),
+		},
+		{
+			name: "complex 4",
+			fields: fields{
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+				values: []DType{1, NaN, NaN, NaN, 5, 6, 7, NaN, NaN, NaN},
+			},
+			want: MakeData(1, []int64{1, 5, 6, 7}, []DType{1, 5, 6, 7}),
+		},
+		{
+			name: "complex 5",
+			fields: fields{
+				freq:   1,
+				index:  []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13},
+				values: []DType{1, NaN, NaN, NaN, 5, 6, 7, NaN, NaN, NaN, 11, 12, 13},
+			},
+			want: MakeData(1, []int64{1, 5, 6, 7, 11, 12, 13}, []DType{1, 5, 6, 7, 11, 12, 13}),
+		},
+		{
 			name: "all NaN",
 			fields: fields{
 				freq:   1,
