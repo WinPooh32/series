@@ -59,7 +59,8 @@ Mostly designed for ordered **time** series data.
   - Slice, Clone
   - Sort, Reverse, Compare (indices or values)
   - Diff, Shift
-  - Fill N/A values: interpolate, pad existing values or replace by constant.
+  - Fill N/A values: interpolate, pad existing values or replace by the constant.
+  - Delete N/A values with Shrink method.
 
 ## Drawing plots
 
