@@ -455,11 +455,81 @@ func TestArgmin(t *testing.T) {
 		args args
 		want int
 	}{
-		// TODO: Add test cases.
+		{
+			name: "empty",
+			args: args{
+				data: MakeData(1, []int64{}, []DType{}),
+			},
+			want: -1,
+		},
+		{
+			name: "all NaN",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
+			},
+			want: -1,
+		},
+		{
+			name: "one value",
+			args: args{
+				data: MakeData(1, []int64{1}, []DType{2}),
+			},
+			want: 0,
+		},
+		{
+			name: "simple",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{2, 2, 6, 6}),
+			},
+			want: 0,
+		},
+		{
+			name: "NaNs leading",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, NaN, 2, 6}),
+			},
+			want: 2,
+		},
+		{
+			name: "nonNaNs leading",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{2, 6, NaN, NaN}),
+			},
+			want: 0,
+		},
+		{
+			name: "NaN at mid 1",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4, 5}, []DType{2, 6, NaN, 2, 6}),
+			},
+			want: 0,
+		},
+		{
+			name: "NaN at mid 2",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{2, 6, NaN, NaN, 2, 6}),
+			},
+			want: 0,
+		},
+		{
+			name: "NaN bounds",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6}, []DType{NaN, 2, 6, 2, 6, NaN}),
+			},
+			want: 1,
+		},
+		{
+			name: "NaN bounds 2",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4, 5, 6, 7, 8}, []DType{NaN, NaN, 2, 6, 2, 6, NaN, NaN}),
+			},
+			want: 2,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Argmin(tt.args.data); got != tt.want {
+			got := Argmin(tt.args.data)
+			if got != tt.want {
 				t.Errorf("Argmin() = %v, want %v", got, tt.want)
 			}
 		})
