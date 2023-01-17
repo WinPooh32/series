@@ -732,11 +732,60 @@ func TestFirst(t *testing.T) {
 		args args
 		want DType
 	}{
-		// TODO: Add test cases.
+		{
+			name: "empty",
+			args: args{
+				data: MakeData(1, []int64{}, []DType{}),
+			},
+			want: NaN,
+		},
+		{
+			name: "all NaN",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
+			},
+			want: NaN,
+		},
+		{
+			name: "last nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, NaN, NaN, 4}),
+			},
+			want: 4,
+		},
+		{
+			name: "first nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{4, NaN, NaN, NaN}),
+			},
+			want: 4,
+		},
+		{
+			name: "mid nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, 4, NaN, NaN}),
+			},
+			want: 4,
+		},
+		{
+			name: "mid nonNa 2",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, 2, 4, NaN}),
+			},
+			want: 2,
+		},
+		{
+			name: "all nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{1, 2, 3, 4}),
+			},
+			want: 1,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := First(tt.args.data); !fpEq(got, tt.want, EpsFp32) {
+			got := First(tt.args.data)
+			if !(IsNA(got) && IsNA(tt.want)) && !fpEq(got, tt.want, EpsFp32) {
 				t.Errorf("First() = %v, want %v", got, tt.want)
 			}
 		})
@@ -752,11 +801,60 @@ func TestLast(t *testing.T) {
 		args args
 		want DType
 	}{
-		// TODO: Add test cases.
+		{
+			name: "empty",
+			args: args{
+				data: MakeData(1, []int64{}, []DType{}),
+			},
+			want: NaN,
+		},
+		{
+			name: "all NaN",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
+			},
+			want: NaN,
+		},
+		{
+			name: "last nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, NaN, NaN, 4}),
+			},
+			want: 4,
+		},
+		{
+			name: "first nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{4, NaN, NaN, NaN}),
+			},
+			want: 4,
+		},
+		{
+			name: "mid nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, 4, NaN, NaN}),
+			},
+			want: 4,
+		},
+		{
+			name: "mid nonNa 2",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{NaN, 2, 4, NaN}),
+			},
+			want: 4,
+		},
+		{
+			name: "all nonNa",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{1, 2, 3, 4}),
+			},
+			want: 4,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Last(tt.args.data); !fpEq(got, tt.want, EpsFp32) {
+			got := Last(tt.args.data)
+			if !(IsNA(got) && IsNA(tt.want)) && !fpEq(got, tt.want, EpsFp32) {
 				t.Errorf("Last() = %v, want %v", got, tt.want)
 			}
 		})
