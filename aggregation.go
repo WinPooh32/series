@@ -117,8 +117,8 @@ func Median(data Data) DType {
 func Argmin(data Data) int {
 	var (
 		min   DType = maxFloat
-		pos   int
-		items = data.Values()
+		pos   int   = -1
+		items       = data.Values()
 	)
 	for i, v := range items {
 		if IsNA(v) {
