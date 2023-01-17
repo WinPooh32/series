@@ -24,7 +24,7 @@ func Mean(data Data) DType {
 	if count == 0 {
 		return math.NaN()
 	}
-	return sum / DType(len(items))
+	return sum / DType(count)
 }
 
 // Sum returns sum of data's values.
