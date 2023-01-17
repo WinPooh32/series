@@ -156,12 +156,21 @@ func Argmax(data Data) int {
 // Ddof - Delta Degrees of Freedom. The divisor used in calculations is N - ddof,
 // where N represents the number of elements.
 func Variance(data Data, mean DType, ddof int) DType {
+	if data.Len() == 0 || IsNA(mean) {
+		return math.NaN()
+	}
+
+	if ddof < 0 || ddof >= data.Len() {
+		panic("ddof must be positive value and less than data length!")
+	}
+
 	var (
 		dev   DType
 		count int
 
 		values = data.Values()
 	)
+
 	for _, v := range values {
 		if IsNA(v) {
 			continue
@@ -170,10 +179,12 @@ func Variance(data Data, mean DType, ddof int) DType {
 		dev += (d * d)
 		count++
 	}
-	if count == 0 {
+
+	if count-ddof < 0 {
 		return math.NaN()
 	}
-	return dev / DType(len(values)-ddof)
+
+	return dev / DType(count-ddof)
 }
 
 // Std returns standard deviation.
