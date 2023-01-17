@@ -195,19 +195,24 @@ func Std(data Data, mean DType, ddof int) DType {
 }
 
 func First(data Data) DType {
-	items := data.Values()
-	if len(items) == 0 {
-		return math.NaN()
+	values := data.Values()
+	for _, v := range values {
+		if !IsNA(v) {
+			return v
+		}
 	}
-	return items[0]
+	return math.NaN()
 }
 
 func Last(data Data) DType {
-	items := data.Values()
-	if len(items) == 0 {
-		return math.NaN()
+	values := data.Values()
+	for i := len(values) - 1; i >= 0; i-- {
+		v := values[i]
+		if !IsNA(v) {
+			return v
+		}
 	}
-	return items[len(items)-1]
+	return math.NaN()
 }
 
 func Skew(data Data) DType {
