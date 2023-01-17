@@ -629,17 +629,94 @@ func TestStd(t *testing.T) {
 	type args struct {
 		data Data
 		mean DType
+		ddof int
 	}
 	tests := []struct {
-		name string
-		args args
-		want DType
+		name      string
+		args      args
+		want      DType
+		wantPainc bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "empty",
+			args: args{
+				data: MakeData(1, []int64{}, []DType{}),
+				mean: NaN,
+				ddof: 0,
+			},
+			want:      NaN,
+			wantPainc: false,
+		},
+		{
+			name: "all NaN",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3}, []DType{NaN, NaN, NaN}),
+				mean: NaN,
+				ddof: 0,
+			},
+			want:      NaN,
+			wantPainc: false,
+		},
+		{
+			name: "one NaN",
+			args: args{
+				data: MakeData(1, []int64{1}, []DType{NaN}),
+			},
+			want:      NaN,
+			wantPainc: false,
+		},
+		{
+			name: "ddof=1 mean is NaN",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{1.61, 1.87, 1.49, 2.01}),
+				mean: NaN,
+				ddof: 1,
+			},
+			want:      NaN,
+			wantPainc: false,
+		},
+		{
+			name: "ddof=1",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{1.61, 1.87, 1.49, 2.01}),
+				mean: 1.745,
+				ddof: 1,
+			},
+			want:      0.2374166,
+			wantPainc: false,
+		},
+		{
+			name: "ddof=0",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{1.61, 1.87, 1.49, 2.01}),
+				mean: 1.745,
+				ddof: 0,
+			},
+			want:      0.2056088,
+			wantPainc: false,
+		},
+		{
+			name: "ddof<0",
+			args: args{
+				data: MakeData(1, []int64{1, 2, 3, 4}, []DType{1.61, 1.87, 1.49, 2.01}),
+				mean: 1.745,
+				ddof: -1,
+			},
+			want:      0,
+			wantPainc: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Std(tt.args.data, tt.args.mean, 1); !fpEq(got, tt.want, EpsFp32) {
+			defer func() {
+				if r := recover(); r != nil && !tt.wantPainc {
+					t.Errorf("recovered unexpected panic: %s", r)
+				}
+			}()
+
+			got := Std(tt.args.data, tt.args.mean, tt.args.ddof)
+
+			if !(IsNA(got) && IsNA(tt.want)) && !fpEq(got, tt.want, EpsFp32) {
 				t.Errorf("Std() = %v, want %v", got, tt.want)
 			}
 		})
