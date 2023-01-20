@@ -187,6 +187,17 @@ func (d Data) ValuesEquals(r Data, eps DType) bool {
 	return true
 }
 
+// HasNA returns true if values has at least one n/a.
+func (d Data) HasNA() bool {
+	values := d.Values()
+	for _, v := range values {
+		if IsNA(v) {
+			return true
+		}
+	}
+	return false
+}
+
 // Slice makes valuesice of values.
 // l and r can be negatvie values.
 func (d Data) Slice(l, r int) Data {
