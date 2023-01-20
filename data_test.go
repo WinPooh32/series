@@ -1652,3 +1652,53 @@ func TestData_Cumsum(t *testing.T) {
 		})
 	}
 }
+
+func TestData_Dot(t *testing.T) {
+	type fields struct {
+		freq   int64
+		index  []int64
+		values []DType
+	}
+	type args struct {
+		r Data
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   DType
+	}{
+		{
+			name: "simple",
+			fields: fields{
+				values: []DType{0, 1, 2, 3},
+			},
+			args: args{
+				r: MakeValues([]DType{-1, 2, -3, 4}),
+			},
+			want: 8,
+		},
+		{
+			name: "with n/a",
+			fields: fields{
+				values: []DType{0, NaN, 2, 3},
+			},
+			args: args{
+				r: MakeValues([]DType{-1, 2, -3, 4}),
+			},
+			want: NaN,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := Data{
+				freq:   tt.fields.freq,
+				index:  tt.fields.index,
+				values: tt.fields.values,
+			}
+			if got := d.Dot(tt.args.r); !fpEq(got, tt.want, EpsFp32) && !(IsNA(got) && IsNA(tt.want)) {
+				t.Errorf("Data.Dot() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

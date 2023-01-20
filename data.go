@@ -410,6 +410,29 @@ func (d Data) Min(r Data) Data {
 	return d
 }
 
+// Dot returns scalar of vectors production.
+func (d Data) Dot(r Data) DType {
+	valuesL := d.values
+	valuesR := r.values
+
+	if EnabledAVX2 {
+		return vek.Dot(valuesL, valuesR)
+	}
+
+	if len(valuesL) != len(valuesR) {
+		panic("sizes of values at series must be equal")
+	}
+
+	var dot DType
+
+	for i := range valuesL {
+		vL, vR := valuesL[i], valuesR[i]
+		dot += vL * vR
+	}
+
+	return dot
+}
+
 func (d Data) AddScalar(s DType) Data {
 	values := d.values
 
