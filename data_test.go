@@ -1585,6 +1585,24 @@ func TestData_Lerp(t *testing.T) {
 				[]DType{NaN, 2, 5, 7, 9, 11, 13.5, 16, NaN, NaN, NaN},
 			),
 		},
+		{
+			"no gaps",
+			fields{1, []int64{0, 1, 2, 3, 4}, []DType{0, 1, 2, 3, 4}},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3, 4},
+				[]DType{0, 1, 2, 3, 4},
+			),
+		},
+		{
+			"all nans",
+			fields{1, []int64{0, 1, 2, 3, 4}, []DType{NaN, NaN, NaN, NaN, NaN}},
+			MakeData(
+				1,
+				[]int64{0, 1, 2, 3, 4},
+				[]DType{NaN, NaN, NaN, NaN, NaN},
+			),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

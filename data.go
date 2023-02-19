@@ -888,14 +888,14 @@ func (d Data) Lerp() Data {
 
 	// Find first non-NaN value.
 	for i := 0; ; i++ {
-		if v := values[i]; !IsNA(v) {
-			beg = i
-			break
-		}
 		if i >= len(values) {
 			// All values are NaNs.
 			// Exit.
 			return d
+		}
+		if v := values[i]; !IsNA(v) {
+			beg = i
+			break
 		}
 	}
 
